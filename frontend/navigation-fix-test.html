@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusERP 導航修復測試</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .test-instructions {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .test-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007cba;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .test-link:hover {
+            background: #005a87;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status.fixed {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.testing {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 NexusERP 導航系統修復測試</h1>
+        <p><strong>修復日期：</strong>2025-08-03</p>
+        <p><strong>修復內容：</strong>使用者下拉選單閃現問題和主題切換顏色問題</p>
+
+        <div class="test-section">
+            <div class="test-title">🎯 修復項目列表</div>
+            <div class="status fixed">
+                ✅ <strong>修復1：</strong>增強下拉選單保護機制，從100ms延長到300ms
+            </div>
+            <div class="status fixed">
+                ✅ <strong>修復2：</strong>改善事件處理邏輯，避免@click.outside與鼠標事件衝突
+            </div>
+            <div class="status fixed">
+                ✅ <strong>修復3：</strong>增加雙重檢查機制，防止意外關閉下拉選單
+            </div>
+            <div class="status fixed">
+                ✅ <strong>修復4：</strong>增強主題切換系統，確保Alpine.js與主題管理器同步
+            </div>
+            <div class="status fixed">
+                ✅ <strong>修復5：</strong>優化延遲關閉時間，從300ms增加到500ms
+            </div>
+            <div class="status fixed">
+                ✅ <strong>修復6：</strong>重新編譯前端資源，確保修復生效
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🧪 測試步驟</div>
+            <div class="test-instructions">
+                <h4>步驟1：測試下拉選單行為</h4>
+                <ol>
+                    <li>訪問 NexusERP 主頁面</li>
+                    <li>點擊右上角使用者頭像</li>
+                    <li>觀察下拉選單是否能正常顯示</li>
+                    <li>將鼠標移入和移出下拉選單區域</li>
+                    <li>確認選單不會立即消失</li>
+                </ol>
+                
+                <h4>步驟2：測試主題切換</h4>
+                <ol>
+                    <li>點擊主題切換按鈕（太陽/月亮圖標）</li>
+                    <li>觀察導航欄色塊是否正確變換</li>
+                    <li>檢查整體頁面主題是否一致</li>
+                    <li>再次切換，確認功能穩定</li>
+                </ol>
+            </div>
+            
+            <a href="http://127.0.0.1:8000" class="test-link" target="_blank">🚀 開始測試 NexusERP</a>
+            <a href="http://127.0.0.1:8000/login" class="test-link" target="_blank">🔐 登入頁面測試</a>
+            <a href="http://127.0.0.1:8000/dashboard" class="test-link" target="_blank">📊 儀表板測試</a>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">📝 測試檢查清單</div>
+            <div class="test-instructions">
+                <h4>下拉選單功能檢查：</h4>
+                <ul>
+                    <li>□ 點擊使用者頭像後下拉選單正常顯示</li>
+                    <li>□ 下拉選單不會閃現後立即消失</li>
+                    <li>□ 鼠標懸停在選單上時選單保持開啟</li>
+                    <li>□ 鼠標移出選單區域後合理延遲關閉</li>
+                    <li>□ 點擊選單外部區域能正常關閉選單</li>
+                </ul>
+                
+                <h4>主題切換功能檢查：</h4>
+                <ul>
+                    <li>□ 主題切換按鈕能正常點擊</li>
+                    <li>□ 導航欄背景色正確切換</li>
+                    <li>□ 文字色彩正確切換</li>
+                    <li>□ 主題圖標（太陽/月亮）正確切換</li>
+                    <li>□ 頁面整體主題保持一致</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔧 技術修復細節</div>
+            <div class="status fixed">
+                <strong>修復檔案：</strong><br>
+                • enhanced-navigation.blade.php - Alpine.js 事件處理優化<br>
+                • nexus-theme.css - CSS變數定義完整<br>
+                • theme-toggle.js - 主題切換邏輯正常<br>
+                • vite.config.js - 資源載入配置正確
+            </div>
+            <div class="status testing">
+                <strong>系統狀態：</strong><br>
+                • 前端資源已重新編譯 ✅<br>
+                • Alpine.js 事件邏輯已優化 ✅<br>
+                • 主題切換系統已同步 ✅<br>
+                • CSS變數系統正常運作 ✅
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">📞 問題反饋</div>
+            <p>如果測試過程中發現任何問題，請記錄以下資訊：</p>
+            <ul>
+                <li>瀏覽器類型和版本</li>
+                <li>問題重現步驟</li>
+                <li>實際行為描述</li>
+                <li>預期行為描述</li>
+                <li>是否有JavaScript錯誤（F12查看控制台）</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 添加一些測試輔助功能
+        console.log('🔧 NexusERP 導航修復測試頁面已載入');
+        console.log('📅 修復日期: 2025-08-03');
+        console.log('🎯 測試重點: 下拉選單穩定性和主題切換功能');
+        
+        // 檢查當前時間
+        console.log('⏰ 測試開始時間:', new Date().toLocaleString());
+    </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+{
+  "testInfo": {
+    "timestamp": "2025-08-02T09:51:06.534Z",
+    "testName": "現金流報表頁面修復驗證測試"
+  },
+  "results": {
+    "loginSuccessful": true,
+    "pageAccessible": true,
+    "hasCashFlowContent": true,
+    "hasReportContent": true,
+    "hasTable": true,
+    "hasCharts": true,
+    "hasNavigation": false,
+    "hasErrors": false
+  },
+  "pageAnalysis": {
+    "title": "NexusERP",
+    "url": "http://127.0.0.1:8000/reports/financial/cash-flow",
+    "hasTable": true,
+    "hasCharts": true,
+    "hasCashFlowContent": true,
+    "hasReportContent": true,
+    "hasLoginForm": false,
+    "hasNavigation": false,
+    "hasErrors": false,
+    "bodyClasses": "font-sans antialiased nx-bg-primary",
+    "mainElements": [
+      {
+        "tag": "H1",
+        "text": "💰 現金流量表",
+        "classes": "text-3xl font-bold mb-2"
+      },
+      {
+        "tag": "H3",
+        "text": "營業活動現金流",
+        "classes": "text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200"
+      },
+      {
+        "tag": "H3",
+        "text": "投資活動現金流",
+        "classes": "text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200"
+      },
+      {
+        "tag": "H3",
+        "text": "籌資活動現金流",
+        "classes": "text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200"
+      },
+      {
+        "tag": "H3",
+        "text": "現金流量表明細",
+        "classes": "text-xl font-semibold mb-6 text-gray-800 dark:text-gray-200"
+      },
+      {
+        "tag": "H3",
+        "text": "現金流趨勢分析",
+        "classes": "text-xl font-semibold mb-6 text-gray-800 dark:text-gray-200"
+      },
+      {
+        "tag": "H3",
+        "text": "現金流結構分析",
+        "classes": "text-xl font-semibold mb-6 text-gray-800 dark:text-gray-200"
+      },
+      {
+        "tag": "MAIN",
+        "text": "報表中心\n                >\n                財務報表\n                >\n                現金流量表\n            \n   ",
+        "classes": ""
+      }
+    ]
+  },
+  "consoleLogs": [
+    {
+      "type": "log",
+      "text": "NexusERP Theme Manager initialized. Current theme: light",
+      "timestamp": "2025-08-02T09:50:56.665Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Module loaded",
+      "timestamp": "2025-08-02T09:50:57.640Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Window Component loaded",
+      "timestamp": "2025-08-02T09:50:57.655Z"
+    },
+    {
+      "type": "log",
+      "text": "NexusERP Theme Manager initialized. Current theme: light",
+      "timestamp": "2025-08-02T09:50:57.659Z"
+    },
+    {
+      "type": "log",
+      "text": "AI 助手已載入，用戶已認證",
+      "timestamp": "2025-08-02T09:50:57.659Z"
+    },
+    {
+      "type": "log",
+      "text": "Initializing AI Chat Module...",
+      "timestamp": "2025-08-02T09:50:57.659Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Module initialized successfully",
+      "timestamp": "2025-08-02T09:50:57.659Z"
+    },
+    {
+      "type": "log",
+      "text": "Initializing AI Chat Window...",
+      "timestamp": "2025-08-02T09:50:57.659Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Window initialized successfully",
+      "timestamp": "2025-08-02T09:50:57.659Z"
+    },
+    {
+      "type": "log",
+      "text": "AI 功能配置已載入: {success: true, message: AI capabilities loaded successfully, data: Object}",
+      "timestamp": "2025-08-02T09:50:57.666Z"
+    },
+    {
+      "type": "log",
+      "text": "NexusERP Theme Manager initialized. Current theme: light",
+      "timestamp": "2025-08-02T09:51:00.742Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Module loaded",
+      "timestamp": "2025-08-02T09:51:04.454Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Window Component loaded",
+      "timestamp": "2025-08-02T09:51:04.454Z"
+    },
+    {
+      "type": "log",
+      "text": "NexusERP Theme Manager initialized. Current theme: light",
+      "timestamp": "2025-08-02T09:51:04.455Z"
+    },
+    {
+      "type": "log",
+      "text": "AI 助手已載入，用戶已認證",
+      "timestamp": "2025-08-02T09:51:04.455Z"
+    },
+    {
+      "type": "log",
+      "text": "Initializing AI Chat Module...",
+      "timestamp": "2025-08-02T09:51:04.455Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Module initialized successfully",
+      "timestamp": "2025-08-02T09:51:04.455Z"
+    },
+    {
+      "type": "log",
+      "text": "Initializing AI Chat Window...",
+      "timestamp": "2025-08-02T09:51:04.455Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Window initialized successfully",
+      "timestamp": "2025-08-02T09:51:04.455Z"
+    },
+    {
+      "type": "log",
+      "text": "AI 功能配置已載入: {success: true, message: AI capabilities loaded successfully, data: Object}",
+      "timestamp": "2025-08-02T09:51:04.469Z"
+    }
+  ],
+  "networkErrors": [],
+  "screenshots": [
+    "01-login-page.png",
+    "02-after-login.png",
+    "03-cash-flow-main-route.png",
+    "04-cash-flow-backup-route.png",
+    "05-final-state.png"
+  ],
+  "successRate": 75,
+  "recommendations": []
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Test</title>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        /* 測試下拉選單文字方向 */
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        
+        .test-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .test-button {
+            background: #e5e7eb;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            cursor: pointer;
+        }
+        
+        .test-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            z-index: 1000;
+        }
+        
+        .test-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .test-item:hover {
+            background: #f9fafb;
+        }
+        
+        /* 可能導致垂直文字的樣式 */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        
+        .vertical-flex {
+            flex-direction: column;
+        }
+        
+        .rotated-text {
+            transform: rotate(90deg);
+        }
+        
+        /* 修復樣式 */
+        .fix-horizontal {
+            writing-mode: initial !important;
+            text-orientation: initial !important;
+            flex-direction: row !important;
+            transform: none !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Navigation Text Direction Test</h1>
+    
+    <!-- 正常的下拉選單 -->
+    <div x-data="{ open: false }" class="test-dropdown">
+        <button @click="open = !open" class="test-button">
+            正常下拉選單
+        </button>
+        <div x-show="open" @click.outside="open = false" class="test-menu">
+            <a href="#" class="test-item">財務會計</a>
+            <a href="#" class="test-item">庫存管理</a>
+            <a href="#" class="test-item">報價管理</a>
+        </div>
+    </div>
+    
+    <!-- 有垂直文字問題的下拉選單 -->
+    <div x-data="{ open: false }" class="test-dropdown" style="margin-left: 20px;">
+        <button @click="open = !open" class="test-button">
+            垂直文字問題
+        </button>
+        <div x-show="open" @click.outside="open = false" class="test-menu">
+            <a href="#" class="test-item vertical-text">財務會計</a>
+            <a href="#" class="test-item vertical-text">庫存管理</a>
+            <a href="#" class="test-item vertical-text">報價管理</a>
+        </div>
+    </div>
+    
+    <!-- 修復後的下拉選單 -->
+    <div x-data="{ open: false }" class="test-dropdown" style="margin-left: 20px;">
+        <button @click="open = !open" class="test-button">
+            修復後
+        </button>
+        <div x-show="open" @click.outside="open = false" class="test-menu">
+            <a href="#" class="test-item vertical-text fix-horizontal">財務會計</a>
+            <a href="#" class="test-item vertical-text fix-horizontal">庫存管理</a>
+            <a href="#" class="test-item vertical-text fix-horizontal">報價管理</a>
+        </div>
+    </div>
+    
+    <div style="margin-top: 40px;">
+        <h2>其他可能的原因測試</h2>
+        
+        <!-- Flex direction 問題 -->
+        <div style="margin: 20px 0;">
+            <h3>Flex Direction 問題：</h3>
+            <div style="display: flex; flex-direction: column; border: 1px solid #ccc; padding: 10px; width: 200px;">
+                <span>財務會計</span>
+                <span>庫存管理</span>
+            </div>
+        </div>
+        
+        <!-- Transform rotate 問題 -->
+        <div style="margin: 20px 0;">
+            <h3>Transform Rotate 問題：</h3>
+            <div style="border: 1px solid #ccc; padding: 10px; width: 200px;">
+                <span style="transform: rotate(90deg); display: inline-block;">財務會計</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 測試動態樣式應用
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Navigation test page loaded');
+            
+            // 模擬 NexusERP 的樣式強制應用
+            setTimeout(() => {
+                const items = document.querySelectorAll('.test-item');
+                console.log('Found test items:', items.length);
+                
+                items.forEach(item => {
+                    item.style.cssText += `
+                        writing-mode: initial !important;
+                        text-orientation: initial !important;
+                        flex-direction: row !important;
+                        transform: none !important;
+                    `;
+                });
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

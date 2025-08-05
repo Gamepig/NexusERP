@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Dashboard API</title>
+</head>
+<body>
+    <h1>Dashboard API Test</h1>
+    <button onclick="testAPI()">Test API</button>
+    <pre id="result"></pre>
+
+    <script>
+        async function testAPI() {
+            try {
+                // First login
+                const loginResponse = await fetch('http://127.0.0.1:8000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        password: 'password123'
+                    }),
+                    credentials: 'include'
+                });
+                
+                console.log('Login response:', loginResponse.status);
+                
+                // Then test dashboard API
+                const dashboardResponse = await fetch('http://127.0.0.1:8000/api/dashboard', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'include'
+                });
+                
+                const data = await dashboardResponse.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                
+                if (data.charts) {
+                    console.log('Charts keys:', Object.keys(data.charts));
+                }
+            } catch (error) {
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

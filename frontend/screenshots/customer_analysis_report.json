@@ -1,0 +1,147 @@
+{
+  "timestamp": "2025-07-30T20:45:48.564Z",
+  "totalCustomers": 15,
+  "customers": [
+    {
+      "index": 0,
+      "value": "",
+      "text": "請選擇客戶"
+    },
+    {
+      "index": 1,
+      "value": "2236",
+      "text": "測試表單客戶"
+    },
+    {
+      "index": 2,
+      "value": "2235",
+      "text": "測試客戶2"
+    },
+    {
+      "index": 3,
+      "value": "2234",
+      "text": "測試客戶"
+    },
+    {
+      "index": 4,
+      "value": "2233",
+      "text": "Test Customer 1"
+    },
+    {
+      "index": 5,
+      "value": "2232",
+      "text": "Test Customer 1"
+    },
+    {
+      "index": 6,
+      "value": "2231",
+      "text": "Test Customer 1"
+    },
+    {
+      "index": 7,
+      "value": "940",
+      "text": "Test Company 客戶 6"
+    },
+    {
+      "index": 8,
+      "value": "935",
+      "text": "Test Company 客戶 1"
+    },
+    {
+      "index": 9,
+      "value": "936",
+      "text": "Test Company 客戶 2"
+    },
+    {
+      "index": 10,
+      "value": "937",
+      "text": "Test Company 客戶 3"
+    },
+    {
+      "index": 11,
+      "value": "938",
+      "text": "Test Company 客戶 4"
+    },
+    {
+      "index": 12,
+      "value": "941",
+      "text": "Test Company 客戶 7"
+    },
+    {
+      "index": 13,
+      "value": "942",
+      "text": "Test Company 客戶 8"
+    },
+    {
+      "index": 14,
+      "value": "939",
+      "text": "Test Company 客戶 5"
+    }
+  ],
+  "suspiciousCustomers": [
+    {
+      "index": 2,
+      "value": "2235",
+      "text": "測試客戶2"
+    },
+    {
+      "index": 4,
+      "value": "2233",
+      "text": "Test Customer 1"
+    },
+    {
+      "index": 5,
+      "value": "2232",
+      "text": "Test Customer 1"
+    },
+    {
+      "index": 6,
+      "value": "2231",
+      "text": "Test Customer 1"
+    },
+    {
+      "index": 7,
+      "value": "940",
+      "text": "Test Company 客戶 6"
+    },
+    {
+      "index": 8,
+      "value": "935",
+      "text": "Test Company 客戶 1"
+    },
+    {
+      "index": 9,
+      "value": "936",
+      "text": "Test Company 客戶 2"
+    },
+    {
+      "index": 10,
+      "value": "937",
+      "text": "Test Company 客戶 3"
+    },
+    {
+      "index": 11,
+      "value": "938",
+      "text": "Test Company 客戶 4"
+    },
+    {
+      "index": 12,
+      "value": "941",
+      "text": "Test Company 客戶 7"
+    },
+    {
+      "index": 13,
+      "value": "942",
+      "text": "Test Company 客戶 8"
+    },
+    {
+      "index": 14,
+      "value": "939",
+      "text": "Test Company 客戶 5"
+    }
+  ],
+  "analysis": {
+    "hasOtherCompanyCustomers": true,
+    "filteringWorking": false
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "testInfo": {
+    "timestamp": "2025-07-30T10:55:25.101Z",
+    "testUrl": "http://127.0.0.1:8000/reports/financial/cash-flow",
+    "credentials": "test@example.com",
+    "duration": "N/A"
+  },
+  "results": {
+    "loginSuccessful": true,
+    "pageAccessible": true,
+    "hasContent": true,
+    "hasErrors": false,
+    "chartsRendered": false,
+    "errors": [],
+    "warnings": []
+  },
+  "contentAnalysis": {
+    "hasCharts": false,
+    "hasTables": true,
+    "hasReports": false,
+    "hasNavigation": true,
+    "hasErrors": false,
+    "elements": [
+      "發現 1 個表格元素",
+      "發現 2 個導航元素"
+    ]
+  },
+  "javascriptAnalysis": {
+    "hasChartJS": false,
+    "hasJQuery": false,
+    "scriptsCount": 2,
+    "stylesheetsCount": 3,
+    "globalVars": [
+      "axios"
+    ]
+  },
+  "screenshots": [
+    "01-login-page.png",
+    "02-after-login.png",
+    "03-cash-flow-page.png",
+    "04-content-analysis.png",
+    "05-responsive-Desktop.png",
+    "05-responsive-Tablet.png",
+    "05-responsive-Mobile.png",
+    "06-final-state.png"
+  ],
+  "summary": {
+    "totalErrors": 0,
+    "totalWarnings": 0,
+    "overallSuccess": true,
+    "loginWorking": true,
+    "pageAccessible": true,
+    "contentAvailable": true,
+    "chartsWorking": false,
+    "jsLibrariesLoaded": false
+  },
+  "recommendations": [
+    "檢查 Chart.js 載入和圖表渲染功能"
+  ]
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="">
+    <title>出貨功能測試</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        input, select { padding: 8px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>NexusERP 出貨功能測試</h1>
+    
+    <div class="section">
+        <h3>1. 檢查庫存狀態</h3>
+        <button onclick="checkInventory()">檢查產品 843 庫存</button>
+        <div id="inventory-result" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h3>2. 建立測試訂單</h3>
+        <input type="number" id="customer-id" placeholder="客戶 ID" value="1">
+        <input type="number" id="product-id" placeholder="產品 ID" value="843">
+        <input type="number" id="quantity" placeholder="數量" value="10">
+        <input type="number" id="unit-price" placeholder="單價" value="100">
+        <button onclick="createOrder()">建立訂單</button>
+        <div id="order-result" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h3>3. 執行出貨</h3>
+        <input type="text" id="order-id" placeholder="訂單 ID">
+        <input type="text" id="tracking-number" placeholder="追蹤號碼" value="">
+        <input type="date" id="shipped-date" value="">
+        <input type="text" id="carrier" placeholder="承運商" value="測試快遞">
+        <button onclick="shipOrder()">執行出貨</button>
+        <div id="ship-result" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h3>4. 檢查出貨後庫存</h3>
+        <button onclick="checkInventoryAfter()">檢查出貨後庫存</button>
+        <div id="inventory-after-result" class="result"></div>
+    </div>
+
+    <script>
+        // 設定今天的日期
+        document.getElementById('shipped-date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('tracking-number').value = 'TRACK-' + Date.now();
+        
+        function getCSRFToken() {
+            // 從 API 獲取 CSRF token
+            return fetch('/api/auth/token', {credentials: 'same-origin'})
+                .then(response => response.json())
+                .then(data => data.token || '')
+                .catch(() => '');
+        }
+        
+        function apiCall(url, method = 'GET', data = null) {
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': getCSRFToken()
+                },
+                credentials: 'same-origin'
+            };
+            
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+            
+            return fetch(url, options)
+                .then(response => response.json())
+                .catch(error => ({ error: error.message }));
+        }
+        
+        function checkInventory() {
+            const resultDiv = document.getElementById('inventory-result');
+            resultDiv.innerHTML = '載入中...';
+            
+            apiCall('/api/inventory/levels?product_id=843')
+                .then(data => {
+                    resultDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                });
+        }
+        
+        function createOrder() {
+            const resultDiv = document.getElementById('order-result');
+            resultDiv.innerHTML = '載入中...';
+            
+            const orderData = {
+                order_number: 'TEST-' + Date.now(),
+                customer_id: parseInt(document.getElementById('customer-id').value),
+                status: 'confirmed',
+                order_items: [{
+                    product_id: parseInt(document.getElementById('product-id').value),
+                    quantity: parseInt(document.getElementById('quantity').value),
+                    unit_price: parseFloat(document.getElementById('unit-price').value)
+                }]
+            };
+            
+            apiCall('/api/sales-orders', 'POST', orderData)
+                .then(data => {
+                    if (data.data && data.data.id) {
+                        document.getElementById('order-id').value = data.data.id;
+                    }
+                    resultDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                });
+        }
+        
+        function shipOrder() {
+            const orderId = document.getElementById('order-id').value;
+            if (!orderId) {
+                alert('請先建立訂單或輸入訂單 ID');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('ship-result');
+            resultDiv.innerHTML = '載入中...';
+            
+            const shipmentData = {
+                tracking_number: document.getElementById('tracking-number').value,
+                shipped_date: document.getElementById('shipped-date').value,
+                carrier: document.getElementById('carrier').value
+            };
+            
+            apiCall(`/api/sales-orders/${orderId}/ship`, 'POST', shipmentData)
+                .then(data => {
+                    resultDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                });
+        }
+        
+        function checkInventoryAfter() {
+            const resultDiv = document.getElementById('inventory-after-result');
+            resultDiv.innerHTML = '載入中...';
+            
+            apiCall('/api/inventory/levels?product_id=843')
+                .then(data => {
+                    resultDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                });
+        }
+    </script>
+</body>
+</html>

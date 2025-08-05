@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'NexusERP') }} - 智慧企業管理系統</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
+    
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/css/nexus-theme.css', 'resources/js/app.js', 'resources/js/theme-toggle.js'])
+    
+    <style>
+        /* 基於 style.json 的 CSS 變數 */
+        :root {
+            --primary-background: #1a1d29;
+            --secondary-background: #252836;
+            --card-background: #2d3142;
+            --sidebar-background: #1e2139;
+            --accent-purple: #8b5cf6;
+            --accent-blue: #3b82f6;
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #374151;
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--primary-background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* 導航欄 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 29, 41, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(26, 29, 41, 0.98);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 英雄區塊 */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            background: linear-gradient(135deg, var(--primary-background) 0%, var(--secondary-background) 100%);
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-content .highlight {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-card {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
+        }
+
+        /* 功能特色 */
+        .features {
+            padding: 6rem 2rem;
+            background: var(--secondary-background);
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .features-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .features-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* 統計數據 */
+        .stats {
+            padding: 6rem 2rem;
+            background: var(--primary-background);
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent-purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* 頁尾 */
+        .footer {
+            padding: 3rem 2rem;
+            background: var(--secondary-background);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            line-height: 1.8;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">NexusERP</div>
+            <ul class="nav-menu">
+                <li><a href="#features">功能特色</a></li>
+                <li><a href="#pricing">價格方案</a></li>
+                <li><a href="#about">關於我們</a></li>
+                <li><a href="#contact">聯絡我們</a></li>
+            </ul>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                @if (Route::has('login'))
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="nav-cta">管理儀表板</a>
+                    @else
+                        <a href="{{ route('login') }}" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s ease;">登入</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="nav-cta">免費註冊</a>
+                        @endif
+                    @endauth
+                @endif
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄區塊 -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>智慧企業管理<br><span class="highlight">無限可能</span></h1>
+                <p>NexusERP 為您的企業提供完整的 ERP 解決方案，從財務管理到人力資源，一站式滿足所有需求。</p>
+                <div class="hero-cta">
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="btn btn-primary">
+                            立即試用 →
+                        </a>
+                    @endif
+                    <a href="#features" class="btn btn-secondary">
+                        了解更多
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <h3>實時儀表板</h3>
+                    <p>即時監控您的業務狀況</p>
+                    <div style="margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>總營收</span>
+                            <span style="color: var(--accent-green);">+12.5%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>新客戶</span>
+                            <span style="color: var(--accent-blue);">+8.2%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>訂單完成</span>
+                            <span style="color: var(--accent-purple);">94.7%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能特色 -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="features-header">
+                <h2>為什麼選擇 NexusERP？</h2>
+                <p>我們提供最先進的企業管理功能，讓您的業務運營更加高效</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>智慧分析</h3>
+                    <p>運用 AI 技術提供深度業務洞察，幫助您做出明智的決策</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>安全可靠</h3>
+                    <p>企業級安全防護，確保您的敏感資料獲得最高級別的保護</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>高效整合</h3>
+                    <p>無縫整合現有系統，快速部署，讓您的團隊立即上手</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 統計數據 -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <h3>10,000+</h3>
+                <p>活躍企業用戶</p>
+            </div>
+            <div class="stat-item">
+                <h3>99.9%</h3>
+                <p>系統穩定性</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>技術支援服務</p>
+            </div>
+            <div class="stat-item">
+                <h3>50+</h3>
+                <p>功能模組</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>NexusERP</h4>
+                <p>專業的企業管理解決方案提供商，致力於為企業創造更大價值。</p>
+            </div>
+            <div class="footer-section">
+                <h4>產品</h4>
+                <p><a href="#">財務管理</a></p>
+                <p><a href="#">人力資源</a></p>
+                <p><a href="#">供應鏈管理</a></p>
+                <p><a href="#">客戶關係管理</a></p>
+            </div>
+            <div class="footer-section">
+                <h4>支援</h4>
+                <p><a href="#">幫助中心</a></p>
+                <p><a href="#">技術支援</a></p>
+                <p><a href="#">培訓課程</a></p>
+                <p><a href="#">API 文件</a></p>
+            </div>
+            <div class="footer-section">
+                <h4>聯絡我們</h4>
+                <p>電話：(02) 1234-5678</p>
+                <p>Email：info@nexuserp.com</p>
+                <p>地址：台北市信義區信義路五段7號</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 NexusERP. 版權所有。</p>
+        </div>
+    </footer>
+
+    <script>
+        // 導航欄滾動效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // 平滑滾動
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 載入動畫
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

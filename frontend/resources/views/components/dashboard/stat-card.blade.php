@@ -43,7 +43,7 @@
     ];
 
     // 統計卡片樣式
-    $cardClasses = 'nexus-card relative overflow-hidden transition-all duration-300 hover:shadow-lg group';
+    $cardClasses = 'nexus-card stat-card-container relative overflow-hidden transition-all duration-300 hover:shadow-lg group';
     if ($loading) {
         $cardClasses .= ' animate-pulse';
     }

@@ -1,0 +1,44 @@
+{
+  "testInfo": {
+    "timestamp": "2025-08-02T09:50:56.108Z",
+    "testDuration": "N/A",
+    "testSteps": 10
+  },
+  "pageInfo": {
+    "url": "about:blank",
+    "title": "",
+    "timestamp": "2025-08-02T09:50:56.108Z"
+  },
+  "contentAnalysis": {
+    "hasCharts": false,
+    "hasTables": false,
+    "hasReports": false,
+    "hasNavigation": false,
+    "hasErrors": false,
+    "bodyClasses": "",
+    "metaDescription": "",
+    "scriptsCount": 0,
+    "stylesheetsCount": 0,
+    "mainElements": []
+  },
+  "screenshots": [
+    "01-login-page.png",
+    "02-after-login.png",
+    "03-cash-flow-page.png",
+    "04-loading-state-analysis.png",
+    "05-final-error-analysis.png",
+    "06-backup-route-test.png",
+    "07-final-comprehensive-test.png"
+  ],
+  "testResults": {
+    "loginSuccessful": true,
+    "pageAccessible": true,
+    "hasContent": false,
+    "hasErrors": false,
+    "interactionTested": true
+  },
+  "recommendations": [
+    "確認現金流報表數據和圖表正確顯示",
+    "檢查 JavaScript 載入問題"
+  ]
+}

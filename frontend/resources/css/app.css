@@ -1,0 +1,597 @@
+/* =====================================================
+   NexusERP Application Styles - 主應用程式樣式
+   ===================================================== */
+
+/* 匯入設計令牌系統 - 必須在 Tailwind 之前載入 */
+@import './design-tokens.css';
+
+/* Tailwind CSS 核心 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== 應用程式基礎層 ===== */
+@layer base {
+  /* HTML 與 Body 基礎設定 */
+  html {
+    font-family: var(--nexus-font-family-sans);
+    line-height: var(--nexus-leading-normal);
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
+  body {
+    background-color: var(--nexus-bg-primary);
+    color: var(--nexus-text-primary);
+    font-feature-settings: 'liga' 1, 'kern' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* 標題層級設定 */
+  h1 { 
+    font-size: var(--nexus-text-4xl); 
+    font-weight: var(--nexus-font-bold);
+    line-height: var(--nexus-leading-tight);
+    color: var(--nexus-text-primary);
+  }
+  
+  h2 { 
+    font-size: var(--nexus-text-3xl); 
+    font-weight: var(--nexus-font-semibold);
+    line-height: var(--nexus-leading-tight);
+    color: var(--nexus-text-primary);
+  }
+  
+  h3 { 
+    font-size: var(--nexus-text-2xl); 
+    font-weight: var(--nexus-font-semibold);
+    line-height: var(--nexus-leading-snug);
+    color: var(--nexus-text-primary);
+  }
+  
+  h4 { 
+    font-size: var(--nexus-text-xl); 
+    font-weight: var(--nexus-font-medium);
+    line-height: var(--nexus-leading-snug);
+    color: var(--nexus-text-secondary);
+  }
+  
+  h5 { 
+    font-size: var(--nexus-text-lg); 
+    font-weight: var(--nexus-font-medium);
+    line-height: var(--nexus-leading-snug);
+    color: var(--nexus-text-secondary);
+  }
+  
+  h6 { 
+    font-size: var(--nexus-text-base); 
+    font-weight: var(--nexus-font-medium);
+    line-height: var(--nexus-leading-normal);
+    color: var(--nexus-text-secondary);
+  }
+  
+  /* 段落與文字 */
+  p {
+    color: var(--nexus-text-secondary);
+    line-height: var(--nexus-leading-relaxed);
+    margin-bottom: var(--nexus-space-4);
+  }
+  
+  /* 連結樣式 */
+  a {
+    color: var(--nexus-primary-600);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: all var(--nexus-transition-fast) var(--nexus-ease-out);
+  }
+  
+  a:hover {
+    color: var(--nexus-primary-700);
+    text-decoration-color: currentColor;
+  }
+  
+  a:focus {
+    outline: 2px solid var(--nexus-focus-ring);
+    outline-offset: 2px;
+  }
+  
+  /* 程式碼樣式 */
+  code {
+    font-family: var(--nexus-font-family-mono);
+    font-size: 0.875em;
+    background-color: var(--nexus-bg-tertiary);
+    color: var(--nexus-text-primary);
+    padding: var(--nexus-space-1) var(--nexus-space-2);
+    border-radius: var(--nexus-radius-sm);
+    border: var(--nexus-border-1) solid var(--nexus-border-primary);
+  }
+  
+  pre {
+    font-family: var(--nexus-font-family-mono);
+    background-color: var(--nexus-bg-tertiary);
+    border: var(--nexus-border-1) solid var(--nexus-border-primary);
+    border-radius: var(--nexus-radius-lg);
+    padding: var(--nexus-space-4);
+    overflow-x: auto;
+    margin: var(--nexus-space-4) 0;
+  }
+  
+  /* 表格樣式 */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: var(--nexus-space-4) 0;
+  }
+  
+  th, td {
+    border: var(--nexus-border-1) solid var(--nexus-border-primary);
+    padding: var(--nexus-space-3) var(--nexus-space-4);
+    text-align: left;
+  }
+  
+  th {
+    background-color: var(--nexus-bg-secondary);
+    font-weight: var(--nexus-font-semibold);
+    color: var(--nexus-text-primary);
+  }
+  
+  td {
+    background-color: var(--nexus-surface-primary);
+    color: var(--nexus-text-secondary);
+  }
+  
+  /* 表單元素基礎樣式 */
+  input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+  }
+  
+  /* 滾動條樣式 */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--nexus-bg-secondary);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--nexus-border-tertiary);
+    border-radius: var(--nexus-radius-full);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--nexus-text-quaternary);
+  }
+}
+
+/* ===== 佈局組件層 ===== */
+@layer components {
+  /* 無側邊欄的主佈局容器 */
+  .nexus-main-layout-no-sidebar {
+    background-color: var(--nexus-bg-primary);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    transition: all var(--nexus-transition-normal) var(--nexus-ease-out);
+  }
+  
+  /* 無側邊欄的主內容區域 */
+  .nexus-main-content-no-sidebar {
+    flex: 1;
+    padding: var(--nexus-space-2) var(--nexus-space-4);
+    background-color: var(--nexus-bg-primary);
+    transition: all var(--nexus-transition-normal) var(--nexus-ease-out);
+  }
+  
+  /* 響應式設計 - 移動設備 */
+  @media (max-width: 768px) {
+    .nexus-main-content-no-sidebar {
+      padding: var(--nexus-space-1) var(--nexus-space-2);
+    }
+  }
+  
+  /* 響應式設計 - 平板設備 */
+  @media (max-width: 1024px) {
+    .nexus-main-content-no-sidebar {
+      padding: var(--nexus-space-2) var(--nexus-space-3);
+    }
+  }
+
+  /* 隱藏所有麵包屑和路徑導航 */
+  nav[aria-label*="麵包屑"],
+  nav[aria-label*="breadcrumb"],
+  .breadcrumb,
+  .breadcrumbs,
+  .nexus-breadcrumb,
+  .nexus-breadcrumb-container,
+  .nexus-breadcrumb-list,
+  .nexus-breadcrumb-indicator,
+  *[class*="breadcrumb"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 隱藏返回箭頭和返回導航 */
+  a[href*="reports.index"] svg[viewBox="0 0 24 24"] path[d*="M10 19l-7-7"],
+  a[class*="mr-2"] svg[viewBox="0 0 24 24"] path[d*="M10 19l-7-7"],
+  svg[viewBox="0 0 24 24"] path[d*="M10 19l-7-7m0 0l7-7m-7 7h18"] {
+    display: none !important;
+  }
+  
+  a[href*="reports.index"]:has(svg path[d*="M10 19l-7-7"]) {
+    display: none !important;
+  }
+
+  /* ===== Enhanced Navigation Dropdown Styles ===== */
+  
+  /* 基礎下拉選單容器 */
+  .nexus-nav-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 50;
+    margin-top: 0.5rem;
+    background-color: var(--nexus-surface-primary);
+    border: var(--nexus-border-1) solid var(--nexus-border-primary);
+    border-radius: var(--nexus-radius-lg);
+    box-shadow: var(--nexus-shadow-xl);
+    min-width: 12rem;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+  }
+
+  /* 下拉選單清單 */
+  .nexus-dropdown-list {
+    padding: var(--nexus-space-1);
+    margin: 0;
+    list-style: none;
+  }
+
+  /* 下拉選單項目 */
+  .nexus-dropdown-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: var(--nexus-space-3) var(--nexus-space-4);
+    text-align: left;
+    font-size: var(--nexus-text-sm);
+    border-radius: var(--nexus-radius-md);
+    transition: all var(--nexus-transition-fast) var(--nexus-ease-out);
+    color: var(--nexus-text-secondary);
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .nexus-dropdown-item:hover {
+    background-color: var(--nexus-bg-secondary);
+    color: var(--nexus-text-primary);
+    transform: translateX(2px);
+  }
+
+  .nexus-dropdown-item:focus {
+    outline: 2px solid var(--nexus-focus-ring);
+    outline-offset: -2px;
+    background-color: var(--nexus-bg-secondary);
+    color: var(--nexus-text-primary);
+  }
+
+  /* 活躍狀態的下拉選單項目 */
+  .nexus-dropdown-item.active {
+    background-color: var(--nexus-primary-50);
+    color: var(--nexus-primary-700);
+    border-left: 4px solid var(--nexus-primary-500);
+    padding-left: calc(var(--nexus-space-4) - 4px);
+  }
+
+  /* 下拉選單圖示 */
+  .nexus-dropdown-icon {
+    margin-right: var(--nexus-space-2);
+    height: var(--nexus-space-4);
+    width: var(--nexus-space-4);
+    flex-shrink: 0;
+    color: var(--nexus-text-tertiary);
+  }
+
+  .nexus-dropdown-item:hover .nexus-dropdown-icon {
+    color: var(--nexus-text-secondary);
+  }
+
+  /* 下拉選單文字 */
+  .nexus-dropdown-text {
+    flex: 1;
+    font-weight: var(--nexus-font-medium);
+  }
+
+  /* 下拉選單描述 */
+  .nexus-dropdown-description {
+    display: block;
+    font-size: var(--nexus-text-xs);
+    color: var(--nexus-text-tertiary);
+    margin-top: var(--nexus-space-1);
+    font-weight: var(--nexus-font-normal);
+  }
+
+  /* 下拉選單徽章 */
+  .nexus-dropdown-badge {
+    margin-left: var(--nexus-space-2);
+    padding: var(--nexus-space-1) var(--nexus-space-2);
+    font-size: var(--nexus-text-xs);
+    font-weight: var(--nexus-font-medium);
+    border-radius: var(--nexus-radius-full);
+    background-color: var(--nexus-bg-tertiary);
+    color: var(--nexus-text-tertiary);
+    flex-shrink: 0;
+  }
+
+  /* 徽章變體 */
+  .nexus-badge-primary {
+    background-color: var(--nexus-primary-100);
+    color: var(--nexus-primary-700);
+  }
+
+  .nexus-badge-success {
+    background-color: var(--nexus-success-100);
+    color: var(--nexus-success-700);
+  }
+
+  .nexus-badge-warning {
+    background-color: var(--nexus-warning-100);
+    color: var(--nexus-warning-700);
+  }
+
+  .nexus-badge-danger {
+    background-color: var(--nexus-danger-100);
+    color: var(--nexus-danger-700);
+  }
+
+  /* 導航箭頭動畫 */
+  .nexus-nav-arrow {
+    transition: transform var(--nexus-transition-normal) var(--nexus-ease-out);
+    margin-left: var(--nexus-space-1);
+    height: var(--nexus-space-3);
+    width: var(--nexus-space-3);
+    color: var(--nexus-text-tertiary);
+  }
+
+  .nexus-nav-arrow.rotate-180 {
+    transform: rotate(180deg);
+  }
+
+  .nexus-nav-arrow.rotate-90 {
+    transform: rotate(90deg);
+  }
+
+  /* 下拉選單分隔線 */
+  .nexus-dropdown-divider {
+    height: 1px;
+    background-color: var(--nexus-border-secondary);
+    margin: var(--nexus-space-2) var(--nexus-space-4);
+  }
+
+  /* 下拉選單動作區域 */
+  .nexus-dropdown-actions {
+    border-top: var(--nexus-border-1) solid var(--nexus-border-secondary);
+    padding: var(--nexus-space-2);
+    background-color: var(--nexus-bg-secondary);
+  }
+
+  .nexus-dropdown-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: var(--nexus-space-2) var(--nexus-space-3);
+    font-size: var(--nexus-text-sm);
+    font-weight: var(--nexus-font-medium);
+    border-radius: var(--nexus-radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--nexus-transition-fast) var(--nexus-ease-out);
+  }
+
+  .nexus-action-primary {
+    background-color: var(--nexus-primary-600);
+    color: white;
+  }
+
+  .nexus-action-primary:hover {
+    background-color: var(--nexus-primary-700);
+  }
+
+  .nexus-action-secondary {
+    background-color: var(--nexus-bg-tertiary);
+    color: var(--nexus-text-secondary);
+  }
+
+  .nexus-action-secondary:hover {
+    background-color: var(--nexus-bg-secondary);
+    color: var(--nexus-text-primary);
+  }
+
+  /* 防止選單閃爍 */
+  .nexus-nav-dropdown[style*="display: none"] {
+    display: none !important;
+  }
+
+  /* 響應式下拉選單定位 */
+  @media (max-width: 768px) {
+    .nexus-nav-dropdown {
+      position: fixed;
+      left: var(--nexus-space-4) !important;
+      right: var(--nexus-space-4);
+      width: auto;
+      min-width: auto;
+      max-width: calc(100vw - 2rem);
+    }
+  }
+
+  /* 垂直導航下拉選單樣式 */
+  .nexus-nav-submenu {
+    position: relative;
+  }
+
+  .nexus-submenu-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 50;
+    margin-top: var(--nexus-space-1);
+    background-color: var(--nexus-surface-primary);
+    border: var(--nexus-border-1) solid var(--nexus-border-primary);
+    border-radius: var(--nexus-radius-lg);
+    box-shadow: var(--nexus-shadow-lg);
+    min-width: 12rem;
+    overflow: hidden;
+    list-style: none;
+    padding: var(--nexus-space-1);
+    margin: 0;
+  }
+
+  .nexus-submenu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: var(--nexus-space-2) var(--nexus-space-3);
+    text-align: left;
+    font-size: var(--nexus-text-sm);
+    border-radius: var(--nexus-radius-md);
+    transition: all var(--nexus-transition-fast) var(--nexus-ease-out);
+    color: var(--nexus-text-secondary);
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .nexus-submenu-item:hover {
+    background-color: var(--nexus-bg-secondary);
+    color: var(--nexus-text-primary);
+  }
+
+  .nexus-submenu-icon {
+    margin-right: var(--nexus-space-2);
+    height: var(--nexus-space-4);
+    width: var(--nexus-space-4);
+    flex-shrink: 0;
+    color: var(--nexus-text-tertiary);
+  }
+
+  .nexus-submenu-text {
+    flex: 1;
+    font-weight: var(--nexus-font-medium);
+  }
+
+  .nexus-submenu-badge {
+    margin-left: var(--nexus-space-2);
+    padding: var(--nexus-space-1) var(--nexus-space-2);
+    font-size: var(--nexus-text-xs);
+    font-weight: var(--nexus-font-medium);
+    border-radius: var(--nexus-radius-full);
+    background-color: var(--nexus-bg-tertiary);
+    color: var(--nexus-text-tertiary);
+    flex-shrink: 0;
+  }
+
+  /* 可選的動畫效果 */
+  .nexus-dropdown-enter {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+
+  .nexus-dropdown-enter-active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    transition: opacity var(--nexus-transition-normal) var(--nexus-ease-out),
+                transform var(--nexus-transition-normal) var(--nexus-ease-out);
+  }
+
+  .nexus-dropdown-leave {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  .nexus-dropdown-leave-active {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+    transition: opacity var(--nexus-transition-fast) var(--nexus-ease-in),
+                transform var(--nexus-transition-fast) var(--nexus-ease-in);
+  }
+}
+
+/* ===== 緊急修復：下拉選單滾動條和文字方向問題 ===== */
+
+@layer utilities {
+  /* 完全消除所有下拉選單滾動條 */
+  .nexus-nav-dropdown,
+  .nexus-nav-dropdown *,
+  .nexus-dropdown-list,
+  .nexus-dropdown-list *,
+  [class*="nexus-dropdown"],
+  [class*="nexus-dropdown"] *,
+  nav[x-data*="multiLevelNav"] .nexus-nav-dropdown,
+  nav[role="navigation"] .nexus-nav-dropdown,
+  .nexus-multi-nav .nexus-nav-dropdown,
+  .relative[x-data*="multiLevelNav"] .nexus-nav-dropdown {
+    overflow: visible !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    min-height: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    contain: none !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Webkit 滾動條完全隱藏 */
+  .nexus-nav-dropdown::-webkit-scrollbar,
+  .nexus-dropdown-list::-webkit-scrollbar,
+  [class*="nexus-dropdown"]::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+
+  /* 強制所有導航文字水平排列 */
+  .nexus-nav-dropdown .nexus-dropdown-text,
+  .nexus-nav-dropdown .nexus-dropdown-item,
+  .nexus-dropdown-list .nexus-dropdown-text,
+  .nexus-dropdown-list .nexus-dropdown-item,
+  .nexus-nav-dropdown span,
+  .nexus-dropdown-list span,
+  nav .nexus-nav-text,
+  nav .nexus-sidebar-text,
+  [class*="nexus-dropdown"] *,
+  [role="menu"] *,
+  [role="menuitem"] * {
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    direction: ltr !important;
+    unicode-bidi: normal !important;
+    text-align: left !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+    transform: none !important;
+  }
+
+  /* 最終保護：確保所有導航文字正確顯示 */
+  nav, nav *, .nexus-multi-nav, .nexus-multi-nav *, 
+  [class*="navigation"], [class*="navigation"] *,
+  [class*="dropdown"], [class*="dropdown"] *,
+  [role="navigation"], [role="navigation"] *,
+  [role="menu"], [role="menu"] *,
+  [role="menuitem"], [role="menuitem"] * {
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    direction: ltr !important;
+  }
+}

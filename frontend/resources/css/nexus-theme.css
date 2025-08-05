@@ -1,0 +1,1422 @@
+/* NexusERP 主題系統 - 支援暗色和淺色主題 */
+
+/* ========================= */
+/* CSS 變數定義 */
+/* ========================= */
+
+/* 預設主題（暗色） */
+:root {
+  /* 主要背景色 */
+  --nexus-bg-primary: #1a1d29;
+  --nexus-bg-secondary: #252836;
+  --nexus-bg-tertiary: #2d3142;
+  --nexus-bg-sidebar: #1e2139;
+  --nexus-card-bg: #2d3142;
+  
+  /* 文字顏色 */
+  --nexus-text-primary: #ffffff;
+  --nexus-text-secondary: #94a3b8;
+  --nexus-text-muted: #64748b;
+  --nexus-text-accent: #e2e8f0;
+  
+  /* 邊框顏色 */
+  --nexus-border-primary: #374151;
+  --nexus-border-secondary: #4b5563;
+  --nexus-border-accent: #6b7280;
+  
+  /* 強調色 */
+  --nexus-accent-purple: #8b5cf6;
+  --nexus-accent-blue: #3b82f6;
+  --nexus-accent-pink: #ec4899;
+  --nexus-accent-cyan: #06b6d4;
+  --nexus-accent-green: #10b981;
+  --nexus-accent-orange: #f59e0b;
+  --nexus-accent-red: #ef4444;
+  
+  /* RGB 值 (用於透明度計算) */
+  --nexus-primary-rgb: 139, 92, 246;
+  --nexus-secondary-rgb: 45, 49, 66;
+  --nexus-accent-rgb: 139, 92, 246;
+  
+  /* 陰影 */
+  --nexus-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --nexus-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --nexus-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --nexus-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* 漸層 */
+  --nexus-gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  --nexus-gradient-secondary: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  
+  /* 主題識別 */
+  --nexus-theme-name: 'dark';
+  
+  /* ========================= */
+  /* 導航系統設計令牌 */
+  /* ========================= */
+  
+  /* 導航高度與尺寸 */
+  --nexus-nav-height: 4rem;           /* 64px */
+  --nexus-nav-height-compact: 3.5rem; /* 56px */
+  --nexus-nav-item-height: 2.5rem;    /* 40px */
+  --nexus-nav-dropdown-width: 16rem;  /* 256px */
+  --nexus-nav-sidebar-width: 18rem;   /* 288px */
+  --nexus-nav-sidebar-collapsed: 4rem; /* 64px */
+  
+  /* 導航間距 */
+  --nexus-nav-padding-x: 1.5rem;      /* 24px */
+  --nexus-nav-padding-y: 0.75rem;     /* 12px */
+  --nexus-nav-item-padding-x: 1rem;   /* 16px */
+  --nexus-nav-item-padding-y: 0.5rem; /* 8px */
+  --nexus-nav-gap: 0.5rem;            /* 8px */
+  
+  /* 導航邊框圓角 */
+  --nexus-nav-border-radius: 0.5rem;  /* 8px */
+  --nexus-nav-item-border-radius: 0.375rem; /* 6px */
+  
+  /* 導航背景色系 */
+  --nexus-nav-bg-primary: #1e2139;
+  --nexus-nav-bg-secondary: #252836;
+  --nexus-nav-bg-hover: #2d3142;
+  --nexus-nav-bg-active: var(--nexus-gradient-primary);
+  --nexus-nav-bg-dropdown: #1a1d29;
+  --nexus-nav-bg-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* 導航文字色系 */
+  --nexus-nav-text-primary: #ffffff;
+  --nexus-nav-text-secondary: #94a3b8;
+  --nexus-nav-text-muted: #64748b;
+  --nexus-nav-text-active: #ffffff;
+  --nexus-nav-text-hover: #e2e8f0;
+  
+  /* 導航邊框色系 */
+  --nexus-nav-border-primary: #374151;
+  --nexus-nav-border-secondary: #4b5563;
+  --nexus-nav-border-active: var(--nexus-accent-purple);
+  
+  /* 導航陰影 */
+  --nexus-nav-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --nexus-nav-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  --nexus-nav-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  --nexus-nav-shadow-dropdown: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+  
+  /* 導航動畫時間 */
+  --nexus-nav-transition-fast: 0.15s;
+  --nexus-nav-transition-normal: 0.3s;
+  --nexus-nav-transition-slow: 0.5s;
+  
+  /* 導航 Z-index 層級 */
+  --nexus-nav-z-base: 1000;
+  --nexus-nav-z-dropdown: 1010;
+  --nexus-nav-z-sidebar: 1020;
+  --nexus-nav-z-overlay: 1030;
+  
+  /* 麵包屑設計令牌 */
+  --nexus-breadcrumb-separator: '/';
+  --nexus-breadcrumb-separator-color: var(--nexus-text-muted);
+  --nexus-breadcrumb-link-color: var(--nexus-accent-purple);
+  --nexus-breadcrumb-current-color: var(--nexus-text-primary);
+  
+  /* 導航圖示 */
+  --nexus-nav-icon-size: 1.25rem;     /* 20px */
+  --nexus-nav-icon-size-sm: 1rem;     /* 16px */
+  --nexus-nav-arrow-size: 0.75rem;    /* 12px */
+}
+
+/* 淺色主題 */
+:root.light-theme {
+  /* 主要背景色 */
+  --nexus-bg-primary: #ffffff;
+  --nexus-bg-secondary: #f8fafc;
+  --nexus-bg-tertiary: #f1f5f9;
+  --nexus-bg-sidebar: #f8fafc;
+  --nexus-card-bg: #ffffff;
+  
+  /* 文字顏色 */
+  --nexus-text-primary: #1e293b;
+  --nexus-text-secondary: #475569;
+  --nexus-text-muted: #64748b;
+  --nexus-text-accent: #334155;
+  
+  /* 邊框顏色 */
+  --nexus-border-primary: #e2e8f0;
+  --nexus-border-secondary: #cbd5e1;
+  --nexus-border-accent: #94a3b8;
+  
+  /* 強調色（保持一致） */
+  --nexus-accent-purple: #8b5cf6;
+  --nexus-accent-blue: #3b82f6;
+  --nexus-accent-pink: #ec4899;
+  --nexus-accent-cyan: #06b6d4;
+  --nexus-accent-green: #10b981;
+  --nexus-accent-orange: #f59e0b;
+  --nexus-accent-red: #ef4444;
+  
+  /* 陰影 */
+  --nexus-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --nexus-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --nexus-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --nexus-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* 漸層 */
+  --nexus-gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  --nexus-gradient-secondary: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  
+  /* 主題識別 */
+  --nexus-theme-name: 'light';
+  
+  /* ========================= */
+  /* 導航系統設計令牌（淺色主題） */
+  /* ========================= */
+  
+  /* 導航高度與尺寸（保持一致） */
+  --nexus-nav-height: 4rem;
+  --nexus-nav-height-compact: 3.5rem;
+  --nexus-nav-item-height: 2.5rem;
+  --nexus-nav-dropdown-width: 16rem;
+  --nexus-nav-sidebar-width: 18rem;
+  --nexus-nav-sidebar-collapsed: 4rem;
+  
+  /* 導航間距（保持一致） */
+  --nexus-nav-padding-x: 1.5rem;
+  --nexus-nav-padding-y: 0.75rem;
+  --nexus-nav-item-padding-x: 1rem;
+  --nexus-nav-item-padding-y: 0.5rem;
+  --nexus-nav-gap: 0.5rem;
+  
+  /* 導航邊框圓角（保持一致） */
+  --nexus-nav-border-radius: 0.5rem;
+  --nexus-nav-item-border-radius: 0.375rem;
+  
+  /* 導航背景色系（淺色主題調整） */
+  --nexus-nav-bg-primary: #f8fafc;
+  --nexus-nav-bg-secondary: #ffffff;
+  --nexus-nav-bg-hover: #f1f5f9;
+  --nexus-nav-bg-active: var(--nexus-gradient-primary);
+  --nexus-nav-bg-dropdown: #f8fafc;
+  --nexus-nav-bg-overlay: rgba(0, 0, 0, 0.3);
+  
+  /* 導航文字色系（淺色主題調整） */
+  --nexus-nav-text-primary: #1e293b;
+  --nexus-nav-text-secondary: #475569;
+  --nexus-nav-text-muted: #64748b;
+  --nexus-nav-text-active: #ffffff;
+  --nexus-nav-text-hover: #334155;
+  
+  /* 導航邊框色系（淺色主題調整） */
+  --nexus-nav-border-primary: #d1d5db;
+  --nexus-nav-border-secondary: #9ca3af;
+  --nexus-nav-border-active: var(--nexus-accent-purple);
+  
+  /* 導航陰影（淺色主題調整） */
+  --nexus-nav-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --nexus-nav-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --nexus-nav-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --nexus-nav-shadow-dropdown: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  
+  /* 動畫、Z-index、圖示等（保持一致） */
+  --nexus-nav-transition-fast: 0.15s;
+  --nexus-nav-transition-normal: 0.3s;
+  --nexus-nav-transition-slow: 0.5s;
+  --nexus-nav-z-base: 1000;
+  --nexus-nav-z-dropdown: 1010;
+  --nexus-nav-z-sidebar: 1020;
+  --nexus-nav-z-overlay: 1030;
+  --nexus-breadcrumb-separator: '/';
+  --nexus-breadcrumb-separator-color: var(--nexus-text-muted);
+  --nexus-breadcrumb-link-color: var(--nexus-accent-purple);
+  --nexus-breadcrumb-current-color: var(--nexus-text-primary);
+  --nexus-nav-icon-size: 1.25rem;
+  --nexus-nav-icon-size-sm: 1rem;
+  --nexus-nav-arrow-size: 0.75rem;
+}
+
+/* ========================= */
+/* 基礎樣式應用 */
+/* ========================= */
+
+/* 全域背景和文字 */
+body {
+  background-color: var(--nexus-bg-primary);
+  color: var(--nexus-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ========================= */
+/* 組件樣式 */
+/* ========================= */
+
+/* 卡片樣式 */
+.nx-card {
+  background-color: var(--nexus-bg-tertiary);
+  border: 1px solid var(--nexus-border-primary);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--nexus-shadow-md);
+  transition: all 0.3s ease;
+}
+
+.nx-card-secondary {
+  background-color: var(--nexus-bg-secondary);
+  border: 1px solid var(--nexus-border-primary);
+}
+
+/* 按鈕樣式 */
+.nx-btn-primary {
+  background: var(--nexus-gradient-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+}
+
+.nx-btn-secondary {
+  background-color: var(--nexus-bg-secondary);
+  color: var(--nexus-text-primary);
+  border: 1px solid var(--nexus-border-primary);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nx-btn-secondary:hover {
+  background-color: var(--nexus-bg-tertiary);
+}
+
+/* 輸入框樣式 */
+.nx-input, .nexus-input {
+  background-color: var(--nexus-bg-secondary);
+  border: 1px solid var(--nexus-border-secondary);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--nexus-text-primary);
+  transition: all 0.2s ease;
+}
+
+.nx-input:focus, .nexus-input:focus {
+  border-color: var(--nexus-accent-purple);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  outline: none;
+}
+
+.nx-input::placeholder, .nexus-input::placeholder {
+  color: var(--nexus-text-muted);
+}
+
+/* 確保在深色主題下輸入框文字可見 */
+.nx-input, .nexus-input, 
+input[type="text"], input[type="email"], input[type="password"], 
+input[type="number"], input[type="search"], input[type="tel"], 
+input[type="url"], textarea, select {
+  background-color: var(--nexus-bg-secondary) !important;
+  color: var(--nexus-text-primary) !important;
+  border: 1px solid var(--nexus-border-secondary) !important;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus,
+input[type="number"]:focus, input[type="search"]:focus, input[type="tel"]:focus,
+input[type="url"]:focus, textarea:focus, select:focus {
+  border-color: var(--nexus-accent-purple) !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+  outline: none !important;
+}
+
+/* 導航樣式 */
+.nx-sidebar {
+  background-color: var(--nexus-bg-sidebar);
+  border-right: 1px solid var(--nexus-border-primary);
+  transition: background-color 0.3s ease;
+}
+
+.nx-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  color: var(--nexus-text-secondary);
+  transition: all 0.2s ease;
+}
+
+.nx-nav-item:hover {
+  background-color: var(--nexus-bg-tertiary);
+  color: var(--nexus-text-primary);
+}
+
+.nx-nav-item.active {
+  background: var(--nexus-gradient-primary);
+  color: #ffffff;
+}
+
+/* 表格樣式 */
+.nx-table {
+  background-color: var(--nexus-bg-tertiary);
+  border: 1px solid var(--nexus-border-primary);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.nx-table-header {
+  background-color: var(--nexus-bg-secondary);
+  padding: 1rem;
+  font-weight: 600;
+  color: var(--nexus-text-primary);
+  border-bottom: 1px solid var(--nexus-border-primary);
+}
+
+.nx-table-row {
+  padding: 1rem;
+  border-bottom: 1px solid var(--nexus-border-primary);
+  color: var(--nexus-text-secondary);
+  transition: background-color 0.2s ease;
+}
+
+.nx-table-row:hover {
+  background-color: var(--nexus-bg-secondary);
+}
+
+/* 徽章樣式 */
+.nx-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.nx-badge-success {
+  background-color: var(--nexus-accent-green);
+  color: #ffffff;
+}
+
+.nx-badge-warning {
+  background-color: var(--nexus-accent-orange);
+  color: #ffffff;
+}
+
+.nx-badge-error {
+  background-color: var(--nexus-accent-red);
+  color: #ffffff;
+}
+
+/* ========================= */
+/* 主題切換按鈕樣式 */
+/* ========================= */
+
+.theme-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 1.5rem;
+  background-color: var(--nexus-bg-secondary);
+  border: 1px solid var(--nexus-border-primary);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background-color: var(--nexus-bg-tertiary);
+}
+
+.theme-toggle-icon {
+  position: absolute;
+  transition: all 0.3s ease;
+  width: 1rem;
+  height: 1rem;
+  color: var(--nexus-text-secondary);
+}
+
+.theme-toggle-sun {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.theme-toggle-moon {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+/* 淺色主題時的圖標切換 */
+:root.light-theme .theme-toggle-sun {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+:root.light-theme .theme-toggle-moon {
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+/* ========================= */
+/* 響應式設計 */
+/* ========================= */
+
+@media (max-width: 768px) {
+  .nx-card {
+    padding: 1rem;
+  }
+  
+  .nx-sidebar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    z-index: 1000;
+    transition: left 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .nx-sidebar.open {
+    left: 0;
+  }
+}
+
+/* ========================= */
+/* 動畫效果 */
+/* ========================= */
+
+.nx-fade-in {
+  opacity: 0;
+  animation: nexusFadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes nexusFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.nx-slide-in {
+  transform: translateY(20px);
+  opacity: 0;
+  animation: nexusSlideIn 0.2s ease-out forwards;
+}
+
+@keyframes nexusSlideIn {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ========================= */
+/* 可訪問性支援 */
+/* ========================= */
+
+/* 減少動畫偏好設置 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 高對比度模式 */
+@media (prefers-contrast: high) {
+  :root {
+    --nexus-border-primary: #000000;
+    --nexus-text-primary: #000000;
+  }
+  
+  :root.light-theme {
+    --nexus-border-primary: #000000;
+    --nexus-text-primary: #000000;
+  }
+}
+
+/* ========================= */
+/* 實用工具類 */
+/* ========================= */
+
+.nx-text-primary { color: var(--nexus-text-primary); }
+.nx-text-secondary { color: var(--nexus-text-secondary); }
+.nx-text-muted { color: var(--nexus-text-muted); }
+.nx-text-accent { color: var(--nexus-text-accent); }
+
+.nx-bg-primary { background-color: var(--nexus-bg-primary); }
+.nx-bg-secondary { background-color: var(--nexus-bg-secondary); }
+.nx-bg-tertiary { background-color: var(--nexus-bg-tertiary); }
+.nx-bg-hover { background-color: var(--nexus-bg-tertiary); }
+
+.nx-border-primary { border-color: var(--nexus-border-primary); }
+.nx-border-secondary { border-color: var(--nexus-border-secondary); }
+.nexus-border-secondary { border-color: var(--nexus-border-secondary); }
+
+.nx-shadow-sm { box-shadow: var(--nexus-shadow-sm); }
+.nx-shadow-md { box-shadow: var(--nexus-shadow-md); }
+.nx-shadow-lg { box-shadow: var(--nexus-shadow-lg); }
+.nx-shadow-xl { box-shadow: var(--nexus-shadow-xl); }
+
+/* NexusERP 卡片背景 */
+.nexus-card { background-color: var(--nexus-card-bg); }
+
+/* 載入動畫樣式 */
+.nx-loading {
+  color: var(--nexus-text-secondary);
+}
+
+/* 錯誤訊息樣式 */
+.nx-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--nexus-accent-red);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* 成功訊息樣式 */
+.nx-success {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--nexus-accent-green);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* 按鈕樣式補充 */
+.nx-btn {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.nx-btn-success {
+  background-color: var(--nexus-accent-green);
+  color: white;
+  border: none;
+}
+
+.nx-btn-success:hover {
+  background-color: #059669;
+}
+
+.nx-btn-danger {
+  background-color: var(--nexus-accent-red);
+  color: white;
+  border: none;
+}
+
+.nx-btn-danger:hover {
+  background-color: #dc2626;
+}
+
+/* ========================= */
+/* 多層級導航組件樣式 */
+/* ========================= */
+
+/* 基礎導航結構 */
+.nexus-multi-nav {
+  position: relative;
+  z-index: var(--nexus-nav-z-base);
+}
+
+/* 水平導航樣式 */
+.nexus-nav-horizontal {
+  height: var(--nexus-nav-height);
+}
+
+.nexus-nav-horizontal .nexus-nav-list {
+  height: 100%;
+  padding: 0 var(--nexus-nav-padding-x);
+}
+
+.nexus-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* 導航按鈕基礎樣式 */
+.nexus-nav-button {
+  height: var(--nexus-nav-item-height);
+  padding: var(--nexus-nav-item-padding-y) var(--nexus-nav-item-padding-x);
+  border-radius: var(--nexus-nav-item-border-radius);
+  display: flex;
+  align-items: center;
+  gap: var(--nexus-nav-gap);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--nexus-nav-text-secondary);
+  transition: all var(--nexus-nav-transition-fast) ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nexus-nav-button:hover {
+  background-color: var(--nexus-nav-bg-hover);
+  color: var(--nexus-nav-text-hover);
+}
+
+.nexus-nav-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--nexus-nav-border-active);
+}
+
+/* 活動狀態 */
+.nexus-nav-item-active .nexus-nav-button {
+  background: var(--nexus-nav-bg-active);
+  color: var(--nexus-nav-text-active);
+  box-shadow: var(--nexus-nav-shadow-sm);
+}
+
+/* 導航圖示 */
+.nexus-nav-icon {
+  width: var(--nexus-nav-icon-size);
+  height: var(--nexus-nav-icon-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nexus-nav-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 導航文字 */
+.nexus-nav-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+/* 導航徽章 */
+.nexus-nav-badge {
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  background-color: var(--nexus-accent-red);
+  color: white;
+  min-width: 1.25rem;
+  text-align: center;
+}
+
+/* 下拉箭頭 */
+.nexus-nav-arrow {
+  width: var(--nexus-nav-arrow-size);
+  height: var(--nexus-nav-arrow-size);
+  color: currentColor;
+  transition: transform var(--nexus-nav-transition-fast) ease;
+}
+
+/* 下拉選單樣式 */
+.nexus-nav-dropdown {
+  position: fixed !important; /* ✅ 修復：使用 fixed 脫離父容器限制 */
+  top: 4rem !important; /* 固定距離頂部的距離 */
+  left: auto !important; /* 通過 JavaScript 動態計算位置 */
+  min-width: var(--nexus-nav-dropdown-width);
+  max-width: 24rem;
+  margin-top: 0.25rem;
+  background-color: var(--nexus-nav-bg-dropdown);
+  border: 1px solid var(--nexus-nav-border-primary);
+  border-radius: var(--nexus-nav-border-radius);
+  box-shadow: var(--nexus-nav-shadow-dropdown);
+  z-index: 9999 !important; /* 確保顯示在最上層 */
+  overflow: visible !important; /* 確保內容可見 */
+}
+
+/* ========================= */
+/* 現代化用戶導航組件樣式 */
+/* ========================= */
+
+/* 用戶觸發器按鈕 - 現代化樣式 */
+.nexus-user-trigger-modern {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.5rem 0.75rem !important;
+  border: 1px solid transparent !important;
+  text-decoration: none !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  border-radius: 0.5rem !important;
+  background-color: var(--nexus-bg-secondary) !important;
+  color: var(--nexus-text-secondary) !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  gap: 0.5rem !important;
+}
+
+.nexus-user-trigger-modern:hover {
+  background-color: var(--nexus-bg-tertiary) !important;
+  color: var(--nexus-text-primary) !important;
+  border-color: var(--nexus-border-secondary) !important;
+}
+
+.nexus-user-trigger-modern:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px var(--nexus-accent-purple) !important;
+}
+
+/* 用戶頭像樣式 */
+.nexus-user-avatar {
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+  border-radius: 50% !important;
+  background: var(--nexus-gradient-primary) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 0.75rem !important;
+}
+
+/* 現代化用戶下拉選單容器 */
+.nexus-user-dropdown-modern {
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  min-width: 12rem !important;
+  margin-top: 0.5rem !important;
+  background: var(--nexus-bg-dropdown) !important;
+  border: 1px solid var(--nexus-border-primary) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: var(--nexus-shadow-lg) !important;
+  z-index: 9999 !important;
+  overflow: hidden !important;
+  padding: 0.5rem !important;
+}
+
+/* 現代化選單項目樣式 */
+.nexus-user-menu-item-modern {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  text-decoration: none !important;
+  color: var(--nexus-text-secondary) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.2s ease !important;
+  gap: 0.75rem !important;
+  border: none !important;
+  background: none !important;
+  cursor: pointer !important;
+  text-align: left !important;
+}
+
+.nexus-user-menu-item-modern:hover {
+  background-color: var(--nexus-bg-hover) !important;
+  color: var(--nexus-text-primary) !important;
+}
+
+.nexus-user-menu-item-modern:focus {
+  outline: none !important;
+  background-color: var(--nexus-bg-hover) !important;
+  box-shadow: 0 0 0 2px var(--nexus-accent-purple) !important;
+}
+
+/* 選單項目圖示 */
+.nexus-user-menu-icon {
+  width: 1rem !important;
+  height: 1rem !important;
+  opacity: 0.75 !important;
+  flex-shrink: 0 !important;
+}
+
+/* 選單分隔線 */
+.nexus-user-menu-divider {
+  height: 1px !important;
+  background-color: var(--nexus-border-secondary) !important;
+  margin: 0.5rem 0 !important;
+}
+
+/* 深色主題特殊調整 */
+:root:not(.light-theme) .nexus-user-dropdown-modern {
+  background: var(--nexus-bg-dropdown) !important;
+  border-color: var(--nexus-border-primary) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 淺色主題特殊調整 */
+:root.light-theme .nexus-user-dropdown-modern {
+  background: #ffffff !important;
+  border-color: #e5e7eb !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* 通知下拉選單樣式 */
+.nexus-notification-dropdown {
+  position: fixed; /* 脫離父容器限制 */
+  top: 100%;
+  right: 0;
+  min-width: 20rem;
+  max-width: 24rem;
+  margin-top: 0.25rem;
+  background-color: var(--nexus-nav-bg-dropdown);
+  border: 1px solid var(--nexus-nav-border-primary);
+  border-radius: var(--nexus-nav-border-radius);
+  box-shadow: var(--nexus-nav-shadow-dropdown);
+  z-index: 9999; /* 確保顯示在最上層 */
+  overflow: visible;
+}
+
+.nexus-dropdown-list {
+  padding: 0.5rem;
+  margin: 0;
+  list-style: none;
+}
+
+/* 下拉選單項目 */
+.nexus-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--nexus-nav-item-border-radius);
+  color: var(--nexus-nav-text-secondary);
+  text-decoration: none;
+  transition: all var(--nexus-nav-transition-fast) ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.nexus-dropdown-item:hover {
+  background-color: var(--nexus-nav-bg-hover);
+  color: var(--nexus-nav-text-hover);
+}
+
+.nexus-dropdown-item:focus {
+  outline: none;
+  background-color: var(--nexus-nav-bg-hover);
+  box-shadow: 0 0 0 2px var(--nexus-nav-border-active);
+}
+
+.nexus-dropdown-item[aria-current="page"] {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--nexus-accent-purple);
+  border-left: 3px solid var(--nexus-accent-purple);
+}
+
+/* 下拉選單圖示 */
+.nexus-dropdown-icon {
+  width: var(--nexus-nav-icon-size-sm);
+  height: var(--nexus-nav-icon-size-sm);
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+/* 下拉選單文字 */
+.nexus-dropdown-text {
+  flex: 1;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+/* 下拉選單描述 */
+.nexus-dropdown-description {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--nexus-nav-text-muted);
+  margin-top: 0.125rem;
+  line-height: 1.3;
+}
+
+/* 下拉選單徽章 */
+.nexus-dropdown-badge {
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  background-color: var(--nexus-accent-blue);
+  color: white;
+}
+
+/* 下拉選單動作區域 */
+.nexus-dropdown-actions {
+  border-top: 1px solid var(--nexus-nav-border-primary);
+  padding: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nexus-dropdown-action {
+  flex: 1;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--nexus-nav-item-border-radius);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--nexus-nav-border-secondary);
+  background-color: transparent;
+  color: var(--nexus-nav-text-secondary);
+  cursor: pointer;
+  transition: all var(--nexus-nav-transition-fast) ease;
+}
+
+.nexus-dropdown-action:hover {
+  background-color: var(--nexus-nav-bg-hover);
+  color: var(--nexus-nav-text-hover);
+}
+
+/* 垂直導航樣式 */
+.nexus-nav-vertical {
+  width: var(--nexus-nav-sidebar-width);
+  height: 100%;
+}
+
+.nexus-nav-list-vertical {
+  padding: 1rem;
+  margin: 0;
+  list-style: none;
+}
+
+.nexus-nav-item-vertical {
+  margin-bottom: 0.25rem;
+}
+
+/* 垂直導航按鈕 */
+.nexus-nav-button-vertical {
+  width: 100%;
+  height: var(--nexus-nav-item-height);
+  padding: var(--nexus-nav-item-padding-y) var(--nexus-nav-item-padding-x);
+  border-radius: var(--nexus-nav-item-border-radius);
+  display: flex;
+  align-items: center;
+  gap: var(--nexus-nav-gap);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--nexus-nav-text-secondary);
+  transition: all var(--nexus-nav-transition-fast) ease;
+  text-align: left;
+}
+
+.nexus-nav-button-vertical:hover {
+  background-color: var(--nexus-nav-bg-hover);
+  color: var(--nexus-nav-text-hover);
+}
+
+/* 垂直導航圖示 */
+.nexus-nav-icon-vertical {
+  width: var(--nexus-nav-icon-size);
+  height: var(--nexus-nav-icon-size);
+  flex-shrink: 0;
+}
+
+/* 垂直導航文字 */
+.nexus-nav-text-vertical {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* 垂直導航徽章 */
+.nexus-nav-badge-vertical {
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--nexus-accent-red);
+  color: white;
+  min-width: 1.25rem;
+  text-align: center;
+}
+
+/* 垂直下拉箭頭 */
+.nexus-nav-arrow-vertical {
+  width: var(--nexus-nav-arrow-size);
+  height: var(--nexus-nav-arrow-size);
+  color: currentColor;
+  transition: transform var(--nexus-nav-transition-fast) ease;
+}
+
+/* 垂直子選單 */
+.nexus-nav-submenu {
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.nexus-submenu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 垂直子選單項目 */
+.nexus-submenu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--nexus-nav-item-border-radius);
+  color: var(--nexus-nav-text-muted);
+  text-decoration: none;
+  transition: all var(--nexus-nav-transition-fast) ease;
+  font-size: 0.8125rem;
+}
+
+.nexus-submenu-item:hover {
+  background-color: var(--nexus-nav-bg-hover);
+  color: var(--nexus-nav-text-hover);
+}
+
+.nexus-submenu-item[aria-current="page"] {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--nexus-accent-purple);
+  border-left: 3px solid var(--nexus-accent-purple);
+}
+
+/* 子選單圖示 */
+.nexus-submenu-icon {
+  width: var(--nexus-nav-icon-size-sm);
+  height: var(--nexus-nav-icon-size-sm);
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+/* 子選單文字 */
+.nexus-submenu-text {
+  flex: 1;
+  font-weight: 400;
+}
+
+/* 子選單徽章 */
+.nexus-submenu-badge {
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  background-color: var(--nexus-accent-blue);
+  color: white;
+}
+
+/* 尺寸變體 */
+.nexus-nav-size-compact {
+  --nexus-nav-height: var(--nexus-nav-height-compact);
+  --nexus-nav-item-height: 2rem;
+  --nexus-nav-padding-x: 1rem;
+  --nexus-nav-item-padding-x: 0.75rem;
+  --nexus-nav-item-padding-y: 0.375rem;
+}
+
+.nexus-nav-size-compact .nexus-nav-text,
+.nexus-nav-size-compact .nexus-dropdown-text {
+  font-size: 0.8125rem;
+}
+
+.nexus-nav-size-large {
+  --nexus-nav-height: 5rem;
+  --nexus-nav-item-height: 3rem;
+  --nexus-nav-padding-x: 2rem;
+  --nexus-nav-item-padding-x: 1.25rem;
+  --nexus-nav-item-padding-y: 0.875rem;
+}
+
+.nexus-nav-size-large .nexus-nav-text,
+.nexus-nav-size-large .nexus-dropdown-text {
+  font-size: 1rem;
+}
+
+/* 動畫效果 */
+.nexus-dropdown-enter {
+  transition: all var(--nexus-nav-transition-normal) ease;
+}
+
+.nexus-dropdown-enter-start {
+  opacity: 0;
+  transform: translateY(-0.5rem) scale(0.95);
+}
+
+.nexus-dropdown-enter-end {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.nexus-dropdown-leave {
+  transition: all var(--nexus-nav-transition-fast) ease;
+}
+
+.nexus-dropdown-leave-start {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.nexus-dropdown-leave-end {
+  opacity: 0;
+  transform: translateY(-0.5rem) scale(0.95);
+}
+
+/* 垂直摺疊動畫 */
+.nexus-collapse-enter {
+  transition: all var(--nexus-nav-transition-normal) ease;
+}
+
+.nexus-collapse-enter-start {
+  opacity: 0;
+  max-height: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+.nexus-collapse-enter-end {
+  opacity: 1;
+  max-height: 20rem;
+  transform: scaleY(1);
+}
+
+.nexus-collapse-leave {
+  transition: all var(--nexus-nav-transition-fast) ease;
+}
+
+.nexus-collapse-leave-start {
+  opacity: 1;
+  max-height: 20rem;
+  transform: scaleY(1);
+}
+
+.nexus-collapse-leave-end {
+  opacity: 0;
+  max-height: 0;
+  transform: scaleY(0);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .nexus-nav-horizontal {
+    --nexus-nav-height: var(--nexus-nav-height-compact);
+    --nexus-nav-padding-x: 1rem;
+  }
+  
+  .nexus-nav-dropdown {
+    left: 1rem !important;
+    right: 1rem !important;
+    min-width: auto;
+    max-width: none;
+    width: calc(100% - 2rem);
+  }
+  
+  .nexus-nav-list {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .nexus-nav-list::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .nexus-nav-horizontal .nexus-nav-text {
+    display: none;
+  }
+  
+  .nexus-nav-button {
+    padding: var(--nexus-nav-item-padding-y);
+    min-width: var(--nexus-nav-item-height);
+    justify-content: center;
+  }
+  
+  .nexus-nav-dropdown {
+    position: fixed;
+    top: var(--nexus-nav-height);
+    left: 0;
+    right: 0;
+    margin-top: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}
+
+/* 徽章變體 */
+.nexus-badge-default {
+  background-color: var(--nexus-accent-blue);
+}
+
+.nexus-badge-success {
+  background-color: var(--nexus-accent-green);
+}
+
+.nexus-badge-warning {
+  background-color: var(--nexus-accent-orange);
+}
+
+.nexus-badge-danger {
+  background-color: var(--nexus-accent-red);
+}
+
+.nexus-badge-info {
+  background-color: var(--nexus-accent-cyan);
+}
+
+.nexus-badge-purple {
+  background-color: var(--nexus-accent-purple);
+}
+
+/* 無障礙增強 */
+@media (prefers-reduced-motion: reduce) {
+  .nexus-nav-button,
+  .nexus-dropdown-item,
+  .nexus-submenu-item,
+  .nexus-nav-arrow,
+  .nexus-nav-arrow-vertical {
+    transition: none;
+  }
+  
+  .nexus-dropdown-enter,
+  .nexus-dropdown-leave,
+  .nexus-collapse-enter,
+  .nexus-collapse-leave {
+    transition: none;
+  }
+}
+
+/* 高對比度支援 */
+@media (prefers-contrast: high) {
+  .nexus-nav-button:focus,
+  .nexus-dropdown-item:focus,
+  .nexus-submenu-item:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+  
+  .nexus-nav-dropdown {
+    border-width: 2px;
+  }
+}
+
+/* ===== 導航列現代化樣式強制載入 ===== */
+/* 確保導航樣式在所有情況下都能正常載入 - 最高優先級 */
+.nexus-multi-nav,
+nav[class*="nexus-multi-nav"],
+[class*="nexus-multi-nav"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    padding: 0.5rem !important;
+    background: rgba(30, 33, 57, 0.08) !important;
+    border-radius: 1rem !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(139, 92, 246, 0.1) !important;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08) !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+}
+
+.nexus-multi-nav button,
+.nexus-multi-nav a,
+nav[class*="nexus-multi-nav"] button,
+nav[class*="nexus-multi-nav"] a,
+[class*="nexus-multi-nav"] button,
+[class*="nexus-multi-nav"] a,
+.nexus-nav-button,
+.nexus-nav-item-enhanced {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(168, 85, 247, 0.08) 100%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+    border-radius: 0.75rem !important;
+    padding: 0.5rem 1.25rem !important;
+    margin: 0 !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 
+        0 2px 8px rgba(139, 92, 246, 0.1),
+        0 1px 3px rgba(139, 92, 246, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+    color: rgba(55, 65, 81, 0.9) !important;
+    height: auto !important;
+    line-height: 1.5 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+.nexus-multi-nav button:hover,
+.nexus-multi-nav a:hover,
+nav[class*="nexus-multi-nav"] button:hover,
+nav[class*="nexus-multi-nav"] a:hover,
+[class*="nexus-multi-nav"] button:hover,
+[class*="nexus-multi-nav"] a:hover,
+.nexus-nav-button:hover,
+.nexus-nav-item-enhanced:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(168, 85, 247, 0.15) 100%) !important;
+    border-color: rgba(139, 92, 246, 0.4) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 
+        0 8px 25px rgba(139, 92, 246, 0.25),
+        0 4px 12px rgba(139, 92, 246, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    color: rgba(139, 92, 246, 1) !important;
+    text-shadow: 0 2px 4px rgba(139, 92, 246, 0.3) !important;
+}
+
+/* 活動狀態強制套用 */
+.nexus-multi-nav button.nexus-nav-active,
+.nexus-multi-nav a.nexus-nav-active,
+nav[class*="nexus-multi-nav"] button.nexus-nav-active,
+nav[class*="nexus-multi-nav"] a.nexus-nav-active,
+[class*="nexus-multi-nav"] button.nexus-nav-active,
+[class*="nexus-multi-nav"] a.nexus-nav-active,
+.nexus-nav-button.nexus-nav-active,
+.nexus-nav-item-enhanced.nexus-nav-active {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(168, 85, 247, 0.35) 50%, rgba(147, 51, 234, 0.3) 100%) !important;
+    border: 2px solid rgba(139, 92, 246, 0.8) !important;
+    color: rgba(139, 92, 246, 1) !important;
+    font-weight: 700 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 
+        0 8px 25px rgba(139, 92, 246, 0.5),
+        0 4px 15px rgba(139, 92, 246, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(139, 92, 246, 0.3) !important;
+    text-shadow: 0 2px 4px rgba(139, 92, 246, 0.5) !important;
+}
+
+/* 深色主題適配 */
+.dark .nexus-multi-nav,
+.dark nav[class*="nexus-multi-nav"],
+.dark [class*="nexus-multi-nav"] {
+    background: rgba(30, 33, 57, 0.15) !important;
+    border-color: rgba(139, 92, 246, 0.15) !important;
+}
+
+.dark .nexus-multi-nav button,
+.dark .nexus-multi-nav a,
+.dark nav[class*="nexus-multi-nav"] button,
+.dark nav[class*="nexus-multi-nav"] a,
+.dark [class*="nexus-multi-nav"] button,
+.dark [class*="nexus-multi-nav"] a,
+.dark .nexus-nav-button,
+.dark .nexus-nav-item-enhanced {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%) !important;
+    border-color: rgba(139, 92, 246, 0.25) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.dark .nexus-multi-nav button:hover,
+.dark .nexus-multi-nav a:hover,
+.dark nav[class*="nexus-multi-nav"] button:hover,
+.dark nav[class*="nexus-multi-nav"] a:hover,
+.dark [class*="nexus-multi-nav"] button:hover,
+.dark [class*="nexus-multi-nav"] a:hover,
+.dark .nexus-nav-button:hover,
+.dark .nexus-nav-item-enhanced:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.22) 0%, rgba(168, 85, 247, 0.18) 100%) !important;
+    color: rgba(139, 92, 246, 1) !important;
+}

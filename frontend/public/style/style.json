@@ -1,0 +1,272 @@
+{
+  "style_guide": {
+    "project_name": "NexusERP",
+    "version": "1.0.0",
+    "description": "深色主題 ERP 系統風格指南",
+    "theme": {
+      "primary": "dark",
+      "name": "深藍夜空主題"
+    },
+    "colors": {
+      "primary": {
+        "background": "#1a1d29",
+        "secondary_background": "#252836",
+        "card_background": "#2d3142",
+        "sidebar_background": "#1e2139"
+      },
+      "accent": {
+        "purple": "#8b5cf6",
+        "blue": "#3b82f6",
+        "pink": "#ec4899",
+        "cyan": "#06b6d4",
+        "green": "#10b981",
+        "orange": "#f59e0b",
+        "red": "#ef4444"
+      },
+      "text": {
+        "primary": "#ffffff",
+        "secondary": "#94a3b8",
+        "muted": "#64748b",
+        "accent": "#e2e8f0"
+      },
+      "border": {
+        "primary": "#374151",
+        "secondary": "#4b5563",
+        "accent": "#6b7280"
+      },
+      "shadow": {
+        "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+        "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        "xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+      }
+    },
+    "typography": {
+      "font_family": {
+        "primary": "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        "monospace": "'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace"
+      },
+      "font_size": {
+        "xs": "0.75rem",
+        "sm": "0.875rem",
+        "base": "1rem",
+        "lg": "1.125rem",
+        "xl": "1.25rem",
+        "2xl": "1.5rem",
+        "3xl": "1.875rem",
+        "4xl": "2.25rem"
+      },
+      "font_weight": {
+        "light": "300",
+        "normal": "400",
+        "medium": "500",
+        "semibold": "600",
+        "bold": "700"
+      },
+      "line_height": {
+        "tight": "1.25",
+        "normal": "1.5",
+        "relaxed": "1.75"
+      }
+    },
+    "spacing": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "1rem",
+      "lg": "1.5rem",
+      "xl": "2rem",
+      "2xl": "3rem",
+      "3xl": "4rem"
+    },
+    "border_radius": {
+      "sm": "0.25rem",
+      "md": "0.5rem",
+      "lg": "0.75rem",
+      "xl": "1rem",
+      "2xl": "1.5rem",
+      "full": "9999px"
+    },
+    "components": {
+      "button": {
+        "primary": {
+          "background": "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+          "color": "#ffffff",
+          "border": "none",
+          "border_radius": "0.5rem",
+          "padding": "0.75rem 1.5rem",
+          "font_weight": "600",
+          "transition": "all 0.2s ease",
+          "box_shadow": "0 4px 6px -1px rgba(139, 92, 246, 0.3)"
+        },
+        "secondary": {
+          "background": "#374151",
+          "color": "#ffffff",
+          "border": "1px solid #4b5563",
+          "border_radius": "0.5rem",
+          "padding": "0.75rem 1.5rem",
+          "font_weight": "500"
+        },
+        "success": {
+          "background": "#10b981",
+          "color": "#ffffff",
+          "border": "none",
+          "border_radius": "0.5rem",
+          "padding": "0.75rem 1.5rem",
+          "font_weight": "600"
+        },
+        "danger": {
+          "background": "#ef4444",
+          "color": "#ffffff",
+          "border": "none",
+          "border_radius": "0.5rem",
+          "padding": "0.75rem 1.5rem",
+          "font_weight": "600"
+        }
+      },
+      "card": {
+        "default": {
+          "background": "#2d3142",
+          "border": "1px solid #374151",
+          "border_radius": "1rem",
+          "padding": "1.5rem",
+          "box_shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+        },
+        "wallet": {
+          "background": "linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)",
+          "border": "none",
+          "border_radius": "1rem",
+          "padding": "1.5rem",
+          "color": "#ffffff",
+          "box_shadow": "0 10px 15px -3px rgba(139, 92, 246, 0.3)"
+        }
+      },
+      "sidebar": {
+        "background": "#1e2139",
+        "width": "16rem",
+        "height": "100vh",
+        "border_right": "1px solid #374151",
+        "padding": "1rem"
+      },
+      "nav_item": {
+        "default": {
+          "display": "flex",
+          "align_items": "center",
+          "padding": "0.75rem 1rem",
+          "border_radius": "0.5rem",
+          "color": "#94a3b8",
+          "transition": "all 0.2s ease"
+        },
+        "active": {
+          "background": "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+          "color": "#ffffff"
+        },
+        "hover": {
+          "background": "#374151",
+          "color": "#ffffff"
+        }
+      },
+      "table": {
+        "container": {
+          "background": "#2d3142",
+          "border": "1px solid #374151",
+          "border_radius": "1rem",
+          "overflow": "hidden"
+        },
+        "header": {
+          "background": "#374151",
+          "padding": "1rem",
+          "font_weight": "600",
+          "color": "#ffffff"
+        },
+        "row": {
+          "padding": "1rem",
+          "border_bottom": "1px solid #374151",
+          "color": "#94a3b8"
+        },
+        "cell": {
+          "padding": "0.5rem"
+        }
+      },
+      "input": {
+        "default": {
+          "background": "#374151",
+          "border": "1px solid #4b5563",
+          "border_radius": "0.5rem",
+          "padding": "0.75rem 1rem",
+          "color": "#ffffff",
+          "font_size": "1rem"
+        },
+        "focus": {
+          "border_color": "#8b5cf6",
+          "box_shadow": "0 0 0 3px rgba(139, 92, 246, 0.1)"
+        }
+      },
+      "badge": {
+        "success": {
+          "background": "#10b981",
+          "color": "#ffffff",
+          "padding": "0.25rem 0.75rem",
+          "border_radius": "9999px",
+          "font_size": "0.875rem",
+          "font_weight": "500"
+        },
+        "warning": {
+          "background": "#f59e0b",
+          "color": "#ffffff",
+          "padding": "0.25rem 0.75rem",
+          "border_radius": "9999px",
+          "font_size": "0.875rem",
+          "font_weight": "500"
+        },
+        "error": {
+          "background": "#ef4444",
+          "color": "#ffffff",
+          "padding": "0.25rem 0.75rem",
+          "border_radius": "9999px",
+          "font_size": "0.875rem",
+          "font_weight": "500"
+        }
+      }
+    },
+    "layout": {
+      "container": {
+        "max_width": "1200px",
+        "margin": "0 auto",
+        "padding": "0 1rem"
+      },
+      "grid": {
+        "columns": {
+          "1": "repeat(1, 1fr)",
+          "2": "repeat(2, 1fr)",
+          "3": "repeat(3, 1fr)",
+          "4": "repeat(4, 1fr)"
+        },
+        "gap": {
+          "sm": "1rem",
+          "md": "1.5rem",
+          "lg": "2rem"
+        }
+      }
+    },
+    "breakpoints": {
+      "mobile": "640px",
+      "tablet": "768px",
+      "desktop": "1024px",
+      "wide": "1280px"
+    },
+    "animations": {
+      "fade_in": {
+        "duration": "0.3s",
+        "timing_function": "ease-in-out"
+      },
+      "slide_in": {
+        "duration": "0.2s",
+        "timing_function": "ease-out"
+      },
+      "scale": {
+        "duration": "0.1s",
+        "timing_function": "ease-in-out"
+      }
+    }
+  }
+} 

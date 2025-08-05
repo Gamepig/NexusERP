@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公司選擇器 UI 測試</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="./public/css/dashboard-company-info.css">
+    <style>
+        body {
+            background: #1a1d29;
+            color: white;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-2xl font-bold mb-6 text-center">公司選擇器 UI 重新設計測試</h1>
+    
+    <div class="company-cards-container mt-3">
+        <!-- 左卡片：公司選擇器 -->
+        <div class="company-selector-card">
+            <div class="card-header">
+                <div class="company-label-section">
+                    <svg class="company-icon-simple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    <span class="company-label-text">目前公司</span>
+                </div>
+            </div>
+            <div class="card-content">
+                <!-- 模擬公司選擇器 -->
+                <div class="dropdown dropdown-end" x-data="{ open: false }">
+                    <div tabindex="0" role="button" class="btn btn-ghost flex items-center gap-2 company-switcher-btn" @click="open = !open">
+                        <div class="flex items-center gap-2">
+                            <div class="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                                <span class="text-xs font-bold text-primary-content">TC</span>
+                            </div>
+                            <div class="company-info-display">
+                                <div class="text-sm font-medium text-base-content company-name">Test Company Incorporated Ltd.</div>
+                                <div class="text-xs text-base-content/70 company-code">TC-2024-001</div>
+                            </div>
+                        </div>
+                        <svg class="w-4 h-4 text-base-content/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右卡片：詳細資訊 -->
+        <div class="company-info-detail-card">
+            <div class="card-header">
+                <div class="info-header-section">
+                    <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="info-label-text">公司資訊</span>
+                </div>
+            </div>
+            <div class="card-content">
+                <!-- 業務與系統資訊 -->
+                <div class="info-items-container">
+                    <div class="info-item">
+                        <div class="info-item-indicator bg-purple-400"></div>
+                        <span class="info-item-label">業務類型</span>
+                        <span class="info-item-value business-type-badge">製造業</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-item-indicator bg-blue-400"></div>
+                        <span class="info-item-label">職務角色</span>
+                        <span class="info-item-value role-badge">企業負責人</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-item-indicator bg-green-400"></div>
+                        <span class="info-item-label">連線狀態</span>
+                        <span class="info-item-value status-online">正常運行</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-item-indicator bg-cyan-400"></div>
+                        <span class="info-item-label">上次登入</span>
+                        <span class="info-item-value status-info">07/29 14:30</span>
+                    </div>
+                </div>
+                
+                <!-- 快速統計 -->
+                <div class="quick-stats-compact">
+                    <div class="stat-item-compact">
+                        <span class="stat-value-compact text-green-400">24</span>
+                        <span class="stat-label-compact">活躍訂單</span>
+                    </div>
+                    <div class="stat-item-compact">
+                        <span class="stat-value-compact text-blue-400">156</span>
+                        <span class="stat-label-compact">產品總數</span>
+                    </div>
+                    <div class="stat-item-compact">
+                        <span class="stat-value-compact text-purple-400">89</span>
+                        <span class="stat-label-compact">客戶總數</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 text-center">
+        <h2 class="text-lg font-semibold mb-4">測試案例</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div class="bg-green-900/20 p-4 rounded-lg border border-green-600">
+                <h3 class="font-bold text-green-400">✅ 長公司名稱測試</h3>
+                <p>"Test Company Incorporated Ltd." 應能完整顯示且不會換行</p>
+            </div>
+            <div class="bg-blue-900/20 p-4 rounded-lg border border-blue-600">
+                <h3 class="font-bold text-blue-400">✅ 空間比例測試</h3>
+                <p>左卡片 (2fr) : 右卡片 (3fr) = 2:3 比例</p>
+            </div>
+            <div class="bg-purple-900/20 p-4 rounded-lg border border-purple-600">
+                <h3 class="font-bold text-purple-400">✅ 響應式測試</h3>
+                <p>縮放瀏覽器視窗測試不同螢幕尺寸的表現</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

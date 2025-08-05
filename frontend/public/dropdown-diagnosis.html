@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusERP 下拉選單診斷工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .step h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .button {
+            background: #007cba;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #005a8c;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f8ff;
+            border: 1px solid #b0d4f1;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            border-color: #f8bbd9;
+        }
+        .success {
+            color: #388e3c;
+            background: #e8f5e8;
+            border-color: #c8e6c9;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 NexusERP 下拉選單診斷工具</h1>
+        <p>此工具用於診斷導航下拉選單無法顯示的問題。請按順序執行以下步驟：</p>
+
+        <div class="step">
+            <h3>步驟 1: 檢查系統狀態</h3>
+            <p>檢查 Alpine.js 是否正確載入，導航元素是否存在。</p>
+            <button class="button" onclick="checkSystemStatus()">檢查系統狀態</button>
+            <div id="system-status" class="results" style="display:none;"></div>
+        </div>
+
+        <div class="step">
+            <h3>步驟 2: 前往主應用程式</h3>
+            <p>在新視窗中打開主應用程式進行測試</p>
+            <button class="button" onclick="window.open('http://127.0.0.1:8000', '_blank')">打開主應用程式</button>
+        </div>
+
+        <div class="step">
+            <h3>步驟 3: 運行綜合診斷</h3>
+            <p>在主應用程式的控制台中執行診斷腳本</p>
+            <button class="button" onclick="showDiagnosticScript()">顯示診斷腳本</button>
+            <div id="diagnostic-script" class="results" style="display:none;"></div>
+        </div>
+
+        <div class="step">
+            <h3>步驟 4: 手動測試</h3>
+            <p>提供手動測試工具和說明</p>
+            <button class="button" onclick="showManualTests()">顯示手動測試</button>
+            <div id="manual-tests" class="results" style="display:none;"></div>
+        </div>
+
+        <div class="step">
+            <h3>步驟 5: 獲取診斷結果</h3>
+            <p>在主應用程式控制台中運行以下命令來獲取診斷結果</p>
+            <button class="button" onclick="showResultCommands()">顯示結果命令</button>
+            <div id="result-commands" class="results" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        function checkSystemStatus() {
+            const statusDiv = document.getElementById('system-status');
+            statusDiv.style.display = 'block';
+            
+            let html = '<h4>本地系統檢查:</h4>';
+            html += '<p><strong>當前頁面 URL:</strong> ' + window.location.href + '</p>';
+            html += '<p><strong>用戶代理:</strong> ' + navigator.userAgent + '</p>';
+            html += '<p><strong>時間戳:</strong> ' + new Date().toISOString() + '</p>';
+            
+            html += '<h4>⚠️ 注意:</h4>';
+            html += '<p>此頁面是獨立的診斷工具。主要的下拉選單測試需要在主應用程式 (http://127.0.0.1:8000) 中進行。</p>';
+            
+            statusDiv.innerHTML = html;
+            statusDiv.className = 'results success';
+        }
+
+        function showDiagnosticScript() {
+            const scriptDiv = document.getElementById('diagnostic-script');
+            scriptDiv.style.display = 'block';
+            
+            const script = \`// 在主應用程式控制台中執行此腳本
+// 首先載入診斷腳本
+fetch('/comprehensive-dropdown-diagnosis.js')
+    .then(response => response.text())
+    .then(script => {
+        eval(script);
+        console.log('✅ 診斷腳本已載入並執行');
+    })
+    .catch(error => {
+        console.error('❌ 載入診斷腳本失敗:', error);
+        console.log('請手動複製腳本內容到控制台執行');
+    });\`;
+            
+            scriptDiv.innerHTML = '<h4>診斷腳本:</h4><pre>' + script + '</pre>';
+            scriptDiv.className = 'results';
+        }
+
+        function showManualTests() {
+            const testsDiv = document.getElementById('manual-tests');
+            testsDiv.style.display = 'block';
+            
+            const tests = \`// 手動測試命令 (在主應用程式控制台中執行)
+
+// 1. 檢查 Alpine.js 狀態
+console.log('Alpine.js 版本:', window.Alpine ? window.Alpine.version : '未載入');
+
+// 2. 檢查導航元素
+const navElement = document.querySelector('[x-data*="multiLevelNav"]');
+console.log('導航元素:', navElement);
+
+// 3. 檢查 Alpine 數據
+if (navElement && navElement._x_dataStack) {
+    const alpineData = navElement._x_dataStack[0];
+    console.log('Alpine 數據:', {
+        openDropdowns: alpineData.openDropdowns,
+        navigationItems: alpineData.navigationItems ? alpineData.navigationItems.length : 0,
+        methods: {
+            smartShowDropdown: typeof alpineData.smartShowDropdown,
+            scheduleHideDropdown: typeof alpineData.scheduleHideDropdown
+        }
+    });
+}
+
+// 4. 嘗試手動觸發下拉選單 (替換 'your-item-id' 為實際 ID)
+// window.testDropdown('your-item-id');
+
+// 5. 檢查下拉選單元素
+document.querySelectorAll('.nexus-nav-dropdown').forEach((dropdown, i) => {
+    const styles = window.getComputedStyle(dropdown);
+    console.log(\`下拉選單 \${i + 1}:\`, {
+        id: dropdown.id,
+        display: styles.display,
+        visibility: styles.visibility,
+        opacity: styles.opacity,
+        xShow: dropdown.getAttribute('x-show')
+    });
+});\`;
+            
+            testsDiv.innerHTML = '<h4>手動測試命令:</h4><pre>' + tests + '</pre>';
+            testsDiv.className = 'results';
+        }
+
+        function showResultCommands() {
+            const commandsDiv = document.getElementById('result-commands');
+            commandsDiv.style.display = 'block';
+            
+            const commands = \`// 獲取診斷結果 (在主應用程式控制台中執行)
+
+// 1. 檢查診斷是否完成
+if (window.dropdownDiagnosis) {
+    console.log('✅ 診斷已完成');
+    console.log('錯誤數量:', window.dropdownDiagnosis.errors.length);
+    console.log('建議數量:', window.dropdownDiagnosis.recommendations.length);
+} else {
+    console.log('❌ 診斷尚未執行，請先執行診斷腳本');
+}
+
+// 2. 查看完整診斷報告
+JSON.stringify(window.dropdownDiagnosis, null, 2);
+
+// 3. 查看特定階段結果
+window.dropdownDiagnosis.phases.basicSystemCheck;
+window.dropdownDiagnosis.phases.alpineInvestigation;
+window.dropdownDiagnosis.phases.cssPositioning;
+
+// 4. 查看錯誤和建議
+window.dropdownDiagnosis.errors;
+window.dropdownDiagnosis.recommendations;\`;
+            
+            commandsDiv.innerHTML = '<h4>結果查看命令:</h4><pre>' + commands + '</pre>';
+            commandsDiv.className = 'results';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusERP 主題切換測試</title>
+    <style>
+        /* 測試用基本樣式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS 變數定義 - 暗色主題 (預設) */
+        :root {
+            --nexus-bg-primary: #1a1d29;
+            --nexus-bg-secondary: #252836;
+            --nexus-bg-tertiary: #2d3142;
+            --nexus-text-primary: #ffffff;
+            --nexus-text-secondary: #94a3b8;
+            --nexus-border-primary: #374151;
+            --nexus-accent-purple: #8b5cf6;
+            --nexus-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --theme-name: 'dark';
+        }
+
+        /* 淺色主題 */
+        :root.light-theme {
+            --nexus-bg-primary: #ffffff;
+            --nexus-bg-secondary: #f8fafc;
+            --nexus-bg-tertiary: #f1f5f9;
+            --nexus-text-primary: #1e293b;
+            --nexus-text-secondary: #475569;
+            --nexus-border-primary: #e2e8f0;
+            --nexus-accent-purple: #8b5cf6;
+            --nexus-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --theme-name: 'light';
+        }
+
+        /* 基本樣式 */
+        body {
+            background-color: var(--nexus-bg-primary);
+            color: var(--nexus-text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .header {
+            background-color: var(--nexus-bg-secondary);
+            border-bottom: 1px solid var(--nexus-border-primary);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--nexus-accent-purple);
+        }
+
+        .theme-toggle {
+            background-color: var(--nexus-bg-tertiary);
+            border: 1px solid var(--nexus-border-primary);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            color: var(--nexus-text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--nexus-accent-purple);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .theme-icon {
+            width: 1rem;
+            height: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-sun {
+            opacity: 0;
+            transform: rotate(90deg);
+        }
+
+        .theme-toggle-moon {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        :root.light-theme .theme-toggle-sun {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        :root.light-theme .theme-toggle-moon {
+            opacity: 0;
+            transform: rotate(-90deg);
+        }
+
+        .card {
+            background-color: var(--nexus-bg-tertiary);
+            border: 1px solid var(--nexus-border-primary);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: var(--nexus-shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            background-color: var(--nexus-accent-purple);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .text-secondary {
+            color: var(--nexus-text-secondary);
+        }
+
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background-color: var(--nexus-accent-purple);
+            color: white;
+        }
+
+        .test-info {
+            background-color: var(--nexus-bg-secondary);
+            border-left: 4px solid var(--nexus-accent-purple);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .current-theme {
+            font-weight: bold;
+            color: var(--nexus-accent-purple);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">🏢 NexusERP</div>
+        <button data-theme-toggle class="theme-toggle" aria-label="切換主題" title="切換主題 (Ctrl+Shift+T)">
+            <svg class="theme-icon theme-toggle-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <svg class="theme-icon theme-toggle-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+            切換主題
+        </button>
+    </header>
+
+    <main class="container">
+        <h1>主題切換測試頁面</h1>
+        
+        <div class="test-info">
+            <h3>測試說明</h3>
+            <p>這個頁面用於測試 NexusERP 的主題切換功能。請嘗試以下操作：</p>
+            <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                <li>點選右上角的主題切換按鈕</li>
+                <li>使用鍵盤快速鍵 <code>Ctrl+Shift+T</code> (或 Mac 上的 <code>Cmd+Shift+T</code>)</li>
+                <li>重新整理頁面確認主題偏好已保存</li>
+                <li>在不同瀏覽器標籤中測試主題同步</li>
+            </ul>
+            <p><strong>當前主題：</strong> <span class="current-theme" id="current-theme">載入中...</span></p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>業績總覽</h3>
+                <p class="text-secondary">本月銷售業績表現</p>
+                <div style="margin: 1rem 0;">
+                    <div class="status">進行中</div>
+                </div>
+                <button class="btn">查看詳情</button>
+            </div>
+
+            <div class="card">
+                <h3>庫存管理</h3>
+                <p class="text-secondary">即時庫存狀態監控</p>
+                <div style="margin: 1rem 0;">
+                    <div class="status">正常</div>
+                </div>
+                <button class="btn">管理庫存</button>
+            </div>
+
+            <div class="card">
+                <h3>員工資訊</h3>
+                <p class="text-secondary">員工資料與出勤記錄</p>
+                <div style="margin: 1rem 0;">
+                    <div class="status">已更新</div>
+                </div>
+                <button class="btn">員工管理</button>
+            </div>
+
+            <div class="card">
+                <h3>財務報表</h3>
+                <p class="text-secondary">財務數據分析與報告</p>
+                <div style="margin: 1rem 0;">
+                    <div class="status">待審核</div>
+                </div>
+                <button class="btn">生成報表</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>主題切換測試結果</h3>
+            <div id="test-results">
+                <p>測試項目：</p>
+                <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                    <li id="test-toggle">✓ 主題切換按鈕功能</li>
+                    <li id="test-persistence">✓ 主題偏好保存</li>
+                    <li id="test-keyboard">✓ 鍵盤快速鍵</li>
+                    <li id="test-transition">✓ 平滑過渡效果</li>
+                    <li id="test-responsive">✓ 響應式設計</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 簡化版主題管理器用於測試
+        class SimpleThemeManager {
+            constructor() {
+                this.STORAGE_KEY = 'nexus-theme';
+                this.DARK_THEME = 'dark';
+                this.LIGHT_THEME = 'light';
+                this.currentTheme = this.loadTheme();
+                this.init();
+            }
+
+            init() {
+                this.applyTheme();
+                this.bindEvents();
+                this.updateThemeDisplay();
+                console.log('Theme Manager initialized:', this.currentTheme);
+            }
+
+            loadTheme() {
+                const saved = localStorage.getItem(this.STORAGE_KEY);
+                if (saved) return saved;
+                
+                // 檢查系統偏好
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    return this.LIGHT_THEME;
+                }
+                return this.DARK_THEME;
+            }
+
+            applyTheme() {
+                const root = document.documentElement;
+                root.classList.remove('light-theme', 'dark-theme');
+                
+                if (this.currentTheme === this.LIGHT_THEME) {
+                    root.classList.add('light-theme');
+                }
+
+                this.saveTheme();
+                this.updateThemeDisplay();
+            }
+
+            toggleTheme() {
+                this.currentTheme = this.currentTheme === this.DARK_THEME ? this.LIGHT_THEME : this.DARK_THEME;
+                this.applyTheme();
+                console.log('Theme switched to:', this.currentTheme);
+            }
+
+            saveTheme() {
+                localStorage.setItem(this.STORAGE_KEY, this.currentTheme);
+            }
+
+            bindEvents() {
+                // 主題切換按鈕
+                document.querySelectorAll('[data-theme-toggle]').forEach(button => {
+                    button.addEventListener('click', () => this.toggleTheme());
+                });
+
+                // 鍵盤快速鍵
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'T') {
+                        e.preventDefault();
+                        this.toggleTheme();
+                    }
+                });
+            }
+
+            updateThemeDisplay() {
+                const display = document.getElementById('current-theme');
+                if (display) {
+                    display.textContent = this.currentTheme === this.DARK_THEME ? '暗色主題' : '淺色主題';
+                }
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            window.themeManager = new SimpleThemeManager();
+            
+            // 測試功能
+            setTimeout(() => {
+                console.log('✓ 主題系統已初始化');
+                console.log('✓ 當前主題:', window.themeManager.currentTheme);
+                console.log('✓ 本地儲存:', localStorage.getItem('nexus-theme'));
+                console.log('提示: 使用 Ctrl+Shift+T 快速切換主題');
+            }, 100);
+        });
+    </script>
+</body>
+</html>

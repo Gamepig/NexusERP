@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation CSS Test</title>
+    <style>
+        /* 從 enhanced-navigation.blade.php 複製的 CSS */
+        .nexus-multi-nav {
+            display: inline-flex !important; /* 使用inline-flex讓容器不占滿寬度 */
+            align-items: center !important;
+            gap: 0.5rem !important;
+            padding: 0.5rem !important;
+            background: rgba(30, 33, 57, 0.08) !important; /* 深色背景提升對比 */
+            border-radius: 1rem !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(139, 92, 246, 0.1) !important;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08) !important;
+            /* 確保與右側功能區垂直對齊 */
+            vertical-align: middle !important;
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* 導航項目基礎樣式 */
+        .nexus-multi-nav button,
+        .nexus-multi-nav a {
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            letter-spacing: -0.01em !important;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(168, 85, 247, 0.08) 100%) !important;
+            border: 1px solid rgba(139, 92, 246, 0.2) !important;
+            border-radius: 0.75rem !important;
+            padding: 0.5rem 1.25rem !important; /* 調整為與右側按鈕相同的高度 */
+            margin: 0 !important;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            box-shadow: 
+                0 2px 8px rgba(139, 92, 246, 0.1),
+                0 1px 3px rgba(139, 92, 246, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+            color: rgba(55, 65, 81, 0.9) !important; /* 深灰色文字，適合淺色背景 */
+            /* 確保與右側按鈕垂直對齊 */
+            height: auto !important;
+            line-height: 1.5 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            text-decoration: none !important;
+        }
+
+        /* 現代化懸停效果 */
+        .nexus-multi-nav button:hover,
+        .nexus-multi-nav a:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(168, 85, 247, 0.15) 100%) !important;
+            border-color: rgba(139, 92, 246, 0.4) !important;
+            transform: translateY(-2px) scale(1.02) !important;
+            box-shadow: 
+                0 8px 25px rgba(139, 92, 246, 0.25),
+                0 4px 12px rgba(139, 92, 246, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            color: rgba(139, 92, 246, 1) !important;
+            text-shadow: 0 2px 4px rgba(139, 92, 246, 0.3) !important;
+        }
+
+        /* 測試用的基本樣式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h2>Navigation CSS 測試</h2>
+        <p>如果樣式正確載入，下面的導航按鈕應該有現代化的外觀效果：</p>
+        
+        <!-- 模擬導航結構 -->
+        <nav class="nexus-multi-nav">
+            <a href="#" class="nexus-nav-button">首頁</a>
+            <a href="#" class="nexus-nav-button">產品管理</a>
+            <a href="#" class="nexus-nav-button">庫存管理</a>
+            <a href="#" class="nexus-nav-button">報表中心</a>
+        </nav>
+    </div>
+
+    <div class="test-section">
+        <h3>預期效果</h3>
+        <ul>
+            <li>導航容器有圓角背景和陰影</li>
+            <li>按鈕有漸層背景和邊框</li>
+            <li>滑鼠懸停時有提升和縮放效果</li>
+            <li>顏色變化為紫色調</li>
+        </ul>
+    </div>
+</body>
+</html>

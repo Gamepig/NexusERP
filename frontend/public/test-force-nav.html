@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>強制載入導航CSS測試</title>
+    <link rel="stylesheet" href="/build/assets/nexus-theme-BWrOMMW7.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h2>強制載入導航CSS測試</h2>
+        <p>測試多種選擇器匹配導航元素：</p>
+        
+        <!-- 測試 1: 基本 nexus-multi-nav class -->
+        <div style="margin: 20px 0;">
+            <h4>測試 1: 基本 .nexus-multi-nav</h4>
+            <nav class="nexus-multi-nav">
+                <a href="#" class="nexus-nav-button">首頁</a>
+                <a href="#" class="nexus-nav-button">產品管理</a>
+                <a href="#" class="nexus-nav-button nexus-nav-active">庫存管理</a>
+                <a href="#" class="nexus-nav-button">報表中心</a>
+            </nav>
+        </div>
+
+        <!-- 測試 2: 屬性選擇器匹配 -->
+        <div style="margin: 20px 0;">
+            <h4>測試 2: nav[class*="nexus-multi-nav"]</h4>
+            <nav class="main-nav nexus-multi-nav-container">
+                <a href="#" class="nexus-nav-item-enhanced">儀表板</a>
+                <a href="#" class="nexus-nav-item-enhanced">用戶管理</a>
+                <a href="#" class="nexus-nav-item-enhanced nexus-nav-active">設置</a>
+            </nav>
+        </div>
+
+        <!-- 測試 3: 一般屬性選擇器 -->
+        <div style="margin: 20px 0;">
+            <h4>測試 3: [class*="nexus-multi-nav"]</h4>
+            <div class="nexus-multi-nav-wrapper">
+                <button class="nexus-nav-button">按鈕1</button>
+                <button class="nexus-nav-button">按鈕2</button>
+                <button class="nexus-nav-button nexus-nav-active">按鈕3（活動）</button>
+            </div>
+        </div>
+
+        <!-- 測試 4: 基本類別選擇器 -->
+        <div style="margin: 20px 0;">
+            <h4>測試 4: 直接類別選擇器</h4>
+            <div>
+                <span class="nexus-nav-button">連結樣式1</span>
+                <span class="nexus-nav-item-enhanced">連結樣式2</span>
+                <span class="nexus-nav-button nexus-nav-active">連結樣式3（活動）</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>CSS 載入狀態檢查</h3>
+        <div id="css-status"></div>
+    </div>
+
+    <script>
+        // 檢查 CSS 是否正確載入
+        function checkCSSLoaded() {
+            const testElement = document.createElement('div');
+            testElement.className = 'nexus-multi-nav';
+            testElement.style.visibility = 'hidden';
+            testElement.style.position = 'absolute';
+            document.body.appendChild(testElement);
+            
+            const styles = window.getComputedStyle(testElement);
+            const statusDiv = document.getElementById('css-status');
+            
+            // 檢查關鍵樣式是否存在
+            const hasBackground = styles.background.includes('rgba') || styles.backgroundColor !== 'rgba(0, 0, 0, 0)';
+            const hasBorderRadius = styles.borderRadius !== '0px';
+            const hasDisplay = styles.display === 'inline-flex';
+            
+            if (hasBackground && hasBorderRadius && hasDisplay) {
+                statusDiv.innerHTML = '<div class="status success">✅ CSS 樣式已正確載入！<br>背景: ' + styles.background + '<br>圓角: ' + styles.borderRadius + '<br>顯示: ' + styles.display + '</div>';
+            } else {
+                statusDiv.innerHTML = '<div class="status error">❌ CSS 樣式載入失敗<br>背景: ' + styles.background + '<br>圓角: ' + styles.borderRadius + '<br>顯示: ' + styles.display + '</div>';
+            }
+            
+            document.body.removeChild(testElement);
+        }
+        
+        // 頁面載入完成後檢查
+        document.addEventListener('DOMContentLoaded', checkCSSLoaded);
+        
+        // 延遲檢查（確保CSS完全載入）
+        setTimeout(checkCSSLoaded, 1000);
+    </script>
+</body>
+</html>

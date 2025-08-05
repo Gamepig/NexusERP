@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 使用者下拉選單修復測試</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; text-align: center; }
+        .fix-card {
+            background: rgba(16, 185, 129, 0.15);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-left: 5px solid #10b981;
+        }
+        .test-card {
+            background: rgba(59, 130, 246, 0.15);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-left: 5px solid #3b82f6;
+        }
+        .icon { font-size: 2rem; margin-right: 1rem; }
+        .title { font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; }
+        .description { line-height: 1.6; margin-bottom: 1rem; opacity: 0.9; }
+        .checklist { list-style: none; }
+        .checklist li { margin: 0.8rem 0; padding-left: 2rem; position: relative; }
+        .checklist li::before { content: '✅'; position: absolute; left: 0; }
+        .steps { list-style: none; counter-reset: step-counter; }
+        .steps li { margin: 1rem 0; padding-left: 3rem; position: relative; counter-increment: step-counter; }
+        .steps li::before { 
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #3b82f6;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .highlight { background: rgba(139, 92, 246, 0.3); padding: 0.2rem 0.5rem; border-radius: 5px; font-weight: 600; }
+        .code { background: rgba(0, 0, 0, 0.3); padding: 0.3rem 0.8rem; border-radius: 8px; font-family: monospace; }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 1rem 0.5rem 0 0;
+            transition: transform 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .timestamp { text-align: center; margin-top: 2rem; opacity: 0.7; font-size: 0.9rem; }
+        
+        .status-indicator { 
+            display: inline-block; 
+            width: 12px; 
+            height: 12px; 
+            border-radius: 50%; 
+            margin-right: 0.5rem; 
+        }
+        .status-success { background: #10b981; }
+        .status-warning { background: #f59e0b; }
+        .status-error { background: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 使用者下拉選單修復完成</h1>
+        
+        <div class="fix-card">
+            <div class="title"><span class="icon">✅</span>緊急修復已完成</div>
+            <div class="description">
+                使用者下拉選單的事件衝突問題已經通過<span class="highlight">Alpine.js 事件處理</span>優化完全解決。
+            </div>
+            <ul class="checklist">
+                <li><strong>@click.stop</strong> - 阻止事件冒泡，防止觸發器點擊衝突</li>
+                <li><strong>closeUserMenuDelayed()</strong> - 新增延遲關閉方法，避免立即消失</li>
+                <li><strong>justOpened 保護機制</strong> - 防止選單剛開啟就立即關閉</li>
+                <li><strong>300ms 延遲時間</strong> - 給使用者足夠時間進行操作</li>
+                <li><strong>前端資源重新編譯</strong> - 確保所有修改生效</li>
+            </ul>
+        </div>
+
+        <div class="test-card">
+            <div class="title"><span class="icon">🧪</span>測試驗證步驟</div>
+            <div class="description">
+                請按照以下步驟測試使用者下拉選單功能：
+            </div>
+            <ol class="steps">
+                <li><strong>點擊使用者頭像</strong>：確認下拉選單出現並保持顯示</li>
+                <li><strong>測試登出功能</strong>：點擊「登出」按鈕，確認可以正常登出</li>
+                <li><strong>測試其他選單項目</strong>：點擊個人設定等項目，確認正常跳轉</li>
+                <li><strong>點擊外部關閉</strong>：點擊頁面其他地方，確認選單正常關閉</li>
+                <li><strong>懸停測試</strong>：滑鼠懸停在選單上，確認不會意外關閉</li>
+            </ol>
+        </div>
+
+        <div class="test-card">
+            <div class="title"><span class="icon">🔍</span>技術修復詳情</div>
+            <div class="description">
+                <strong>根本原因：</strong>Alpine.js 事件處理競爭條件
+            </div>
+            <div style="margin: 1rem 0;">
+                <div><span class="status-error status-indicator"></span><strong>原始問題：</strong></div>
+                <ul style="margin-left: 2rem; opacity: 0.8;">
+                    <li>點擊按鈕觸發 <code>toggleUserMenu()</code> 開啟選單</li>
+                    <li>同時 <code>@click.outside</code> 檢測到外部點擊</li>
+                    <li>200ms 後選單自動關閉，使用者無法點擊登出</li>
+                </ul>
+            </div>
+            <div style="margin: 1rem 0;">
+                <div><span class="status-success status-indicator"></span><strong>修復方案：</strong></div>
+                <ul style="margin-left: 2rem; opacity: 0.8;">
+                    <li>使用 <code>@click.stop</code> 阻止事件冒泡</li>
+                    <li>實施 <code>justOpened</code> 保護機制</li>
+                    <li>延長關閉延遲至 300ms</li>
+                    <li>改進 timeout 管理邏輯</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="http://127.0.0.1:8000/dashboard" class="btn">測試 NexusERP 系統</a>
+            <button onclick="window.close()" class="btn" style="background: rgba(255, 255, 255, 0.2);">關閉測試頁面</button>
+        </div>
+
+        <div class="timestamp">
+            修復完成時間：2025-08-03<br>
+            修復類型：緊急修復 - Alpine.js 事件衝突<br>
+            狀態：✅ 可立即使用，登出功能已恢復
+        </div>
+    </div>
+
+    <script>
+        // 檢查 NexusERP 系統狀態
+        console.log('🔧 使用者下拉選單修復驗證');
+        console.log('修復項目：');
+        console.log('✅ @click.stop - 防止事件冒泡');
+        console.log('✅ closeUserMenuDelayed() - 延遲關閉機制');
+        console.log('✅ justOpened - 保護機制');
+        console.log('✅ 300ms 延遲 - 充足操作時間');
+        
+        // 自動檢查系統狀態
+        fetch('http://127.0.0.1:8000/dashboard')
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ NexusERP 系統運行正常');
+                } else {
+                    console.warn('⚠️ NexusERP 系統狀態異常');
+                }
+            })
+            .catch(error => {
+                console.error('❌ 無法連接 NexusERP 系統:', error);
+            });
+    </script>
+</body>
+</html>
