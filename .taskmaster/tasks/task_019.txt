@@ -1,0 +1,11 @@
+# Task ID: 19
+# Title: Phase 3: Implement Intelligent Sales & Inventory Prediction
+# Status: done
+# Dependencies: 17
+# Priority: medium
+# Description: Develop and integrate initial machine learning models for sales forecasting and inventory optimization, as per PRD 4.3.
+# Details:
+Use historical sales data to train a time-series forecasting model (e.g., ARIMA, Prophet). Use the sales forecast and lead times to calculate and suggest optimal inventory levels and reorder points. Expose these suggestions via a new API endpoint.
+
+# Test Strategy:
+Backtest the forecasting model against a holdout dataset and measure its accuracy (e.g., MAPE < 15%). Validate that the inventory suggestions are logical and respond correctly to changes in the sales forecast.

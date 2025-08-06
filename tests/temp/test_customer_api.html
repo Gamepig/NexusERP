@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客戶 API 測試</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background-color: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        pre { background-color: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>NexusERP 客戶 API 測試</h1>
+    
+    <div class="info">
+        <strong>測試目的：</strong>診斷銷售訂單建立頁面客戶下拉選單無資料問題
+    </div>
+
+    <div id="status"></div>
+    
+    <button onclick="testLogin()">1. 測試登入狀態</button>
+    <button onclick="testCustomerAPI()">2. 測試客戶 API</button>
+    <button onclick="testProductAPI()">3. 測試產品 API</button>
+    <button onclick="testSalesOrderPage()">4. 模擬銷售訂單頁面載入</button>
+    
+    <div id="results"></div>
+
+    <script>
+        async function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+
+        async function addResult(title, content, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const resultItem = document.createElement('div');
+            resultItem.className = `status ${type}`;
+            resultItem.innerHTML = `
+                <h3>${title}</h3>
+                <pre>${JSON.stringify(content, null, 2)}</pre>
+            `;
+            resultsDiv.appendChild(resultItem);
+        }
+
+        async function testLogin() {
+            updateStatus('檢查登入狀態中...', 'info');
+            try {
+                const response = await fetch('/api/auth/token', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    updateStatus('已登入', 'success');
+                    addResult('登入狀態', data, 'success');
+                } else {
+                    updateStatus('未登入', 'error');
+                    addResult('登入狀態', data, 'error');
+                }
+            } catch (error) {
+                updateStatus('登入狀態檢查失敗', 'error');
+                addResult('登入狀態錯誤', error.message, 'error');
+            }
+        }
+
+        async function testCustomerAPI() {
+            updateStatus('測試客戶 API...', 'info');
+            try {
+                const response = await fetch('/api/customers?paginate=false', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    updateStatus(`客戶 API 成功 - 找到 ${data.data ? data.data.length : 0} 個客戶`, 'success');
+                    addResult('客戶 API 結果', {
+                        count: data.data ? data.data.length : 0,
+                        sample: data.data ? data.data.slice(0, 3) : [],
+                        pagination: data.pagination
+                    }, 'success');
+                } else {
+                    updateStatus(`客戶 API 失敗 - ${response.status}`, 'error');
+                    addResult('客戶 API 錯誤', data, 'error');
+                }
+            } catch (error) {
+                updateStatus('客戶 API 請求失敗', 'error');
+                addResult('客戶 API 錯誤', error.message, 'error');
+            }
+        }
+
+        async function testProductAPI() {
+            updateStatus('測試產品 API...', 'info');
+            try {
+                const response = await fetch('/api/products?paginate=false', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    updateStatus(`產品 API 成功 - 找到 ${data.data ? data.data.length : 0} 個產品`, 'success');
+                    addResult('產品 API 結果', {
+                        count: data.data ? data.data.length : 0,
+                        sample: data.data ? data.data.slice(0, 3) : [],
+                        pagination: data.pagination
+                    }, 'success');
+                } else {
+                    updateStatus(`產品 API 失敗 - ${response.status}`, 'error');
+                    addResult('產品 API 錯誤', data, 'error');
+                }
+            } catch (error) {
+                updateStatus('產品 API 請求失敗', 'error');
+                addResult('產品 API 錯誤', error.message, 'error');
+            }
+        }
+
+        async function testSalesOrderPage() {
+            updateStatus('模擬銷售訂單頁面載入流程...', 'info');
+            
+            // 模擬銷售訂單頁面的載入流程
+            try {
+                // 1. 載入客戶
+                const customersResponse = await fetch('/api/customers', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                // 2. 載入產品
+                const productsResponse = await fetch('/api/products', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                const customersData = await customersResponse.json();
+                const productsData = await productsResponse.json();
+                
+                let customerOptions = '';
+                if (customersResponse.ok && customersData.success && customersData.data) {
+                    customersData.data.forEach(customer => {
+                        customerOptions += `<option value="${customer.id}">${customer.name}</option>`;
+                    });
+                }
+                
+                let productOptions = '';
+                if (productsResponse.ok && productsData.success && productsData.data) {
+                    productsData.data.forEach(product => {
+                        productOptions += `<option value="${product.id}">${product.name}</option>`;
+                    });
+                }
+                
+                const result = {
+                    customers: {
+                        status: customersResponse.status,
+                        success: customersResponse.ok,
+                        count: (customersData.data ? customersData.data.length : 0),
+                        options: customerOptions ? customerOptions.substring(0, 200) + '...' : '無客戶選項'
+                    },
+                    products: {
+                        status: productsResponse.status,
+                        success: productsResponse.ok,
+                        count: (productsData.data ? productsData.data.length : 0),
+                        options: productOptions ? productOptions.substring(0, 200) + '...' : '無產品選項'
+                    }
+                };
+                
+                if (customersResponse.ok && productsResponse.ok) {
+                    updateStatus('銷售訂單頁面載入模擬成功', 'success');
+                    addResult('銷售訂單頁面載入結果', result, 'success');
+                } else {
+                    updateStatus('銷售訂單頁面載入模擬失敗', 'error');
+                    addResult('銷售訂單頁面載入結果', result, 'error');
+                }
+                
+            } catch (error) {
+                updateStatus('銷售訂單頁面載入模擬錯誤', 'error');
+                addResult('銷售訂單頁面載入錯誤', error.message, 'error');
+            }
+        }
+
+        // 頁面載入時自動檢查登入狀態
+        window.addEventListener('load', () => {
+            testLogin();
+        });
+    </script>
+</body>
+</html>

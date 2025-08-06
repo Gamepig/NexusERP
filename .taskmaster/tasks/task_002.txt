@@ -1,0 +1,49 @@
+# Task ID: 2
+# Title: Phase 0: Initialize Go/Gin Backend API Boilerplate
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Set up the foundational structure for the Go/Gin RESTful API service. This includes project layout, configuration management, basic logging, and a health check endpoint.
+# Details:
+Create the main application entry point, router setup using Gin, environment variable handling, and a basic middleware structure for logging and error handling. Implement a `/health` endpoint.
+
+# Test Strategy:
+Unit test the configuration loader and health check handler. Run the service within the Docker environment and confirm the health check endpoint returns a 200 OK status.
+
+# Subtasks:
+## 1. 建立 Go 專案結構和依賴管理 [done]
+### Dependencies: None
+### Description: 初始化 Go 模組，設定專案目錄結構，安裝 Gin 框架和其他必要依賴套件
+### Details:
+
+
+## 2. 配置資料庫連接和 ORM 設定 [done]
+### Dependencies: None
+### Description: 設定 PostgreSQL 資料庫連接，配置 GORM ORM，建立資料庫連接池和基本配置
+### Details:
+
+
+## 3. 實作路由系統和中介軟體 [done]
+### Dependencies: None
+### Description: 建立 Gin 路由器配置，實作基本中介軟體（CORS、日誌記錄、錯誤處理）
+### Details:
+
+
+## 4. 建立配置管理系統 [done]
+### Dependencies: None
+### Description: 實作環境變數配置管理，支援開發、測試、生產環境的不同配置設定
+### Details:
+
+
+## 5. 實作健康檢查和監控端點 [done]
+### Dependencies: None
+### Description: 建立系統健康檢查端點，包括資料庫連接狀態、記憶體使用率等監控功能
+### Details:
+
+
+## 6. 建立日誌記錄系統 [done]
+### Dependencies: None
+### Description: 配置結構化日誌記錄系統，包括不同層級的日誌輸出和日誌輪轉機制
+### Details:
+
+

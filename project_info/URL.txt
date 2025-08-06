@@ -1,0 +1,5 @@
+Access points:
+  - Main app: http://localhost
+  - API: http://localhost/api/
+  - MinIO Console: http://localhost:9090
+  - Health Check: http://localhost/health

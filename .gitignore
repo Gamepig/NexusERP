@@ -1,0 +1,94 @@
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# MCP Database Configuration (contains sensitive data)
+.mcp-database-config.json
+
+# Build and Compiled Files
+/build/
+/dist/
+*.o
+*.so
+*.dll
+*.exe
+main
+nexus-erp
+nexus-erp-backend
+data-generator
+nexus-data-generator
+
+# Logs and Temporary Files
+*.log
+*.tmp
+tmp/
+logs/
+storage/logs/*.log
+
+# Environment and Configuration
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# Dependencies
+node_modules/
+vendor/
+go.sum
+
+# Cache and Session Files
+/frontend/storage/framework/cache/*
+/frontend/storage/framework/sessions/*
+/frontend/storage/framework/views/*
+\!/frontend/storage/framework/.gitkeep
+/frontend/bootstrap/cache/*
+\!/frontend/bootstrap/cache/.gitkeep
+
+# Database
+*.sqlite
+*.sqlite-journal
+*.db
+
+# OS Generated Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Testing and Coverage
+/coverage/
+/test-results/
+playwright-report/
+*.coverage
+
+# Archive Directory (for cleanup purposes)
+/archive/
+
+# PHP Specific
+composer.phar
+*.phar
+
+# Go Specific
+*.test
+*.out
+
+# Frontend Build Files
+/frontend/public/build/*
+/frontend/public/hot
+
+# Miscellaneous
+*.pid
+*.seed
+*.pid.lock
+.nyc_output
+.grunt
+.lock-wscript
+build/Release
+.npm
+.eslintcache
+.stylelintcache
+EOF < /dev/null

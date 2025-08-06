@@ -79,25 +79,26 @@
         margin-bottom: 1rem;
     }
     
-    /* NexusERP 增強卡片樣式 - 高對比度 */
+    /* NexusERP 增強卡片樣式 - 現代深色主題 */
     .nexus-card {
-        background: linear-gradient(135deg, #2d3142 0%, #353849 100%) !important;
-        border: 2px solid #4b5563 !important;
+        background: linear-gradient(135deg, #1e1b2e 0%, #2a2a3a 50%, #2d2d3d 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         border-radius: 1rem !important;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
-        transition: all 0.3s ease;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(10px) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .nexus-card:hover {
-        border-color: #8b5cf6 !important;
-        box-shadow: 0 20px 35px -5px rgba(139, 92, 246, 0.2), 0 10px 15px -6px rgba(0, 0, 0, 0.1) !important;
-        transform: translateY(-2px);
+        border-color: rgba(139, 92, 246, 0.5) !important;
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        transform: translateY(-4px) scale(1.02);
     }
     
-    /* 快速操作卡片增強 */
+    /* 快速操作卡片增強 - 現代漸層設計 */
     .nexus-quick-action-card {
-        background: linear-gradient(135deg, #2d3142 0%, #353849 100%) !important;
-        border: 2px solid #374151 !important;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+        border: 1px solid rgba(139, 92, 246, 0.2) !important;
         position: relative;
         overflow: hidden;
     }
@@ -108,26 +109,27 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #8b5cf6, #ec4899, #06b6d4, #10b981);
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        height: 2px;
+        background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 25%, #06b6d4 50%, #10b981 75%, #f59e0b 100%);
+        opacity: 0.7;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .nexus-quick-action-card:hover::before {
         opacity: 1;
+        height: 3px;
     }
     
     .nexus-quick-action-card:hover {
-        border-color: #6b7280 !important;
-        transform: translateY(-4px);
-        box-shadow: 0 15px 30px -5px rgba(139, 92, 246, 0.3) !important;
+        border-color: rgba(139, 92, 246, 0.6) !important;
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 20px 40px rgba(139, 92, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
     }
     
-    /* 圖表卡片增強 */
+    /* 圖表卡片增強 - 現代深色主題 */
     .nexus-chart-card {
-        background: linear-gradient(135deg, #2d3142 0%, #343751 100%) !important;
-        border: 2px solid #4b5563 !important;
+        background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 50%, #2d2d42 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         position: relative;
         overflow: hidden;
     }
@@ -138,21 +140,22 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #10b981, #3b82f6, #f59e0b, #ec4899);
-        opacity: 0.8;
+        height: 3px;
+        background: linear-gradient(90deg, #10b981 0%, #3b82f6 25%, #f59e0b 50%, #ec4899 75%, #8b5cf6 100%);
+        opacity: 0.9;
     }
     
     .nexus-chart-card:hover {
-        border-color: #6366f1 !important;
-        box-shadow: 0 20px 35px -5px rgba(99, 102, 241, 0.2) !important;
+        border-color: rgba(99, 102, 241, 0.5) !important;
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        transform: translateY(-2px);
     }
     
-    /* 統計區域增強 */
+    /* 統計區域增強 - 現代毛玻璃效果 */
     #statsGrid {
-        background: linear-gradient(135deg, rgba(45, 49, 66, 0.6) 0%, rgba(37, 40, 54, 0.8) 100%) !important;
-        border: 2px solid #4b5563 !important;
-        backdrop-filter: blur(10px);
+        /* background: linear-gradient(135deg, rgba(30, 27, 46, 0.7) 0%, rgba(42, 42, 58, 0.8) 50%, rgba(45, 45, 67, 0.9) 100%) !important; */
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(20px) !important;
         position: relative;
         overflow: hidden;
     }
@@ -164,7 +167,25 @@
         left: 0;
         right: 0;
         height: 2px;
-        background: linear-gradient(90deg, #8b5cf6, #3b82f6, #10b981, #f59e0b, #ef4444, #ec4899);
+        background: linear-gradient(90deg, #8b5cf6 0%, #3b82f6 20%, #10b981 40%, #f59e0b 60%, #ef4444 80%, #ec4899 100%);
+        opacity: 0.8;
+    }
+    
+    /* 為不同類型的卡片添加特定的背景變體 */
+    .nexus-quick-action-card:nth-child(1) {
+        background: linear-gradient(135deg, #1a1a2e 0%, #2d1b69 50%, #4c1d95 100%) !important; /* 紫色調 */
+    }
+    
+    .nexus-quick-action-card:nth-child(2) {
+        background: linear-gradient(135deg, #1a1a2e 0%, #92400e 50%, #f59e0b 100%) !important; /* 橙色調 */
+    }
+    
+    .nexus-quick-action-card:nth-child(3) {
+        background: linear-gradient(135deg, #1a1a2e 0%, #1e40af 50%, #3b82f6 100%) !important; /* 藍色調 */
+    }
+    
+    .nexus-quick-action-card:nth-child(4) {
+        background: linear-gradient(135deg, #1a1a2e 0%, #065f46 50%, #10b981 100%) !important; /* 綠色調 */
     }
     
     /* 文字對比度增強 */
@@ -238,7 +259,7 @@
         </div>
         <div class="flex items-center space-x-3">
             <div class="text-sm nexus-text-muted" id="lastUpdateTime">
-                最後更新: 載入中...
+                最後更新: {{ date('Y-m-d H:i:s') }}
             </div>
             <button data-action="refresh-dashboard" 
                     class="nexus-btn nexus-btn-primary flex items-center space-x-2">
@@ -275,8 +296,67 @@
 
     <!-- 儀表板內容 -->
     <div id="dashboardStats" class="">
+        <!-- 快速操作區域 - 移到統計卡片上方 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <!-- 新增報價單 -->
+            <a href="/quotes/create" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
+                <div class="p-6 text-center h-full flex flex-col justify-center items-center">
+                    <div class="w-12 h-12 mx-auto mb-3 bg-purple-500 bg-opacity-20 rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all quick-action-purple">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm nexus-text-primary mb-1">新增報價單</h3>
+                    <p class="text-xs nexus-text-secondary">建立新的報價文件</p>
+                    <div class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></div>
+                </div>
+            </a>
+
+            <!-- 庫存管理 -->
+            <a href="/inventory" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
+                <div class="p-6 text-center h-full flex flex-col justify-center items-center">
+                    <div class="w-12 h-12 mx-auto mb-3 bg-orange-500 bg-opacity-20 rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all quick-action-orange">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm nexus-text-primary mb-1">庫存管理</h3>
+                    <p class="text-xs nexus-text-secondary">檢視庫存狀況</p>
+                    <div class="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-medium">22</div>
+                </div>
+            </a>
+
+            <!-- 訂單處理 -->
+            <a href="/orders" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
+                <div class="p-6 text-center h-full flex flex-col justify-center items-center">
+                    <div class="w-12 h-12 mx-auto mb-3 bg-blue-500 bg-opacity-20 rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all quick-action-blue">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm nexus-text-primary mb-1">訂單處理</h3>
+                    <p class="text-xs nexus-text-secondary">處理待辦訂單</p>
+                    <div class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-medium">1000</div>
+                </div>
+            </a>
+
+            <!-- 客戶管理 -->
+            <a href="/customers" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
+                <div class="p-6 text-center h-full flex flex-col justify-center items-center">
+                    <div class="w-12 h-12 mx-auto mb-3 bg-green-500 bg-opacity-20 rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all quick-action-green">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-sm nexus-text-primary mb-1">客戶管理</h3>
+                    <p class="text-xs nexus-text-secondary">管理客戶資料</p>
+                    <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">17</div>
+                </div>
+            </a>
+        </div>
+
         <!-- 關鍵績效指標卡片 - NexusERP 標準風格 -->
-        <div id="statsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8" style="background: rgba(45, 49, 66, 0.3); border-radius: 1rem; padding: 1.5rem; border: 1px solid #374151;">
+        <div id="statsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 stats-cards-container" style="border-radius: 1rem; padding: 1.5rem;">
             <!-- 總營收統計卡片 -->
             <x-dashboard.stat-card 
                 title="總營收"
@@ -358,64 +438,6 @@
             />
         </div>
 
-        <!-- 快速操作區域 - 移到統計卡片下方 -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <!-- 新增報價單 -->
-            <a href="/quotes/create" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
-                <div class="p-6 text-center">
-                    <div class="w-12 h-12 mx-auto mb-4 bg-purple-500 bg-opacity-20 rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                        <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-sm nexus-text-primary mb-1">新增報價單</h3>
-                    <p class="text-xs nexus-text-secondary">建立新的報價文件</p>
-                    <div class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></div>
-                </div>
-            </a>
-
-            <!-- 庫存管理 -->
-            <a href="/inventory" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
-                <div class="p-6 text-center">
-                    <div class="w-12 h-12 mx-auto mb-4 bg-orange-500 bg-opacity-20 rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-sm nexus-text-primary mb-1">庫存管理</h3>
-                    <p class="text-xs nexus-text-secondary">檢視庫存狀況</p>
-                    <div class="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-medium">22</div>
-                </div>
-            </a>
-
-            <!-- 訂單處理 -->
-            <a href="/orders" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
-                <div class="p-6 text-center">
-                    <div class="w-12 h-12 mx-auto mb-4 bg-blue-500 bg-opacity-20 rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                        <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-sm nexus-text-primary mb-1">訂單處理</h3>
-                    <p class="text-xs nexus-text-secondary">處理待辦訂單</p>
-                    <div class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-medium">1000</div>
-                </div>
-            </a>
-
-            <!-- 客戶管理 -->
-            <a href="/customers" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
-                <div class="p-6 text-center">
-                    <div class="w-12 h-12 mx-auto mb-4 bg-green-500 bg-opacity-20 rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all">
-                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-sm nexus-text-primary mb-1">客戶管理</h3>
-                    <p class="text-xs nexus-text-secondary">管理客戶資料</p>
-                    <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">17</div>
-                </div>
-            </a>
-        </div>
 
         <!-- 圖表區域 - 2x2 平衡佈局 -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -428,7 +450,7 @@
                             <p class="text-sm nexus-text-secondary">過去7天營收表現</p>
                         </div>
                         <div class="text-right">
-                            <div class="text-lg font-bold text-green-400" id="totalRevenueDisplay">載入中...</div>
+                            <div class="text-lg font-bold text-green-400" id="totalRevenueDisplay">NT$81,890,029</div>
                             <div class="text-xs text-green-400">+12.5% ↗</div>
                         </div>
                     </div>
@@ -479,6 +501,343 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+/* 調整後卡片高度配置 - 保持寬度不變 */
+
+/* 1. 快速操作卡片 - 高度縮減為原本3/4 */
+.nexus-quick-action-card {
+    height: 150px !important; /* 原200px × 3/4 = 150px */
+    min-height: 150px !important;
+    max-height: 150px !important;
+}
+
+.nexus-quick-action-card .p-6 {
+    padding: 1rem !important; /* 調整內邊距適應高度 */
+    height: 100% !important; /* 確保內容容器填滿卡片高度 */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 2. 統計分析卡片 - 高度縮減為原本3/4 */
+.stats-cards-container .nexus-card,
+.stats-cards-container .stat-card-container {
+    height: 135px !important; /* 原180px × 3/4 = 135px */
+    min-height: 135px !important;
+    max-height: 135px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* 3. 圖表卡片 - 恢復原來高度 */
+.nexus-chart-card {
+    height: 400px !important; /* 恢復原始高度 */
+    min-height: 400px !important;
+    max-height: 400px !important;
+}
+
+.nexus-chart-card .chart-container {
+    height: 270px !important; /* 恢復原始高度 */
+    max-height: 270px !important;
+}
+
+.nexus-chart-card .p-6 {
+    padding: 1.5rem !important; /* 恢復原始內邊距 */
+    padding-bottom: 0.5rem !important;
+}
+
+.stats-cards-container .nexus-card .p-6 {
+    padding: 0.75rem !important;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.stats-cards-container .nexus-card .stat-value {
+    font-size: 1.25rem !important;
+    line-height: 1.1;
+}
+
+/* 統計卡片Icon放大 */
+.stats-cards-container .nexus-card .w-12.h-12 {
+    width: 2rem !important;
+    height: 2rem !important;
+}
+
+.stats-cards-container .nexus-card .w-6.h-6 {
+    width: 2rem !important;
+    height: 2rem !important;
+}
+
+/* 響應式優化 - 調整後的卡片高度配置 */
+@media (max-width: 768px) {
+    /* 快速操作卡片 - 行動裝置 (3/4高度) */
+    .nexus-quick-action-card {
+        height: 120px !important; /* 原160px × 3/4 = 120px */
+        min-height: 120px !important;
+        max-height: 120px !important;
+    }
+    
+    /* 統計分析卡片 - 行動裝置 (3/4高度) */
+    .stats-cards-container .nexus-card,
+    .stats-cards-container .stat-card-container {
+        height: 105px !important; /* 原140px × 3/4 = 105px */
+        min-height: 105px !important;
+        max-height: 105px !important;
+    }
+    
+    .stats-cards-container .nexus-card .stat-value {
+        font-size: 1.1rem !important;
+    }
+    
+    .stats-cards-container .nexus-card .p-6 {
+        padding: 0.5rem !important;
+    }
+    
+    /* 移動版快速操作卡片垂直置中 */
+    .nexus-quick-action-card .p-6 {
+        padding: 0.75rem !important;
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    
+    /* 圖表卡片 - 行動裝置 (恢復原始高度) */
+    .nexus-chart-card {
+        height: 300px !important; /* 恢復行動裝置原始高度 */
+        min-height: 300px !important;
+        max-height: 300px !important;
+    }
+    
+    .nexus-chart-card .chart-container {
+        height: 200px !important; /* 恢復行動裝置原始高度 */
+        max-height: 200px !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    /* 統計分析卡片 - 大螢幕 (3/4高度) */
+    .stats-cards-container .nexus-card,
+    .stats-cards-container .stat-card-container {
+        height: 140px !important; /* 原185px × 3/4 ≈ 140px */
+        min-height: 140px !important;
+        max-height: 140px !important;
+    }
+    
+    /* 圖表卡片 - 大螢幕 (恢復原始高度) */
+    .nexus-chart-card {
+        height: 420px !important; /* 恢復大螢幕原始高度 */
+        min-height: 420px !important;
+        max-height: 420px !important;
+    }
+    
+    .nexus-chart-card .chart-container {
+        height: 280px !important; /* 恢復大螢幕原始高度 */
+        max-height: 280px !important;
+    }
+}
+
+/* 統計卡片內容對齊 */
+.stats-cards-container .nexus-card .flex.items-center.space-x-4 {
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.stats-cards-container .nexus-card .flex-1.min-w-0 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+/* 快速操作icon顏色區隔 */
+.quick-action-purple .w-6.h-6 { color: #8b5cf6 !important; }
+.quick-action-orange .w-6.h-6 { color: #f59e0b !important; }
+.quick-action-blue .w-6.h-6 { color: #3b82f6 !important; }
+.quick-action-green .w-6.h-6 { color: #10b981 !important; }
+
+.quick-action-purple .bg-purple-500 { background-color: rgba(139, 92, 246, 0.2) !important; }
+.quick-action-orange .bg-orange-500 { background-color: rgba(245, 158, 11, 0.2) !important; }
+.quick-action-blue .bg-blue-500 { background-color: rgba(59, 130, 246, 0.2) !important; }
+.quick-action-green .bg-green-500 { background-color: rgba(16, 185, 129, 0.2) !important; }
+
+/* 深色主題 - 統計分析區塊容器 */
+[data-theme="dark"] .stats-cards-container {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 30%, #475569 70%, #64748b 100%) !important;
+    border: 2px solid #475569 !important;
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 深色主題 - 統計卡片樣式 */
+[data-theme="dark"] .stats-cards-container .nexus-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%) !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .stats-cards-container .nexus-card:hover {
+    border-color: #475569 !important;
+    box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-2px) scale(1.01) !important;
+}
+
+/* 淺色主題完整樣式重構 - 高對比度設計 */
+
+/* 淺色主題 - 統計分析區塊容器 (修正背景色) */
+[data-theme="light"] .stats-cards-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 70%, #ffffff 100%) !important;
+    border: 2px solid #cbd5e1 !important;
+    box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+}
+
+/* 淺色主題 - 統計卡片彩色漸層背景 */
+[data-theme="light"] .stats-cards-container .nexus-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 50%, #e0f2fe 100%) !important;
+    border: 2px solid #0ea5e9 !important;
+    box-shadow: 0 8px 25px -5px rgba(14, 165, 233, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="light"] .stats-cards-container .nexus-card:hover {
+    border-color: #0284c7 !important;
+    box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    transform: translateY(-4px) scale(1.02) !important;
+}
+
+/* 淺色主題 - 快速操作卡片個別彩色漸層 */
+[data-theme="light"] .nexus-quick-action-card:nth-child(1) {
+    background: linear-gradient(135deg, #fdf4ff 0%, #f3e8ff 50%, #e9d5ff 100%) !important;
+    border: 2px solid #a855f7 !important;
+    box-shadow: 0 8px 25px -5px rgba(168, 85, 247, 0.15) !important;
+}
+
+[data-theme="light"] .nexus-quick-action-card:nth-child(2) {
+    background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 50%, #fdba74 100%) !important;
+    border: 2px solid #f97316 !important;
+    box-shadow: 0 8px 25px -5px rgba(249, 115, 22, 0.15) !important;
+}
+
+[data-theme="light"] .nexus-quick-action-card:nth-child(3) {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%) !important;
+    border: 2px solid #3b82f6 !important;
+    box-shadow: 0 8px 25px -5px rgba(59, 130, 246, 0.15) !important;
+}
+
+[data-theme="light"] .nexus-quick-action-card:nth-child(4) {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%) !important;
+    border: 2px solid #10b981 !important;
+    box-shadow: 0 8px 25px -5px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* 淺色主題 - 快速操作卡片懸停效果 */
+[data-theme="light"] .nexus-quick-action-card:nth-child(1):hover {
+    background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 50%, #d8b4fe 100%) !important;
+    border-color: #9333ea !important;
+    box-shadow: 0 15px 35px -5px rgba(168, 85, 247, 0.3) !important;
+    transform: translateY(-3px) scale(1.02) !important;
+}
+
+[data-theme="light"] .nexus-quick-action-card:nth-child(2):hover {
+    background: linear-gradient(135deg, #fed7aa 0%, #fdba74 50%, #fb923c 100%) !important;
+    border-color: #ea580c !important;
+    box-shadow: 0 15px 35px -5px rgba(249, 115, 22, 0.3) !important;
+    transform: translateY(-3px) scale(1.02) !important;
+}
+
+[data-theme="light"] .nexus-quick-action-card:nth-child(3):hover {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%) !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.3) !important;
+    transform: translateY(-3px) scale(1.02) !important;
+}
+
+[data-theme="light"] .nexus-quick-action-card:nth-child(4):hover {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%) !important;
+    border-color: #059669 !important;
+    box-shadow: 0 15px 35px -5px rgba(16, 185, 129, 0.3) !important;
+    transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* 淺色主題 - 圖表卡片彩色漸層 */
+[data-theme="light"] .nexus-chart-card {
+    background: linear-gradient(135deg, #fefefe 0%, #f8fafc 30%, #f1f5f9 70%, #e2e8f0 100%) !important;
+    border: 2px solid #64748b !important;
+    box-shadow: 0 8px 30px -5px rgba(71, 85, 105, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+[data-theme="light"] .nexus-chart-card:hover {
+    border-color: #475569 !important;
+    box-shadow: 0 20px 45px -10px rgba(71, 85, 105, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    transform: translateY(-2px) scale(1.01) !important;
+}
+
+/* 淺色主題 - 文字顏色高對比 */
+[data-theme="light"] .nexus-text-primary {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="light"] .nexus-text-secondary {
+    color: #334155 !important;
+    font-weight: 500 !important;
+}
+
+/* 淺色主題 - 統計數值突出顯示 */
+[data-theme="light"] .stat-value {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 2px rgba(15, 23, 42, 0.1) !important;
+}
+
+/* 淺色主題 - 變化指示器增強 */
+[data-theme="light"] .stat-change.text-green-600 {
+    color: #047857 !important;
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important;
+    border: 2px solid #059669 !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="light"] .stat-change.text-red-600 {
+    color: #b91c1c !important;
+    background: linear-gradient(135deg, #fee2e2, #fecaca) !important;
+    border: 2px solid #dc2626 !important;
+    font-weight: 600 !important;
+}
+
+/* 淺色主題 - 圖標背景增強 */
+[data-theme="light"] .quick-action-purple .bg-purple-500 { 
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1)) !important; 
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+}
+
+[data-theme="light"] .quick-action-orange .bg-orange-500 { 
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(251, 191, 36, 0.1)) !important; 
+    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+[data-theme="light"] .quick-action-blue .bg-blue-500 { 
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 197, 253, 0.1)) !important; 
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-theme="light"] .quick-action-green .bg-green-500 { 
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(52, 211, 153, 0.1)) !important; 
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* 淺色主題 - 頁面背景增強 */
+[data-theme="light"] body {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #f8fafc 100%) !important;
+}
+</style>
+@endpush
 
 @push('scripts')
 <!-- Chart.js CDN - 使用穩定版本 -->

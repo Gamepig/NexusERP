@@ -1,0 +1,436 @@
+{
+  "ui_style_reference": {
+    "project_name": "NexusERP - Sempoa Style Reference",
+    "version": "1.0.0",
+    "description": "基於 Sempoa.id ERP 系統的 UI 風格參考規範，轉換為 NexusERP 前端設計標準",
+    "color_palette": {
+      "primary": {
+        "name": "深藍紫色",
+        "dark": "#2D1B69",
+        "main": "#4A3B8C", 
+        "light": "#6B5B99",
+        "description": "主要品牌色，用於側邊欄、按鈕、強調元素"
+      },
+      "secondary": {
+        "name": "科技藍",
+        "dark": "#1E3A8A",
+        "main": "#3B82F6",
+        "light": "#60A5FA",
+        "description": "次要色彩，用於連結、輔助按鈕"
+      },
+      "accent": {
+        "name": "活力橙",
+        "main": "#F97316",
+        "light": "#FB923C",
+        "description": "強調色，用於重要操作、通知"
+      },
+      "neutral": {
+        "dark": "#1F2937",
+        "main": "#6B7280", 
+        "light": "#D1D5DB",
+        "lightest": "#F9FAFB",
+        "description": "中性色系，用於文字、邊框、背景"
+      },
+      "status": {
+        "success": "#10B981",
+        "warning": "#F59E0B", 
+        "error": "#EF4444",
+        "info": "#3B82F6",
+        "description": "狀態色彩，用於提示、標籤、狀態指示"
+      },
+      "background": {
+        "body": "#F1F5F9",
+        "card": "#FFFFFF",
+        "sidebar": "#2D1B69",
+        "header": "#FFFFFF",
+        "modal_overlay": "rgba(0, 0, 0, 0.4)",
+        "description": "背景色彩定義"
+      }
+    },
+    "typography": {
+      "font_family": {
+        "primary": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        "mono": "'JetBrains Mono', 'Fira Code', 'Consolas', monospace"
+      },
+      "font_sizes": {
+        "xs": "0.75rem",
+        "sm": "0.875rem", 
+        "base": "1rem",
+        "lg": "1.125rem",
+        "xl": "1.25rem",
+        "2xl": "1.5rem",
+        "3xl": "1.875rem",
+        "4xl": "2.25rem"
+      },
+      "font_weights": {
+        "normal": "400",
+        "medium": "500",
+        "semibold": "600", 
+        "bold": "700"
+      },
+      "line_heights": {
+        "tight": "1.25",
+        "normal": "1.5",
+        "relaxed": "1.75"
+      }
+    },
+    "spacing": {
+      "scale": "0.25rem",
+      "sizes": {
+        "0": "0",
+        "1": "0.25rem",
+        "2": "0.5rem", 
+        "3": "0.75rem",
+        "4": "1rem",
+        "5": "1.25rem",
+        "6": "1.5rem",
+        "8": "2rem",
+        "10": "2.5rem",
+        "12": "3rem",
+        "16": "4rem",
+        "20": "5rem"
+      }
+    },
+    "border_radius": {
+      "none": "0",
+      "sm": "0.125rem",
+      "base": "0.25rem",
+      "md": "0.375rem", 
+      "lg": "0.5rem",
+      "xl": "0.75rem",
+      "2xl": "1rem",
+      "full": "9999px"
+    },
+    "shadows": {
+      "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "base": "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+      "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      "xl": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+    },
+    "layout": {
+      "sidebar": {
+        "width": "16rem",
+        "collapsed_width": "4rem",
+        "background": "#2D1B69",
+        "text_color": "#FFFFFF",
+        "border_radius": "0",
+        "shadow": "none"
+      },
+      "header": {
+        "height": "4rem",
+        "background": "#FFFFFF", 
+        "border_bottom": "1px solid #E5E7EB",
+        "shadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
+      },
+      "main_content": {
+        "padding": "1.5rem",
+        "max_width": "none",
+        "background": "#F1F5F9"
+      },
+      "container": {
+        "max_width": "1200px",
+        "margin": "0 auto",
+        "padding": "0 1rem"
+      }
+    },
+    "components": {
+      "buttons": {
+        "primary": {
+          "background": "#3B82F6",
+          "text_color": "#FFFFFF",
+          "hover_background": "#2563EB",
+          "border_radius": "0.375rem",
+          "padding": "0.5rem 1rem",
+          "font_weight": "500",
+          "transition": "all 0.15s ease-in-out"
+        },
+        "secondary": {
+          "background": "#FFFFFF",
+          "text_color": "#374151",
+          "border": "1px solid #D1D5DB",
+          "hover_background": "#F9FAFB",
+          "border_radius": "0.375rem",
+          "padding": "0.5rem 1rem"
+        },
+        "danger": {
+          "background": "#EF4444",
+          "text_color": "#FFFFFF", 
+          "hover_background": "#DC2626",
+          "border_radius": "0.375rem",
+          "padding": "0.5rem 1rem"
+        },
+        "sizes": {
+          "sm": "0.375rem 0.75rem",
+          "base": "0.5rem 1rem",
+          "lg": "0.75rem 1.5rem"
+        }
+      },
+      "cards": {
+        "default": {
+          "background": "#FFFFFF",
+          "border_radius": "0.5rem",
+          "shadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+          "padding": "1.5rem",
+          "border": "none"
+        },
+        "stats": {
+          "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          "text_color": "#FFFFFF",
+          "border_radius": "0.75rem",
+          "padding": "1.5rem",
+          "shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+        }
+      },
+      "tables": {
+        "container": {
+          "background": "#FFFFFF",
+          "border_radius": "0.5rem",
+          "shadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+          "overflow": "hidden"
+        },
+        "header": {
+          "background": "#F8FAFC",
+          "text_color": "#374151",
+          "font_weight": "600",
+          "font_size": "0.875rem",
+          "padding": "0.75rem 1rem",
+          "border_bottom": "1px solid #E5E7EB"
+        },
+        "row": {
+          "padding": "0.75rem 1rem",
+          "border_bottom": "1px solid #F3F4F6",
+          "hover_background": "#F9FAFB",
+          "transition": "background-color 0.15s ease-in-out"
+        },
+        "cell": {
+          "text_color": "#374151",
+          "font_size": "0.875rem"
+        }
+      },
+      "forms": {
+        "input": {
+          "background": "#FFFFFF",
+          "border": "1px solid #D1D5DB",
+          "border_radius": "0.375rem",
+          "padding": "0.5rem 0.75rem",
+          "font_size": "0.875rem",
+          "focus_border": "#3B82F6",
+          "focus_ring": "0 0 0 3px rgba(59, 130, 246, 0.1)"
+        },
+        "label": {
+          "text_color": "#374151",
+          "font_weight": "500",
+          "font_size": "0.875rem",
+          "margin_bottom": "0.5rem"
+        },
+        "select": {
+          "background": "#FFFFFF",
+          "border": "1px solid #D1D5DB", 
+          "border_radius": "0.375rem",
+          "padding": "0.5rem 0.75rem",
+          "font_size": "0.875rem"
+        },
+        "error": {
+          "text_color": "#EF4444",
+          "font_size": "0.75rem",
+          "margin_top": "0.25rem"
+        }
+      },
+      "modals": {
+        "overlay": {
+          "background": "rgba(0, 0, 0, 0.4)",
+          "backdrop_filter": "blur(2px)"
+        },
+        "container": {
+          "background": "#FFFFFF",
+          "border_radius": "0.5rem",
+          "shadow": "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+          "max_width": "32rem",
+          "padding": "1.5rem"
+        },
+        "header": {
+          "font_size": "1.125rem",
+          "font_weight": "600",
+          "text_color": "#111827",
+          "margin_bottom": "1rem"
+        }
+      },
+      "navigation": {
+        "item": {
+          "padding": "0.75rem 1rem",
+          "border_radius": "0.375rem",
+          "margin_bottom": "0.25rem",
+          "transition": "all 0.15s ease-in-out"
+        },
+        "item_active": {
+          "background": "rgba(255, 255, 255, 0.1)",
+          "text_color": "#FFFFFF"
+        },
+        "item_hover": {
+          "background": "rgba(255, 255, 255, 0.05)"
+        },
+        "icon": {
+          "width": "1.25rem",
+          "height": "1.25rem",
+          "margin_right": "0.75rem"
+        }
+      },
+      "badges": {
+        "success": {
+          "background": "#D1FAE5",
+          "text_color": "#065F46",
+          "border_radius": "9999px",
+          "padding": "0.25rem 0.75rem",
+          "font_size": "0.75rem",
+          "font_weight": "500"
+        },
+        "warning": {
+          "background": "#FEF3C7", 
+          "text_color": "#92400E",
+          "border_radius": "9999px",
+          "padding": "0.25rem 0.75rem",
+          "font_size": "0.75rem"
+        },
+        "error": {
+          "background": "#FEE2E2",
+          "text_color": "#991B1B", 
+          "border_radius": "9999px",
+          "padding": "0.25rem 0.75rem",
+          "font_size": "0.75rem"
+        },
+        "info": {
+          "background": "#DBEAFE",
+          "text_color": "#1E40AF",
+          "border_radius": "9999px", 
+          "padding": "0.25rem 0.75rem",
+          "font_size": "0.75rem"
+        }
+      },
+      "pagination": {
+        "container": {
+          "display": "flex",
+          "justify_content": "center",
+          "align_items": "center",
+          "gap": "0.5rem",
+          "margin_top": "1.5rem"
+        },
+        "item": {
+          "padding": "0.5rem 0.75rem",
+          "border_radius": "0.375rem",
+          "border": "1px solid #D1D5DB",
+          "background": "#FFFFFF",
+          "text_color": "#374151",
+          "font_size": "0.875rem"
+        },
+        "item_active": {
+          "background": "#3B82F6",
+          "text_color": "#FFFFFF",
+          "border_color": "#3B82F6"
+        },
+        "item_hover": {
+          "background": "#F3F4F6"
+        }
+      }
+    },
+    "dashboard_widgets": {
+      "stats_card": {
+        "width": "100%",
+        "background": "linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%)",
+        "text_color": "#FFFFFF",
+        "border_radius": "0.75rem",
+        "padding": "1.5rem",
+        "shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+      },
+      "chart_container": {
+        "background": "#FFFFFF",
+        "border_radius": "0.5rem", 
+        "padding": "1.5rem",
+        "shadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+        "height": "20rem"
+      },
+      "recent_activity": {
+        "background": "#FFFFFF",
+        "border_radius": "0.5rem",
+        "padding": "1.5rem",
+        "shadow": "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
+      }
+    },
+    "responsive": {
+      "breakpoints": {
+        "sm": "640px",
+        "md": "768px", 
+        "lg": "1024px",
+        "xl": "1280px",
+        "2xl": "1536px"
+      },
+      "sidebar_behavior": {
+        "mobile": "overlay",
+        "tablet": "collapsible",
+        "desktop": "fixed"
+      }
+    },
+    "animations": {
+      "transitions": {
+        "fast": "0.15s ease-in-out",
+        "normal": "0.3s ease-in-out",
+        "slow": "0.5s ease-in-out"
+      },
+      "loading": {
+        "spinner": "animate-spin",
+        "pulse": "animate-pulse",
+        "bounce": "animate-bounce"
+      }
+    },
+    "accessibility": {
+      "focus_ring": {
+        "color": "#3B82F6",
+        "width": "2px",
+        "offset": "2px"
+      },
+      "contrast_ratios": {
+        "normal_text": "4.5:1",
+        "large_text": "3:1",
+        "non_text": "3:1"
+      }
+    },
+    "implementation_notes": {
+      "css_framework": "Tailwind CSS",
+      "javascript": "Vanilla ES6+",
+      "icons": "Heroicons 或 Lucide Icons", 
+      "charts": "Chart.js",
+      "date_picker": "Flatpickr",
+      "notifications": "自訂 Toast 元件"
+    },
+    "page_specific_styles": {
+      "login_page": {
+        "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        "card_background": "#FFFFFF",
+        "card_shadow": "0 20px 25px -5px rgba(0, 0, 0, 0.1)"
+      },
+      "dashboard": {
+        "grid_layout": "CSS Grid",
+        "widget_spacing": "1.5rem",
+        "responsive_columns": {
+          "mobile": "1",
+          "tablet": "2", 
+          "desktop": "3-4"
+        }
+      },
+      "data_tables": {
+        "header_sticky": true,
+        "row_hover": "#F9FAFB",
+        "selected_row": "#EBF8FF",
+        "action_buttons": {
+          "edit": "#3B82F6",
+          "delete": "#EF4444",
+          "view": "#6B7280"
+        }
+      }
+    },
+    "dark_mode_support": {
+      "enabled": false,
+      "note": "當前版本不支援暗色模式，未來版本可考慮加入"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+# Task ID: 17
+# Title: Phase 2: Develop Core Reporting Dashboards
+# Status: done
+# Dependencies: 11, 16
+# Priority: medium
+# Description: Create a set of basic dashboards and reports for sales, inventory, and financial analysis, as outlined in PRD 6.3.2.3.
+# Details:
+Develop API endpoints (`GET /api/sales-reports`, etc.) that aggregate data to provide key metrics like total sales, inventory turnover, and outstanding AR/AP. On the frontend, use a charting library to visualize this data.
+
+# Test Strategy:
+Write tests for the aggregation queries to ensure accuracy. Compare report outputs with manually calculated figures from a known dataset. Test frontend chart rendering with various data points.

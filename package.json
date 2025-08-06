@@ -1,0 +1,35 @@
+{
+  "name": "nexus-erp-testing",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Comprehensive testing suite for NexusERP system",
+  "scripts": {
+    "test": "playwright test",
+    "test:comprehensive": "node run-comprehensive-test.js",
+    "test:chrome": "playwright test --project=comprehensive-chrome",
+    "test:firefox": "playwright test --project=comprehensive-firefox",
+    "test:webkit": "playwright test --project=comprehensive-webkit",
+    "test:mobile": "playwright test --project=mobile-testing",
+    "test:report": "playwright show-report",
+    "test:install": "playwright install",
+    "test:debug": "playwright test --debug",
+    "test:headed": "playwright test --headed",
+    "postinstall": "playwright install"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.54.2"
+  },
+  "devDependencies": {
+    "playwright": "^1.54.2"
+  },
+  "keywords": [
+    "testing",
+    "playwright",
+    "erp",
+    "laravel",
+    "e2e",
+    "comprehensive"
+  ],
+  "author": "Claude Code Assistant",
+  "license": "MIT"
+}

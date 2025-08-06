@@ -1,0 +1,11 @@
+# Task ID: 10
+# Title: Phase 1: Supplier and Purchase Order Management
+# Status: done
+# Dependencies: 8
+# Priority: high
+# Description: Develop the modules for managing suppliers and the complete purchase order lifecycle, from creation to approval and receiving, as per PRD 3.4.
+# Details:
+Create `suppliers` and `purchase_orders` tables. Implement APIs for supplier CRUD and for creating (`POST /api/purchase-orders`), approving (`PUT /api/purchase-orders/{id}/approve`), and receiving goods (`POST /api/purchase-orders/{id}/receive`). Receiving should create an inventory transaction.
+
+# Test Strategy:
+Test the PO state machine (draft -> pending approval -> approved -> partially received -> received). Verify that a 'receive' action correctly increases inventory levels in the specified warehouse.

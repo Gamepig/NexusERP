@@ -1,0 +1,47 @@
+{
+  "mcpServers": {
+    "task-master-ai": {
+      "command": "npx",
+      "args": ["-y", "--package=task-master-ai", "task-master-ai"],
+      "env": {
+        "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
+        "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}",
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
+        "XAI_API_KEY": "${XAI_API_KEY}",
+        "OPENROUTER_API_KEY": "${OPENROUTER_API_KEY}",
+        "MISTRAL_API_KEY": "${MISTRAL_API_KEY}",
+        "AZURE_OPENAI_API_KEY": "${AZURE_OPENAI_API_KEY}",
+        "OLLAMA_API_KEY": "not-required",
+        "OLLAMA_BASE_URL": "http://localhost:11434/v1"
+      }
+    },
+    "memory-bank": {
+      "command": "uv",
+      "args": ["tool", "run", "--from", "git+https://github.com/ipospelov/mcp-memory-bank", "mcp_memory_bank"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "time-mcp": {
+      "command": "npx",
+      "args": ["-y", "time-mcp"]
+    },
+    "playwright-mcp": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "serena": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/oraios/serena", "serena-mcp-server", "--context", "ide-assistant", "--project", "/Users/gamepig/projects/NexusERP"]
+    },
+    "database": {
+      "command": "npx",
+      "args": ["-y", "@ahmetbarut/mcp-database-server"],
+      "env": {
+        "DATABASE_CONNECTIONS_FILE": "/Users/gamepig/projects/NexusERP/.mcp-database-config.json"
+      }
+    }
+  }
+}

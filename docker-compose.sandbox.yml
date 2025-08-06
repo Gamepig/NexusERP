@@ -1,0 +1,248 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for sandbox testing
+  postgres-sandbox:
+    image: postgres:15-alpine
+    container_name: nexus-erp-postgres-sandbox
+    environment:
+      POSTGRES_DB: nexus_erp_sandbox
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sandbox_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_sandbox_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexus-erp-sandbox
+
+  # Redis for caching in sandbox
+  redis-sandbox:
+    image: redis:7-alpine
+    container_name: nexus-erp-redis-sandbox
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes --requirepass sandbox_redis_password
+    volumes:
+      - redis_sandbox_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "sandbox_redis_password", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexus-erp-sandbox
+
+  # NexusERP Backend API for sandbox testing
+  nexus-erp-backend-sandbox:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: nexus-erp-backend-sandbox
+    environment:
+      - APP_ENV=sandbox
+      - APP_DEBUG=true
+      - DB_HOST=postgres-sandbox
+      - DB_PORT=5432
+      - DB_DATABASE=nexus_erp_sandbox
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=sandbox_password
+      - REDIS_HOST=redis-sandbox
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=sandbox_redis_password
+      - JWT_SECRET=sandbox-jwt-secret-key-for-testing-only
+      - LOG_LEVEL=debug
+      # QuickBooks Sandbox Configuration
+      - QUICKBOOKS_ENABLED=true
+      - QUICKBOOKS_SANDBOX=true
+      - QUICKBOOKS_BASE_URL=https://sandbox-quickbooks.api.intuit.com
+      - QUICKBOOKS_CLIENT_ID=${QUICKBOOKS_SANDBOX_CLIENT_ID}
+      - QUICKBOOKS_CLIENT_SECRET=${QUICKBOOKS_SANDBOX_CLIENT_SECRET}
+      - QUICKBOOKS_REDIRECT_URI=http://localhost:8081/auth/quickbooks/callback
+      # Shipment Tracking Sandbox Configuration
+      - SHIPMENT_TRACKING_ENABLED=true
+      - SHIPMENT_TRACKING_DEFAULT_PROVIDER=dhl
+      - DHL_ENABLED=true
+      - DHL_SANDBOX=true
+      - DHL_BASE_URL=https://api-test.dhl.com
+      - DHL_API_KEY=${DHL_SANDBOX_API_KEY}
+      - FEDEX_ENABLED=true
+      - FEDEX_SANDBOX=true
+      - FEDEX_BASE_URL=https://apis-sandbox.fedex.com
+      - FEDEX_API_KEY=${FEDEX_SANDBOX_API_KEY}
+      # Testing configuration
+      - ENABLE_TEST_ENDPOINTS=true
+      - CORS_ORIGINS=http://localhost:3001,http://localhost:8081
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./backend:/app
+      - backend_sandbox_storage:/app/storage
+    depends_on:
+      postgres-sandbox:
+        condition: service_healthy
+      redis-sandbox:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - nexus-erp-sandbox
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 5 &&
+        echo 'Running database migrations...' &&
+        ./migrate-up &&
+        echo 'Starting application in sandbox mode...' &&
+        air -c .air.toml
+      "
+
+  # NexusERP Frontend for sandbox testing
+  nexus-erp-frontend-sandbox:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: nexus-erp-frontend-sandbox
+    environment:
+      - APP_ENV=sandbox
+      - APP_URL=http://localhost:8081
+      - API_URL=http://nexus-erp-backend-sandbox:8080
+      - MIX_APP_URL=http://localhost:8081
+      - MIX_API_URL=http://localhost:8081/api
+    ports:
+      - "8081:80"
+    volumes:
+      - ./frontend:/var/www/html
+      - frontend_sandbox_storage:/var/www/html/storage
+    depends_on:
+      - nexus-erp-backend-sandbox
+    networks:
+      - nexus-erp-sandbox
+
+  # MailHog for email testing in sandbox
+  mailhog-sandbox:
+    image: mailhog/mailhog:latest
+    container_name: nexus-erp-mailhog-sandbox
+    ports:
+      - "1026:1025"  # SMTP
+      - "8026:8025"  # Web UI
+    networks:
+      - nexus-erp-sandbox
+
+  # Adminer for database management in sandbox
+  adminer-sandbox:
+    image: adminer:latest
+    container_name: nexus-erp-adminer-sandbox
+    ports:
+      - "8086:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres-sandbox
+    networks:
+      - nexus-erp-sandbox
+
+  # MinIO for S3-compatible storage testing
+  minio-sandbox:
+    image: minio/minio:latest
+    container_name: nexus-erp-minio-sandbox
+    environment:
+      MINIO_ROOT_USER: minio_admin
+      MINIO_ROOT_PASSWORD: minio_password123
+    ports:
+      - "9001:9000"  # API
+      - "9091:9001"  # Console
+    volumes:
+      - minio_sandbox_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - nexus-erp-sandbox
+
+  # Integration Testing Service
+  integration-tests:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    container_name: nexus-erp-integration-tests
+    environment:
+      - APP_ENV=testing
+      - DB_HOST=postgres-sandbox
+      - DB_PORT=5432
+      - DB_DATABASE=nexus_erp_sandbox
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=sandbox_password
+      - REDIS_HOST=redis-sandbox
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=sandbox_redis_password
+      # QuickBooks Testing
+      - QUICKBOOKS_ENABLED=true
+      - QUICKBOOKS_SANDBOX=true
+      - QUICKBOOKS_BASE_URL=https://sandbox-quickbooks.api.intuit.com
+      - QUICKBOOKS_CLIENT_ID=${QUICKBOOKS_SANDBOX_CLIENT_ID}
+      - QUICKBOOKS_CLIENT_SECRET=${QUICKBOOKS_SANDBOX_CLIENT_SECRET}
+      # Shipment Tracking Testing
+      - SHIPMENT_TRACKING_ENABLED=true
+      - DHL_ENABLED=true
+      - DHL_SANDBOX=true
+      - DHL_API_KEY=${DHL_SANDBOX_API_KEY}
+      - FEDEX_ENABLED=true
+      - FEDEX_SANDBOX=true
+      - FEDEX_API_KEY=${FEDEX_SANDBOX_API_KEY}
+    volumes:
+      - ./backend:/app
+      - test_results:/app/test-results
+    depends_on:
+      postgres-sandbox:
+        condition: service_healthy
+      redis-sandbox:
+        condition: service_healthy
+      nexus-erp-backend-sandbox:
+        condition: service_healthy
+    networks:
+      - nexus-erp-sandbox
+    profiles:
+      - testing
+    command: >
+      sh -c "
+        echo 'Waiting for services to be ready...' &&
+        sleep 10 &&
+        echo 'Running integration tests...' &&
+        go test -v -tags=integration ./tests/... -coverprofile=coverage.out &&
+        echo 'Generating test reports...' &&
+        go tool cover -html=coverage.out -o test-results/coverage.html &&
+        echo 'Integration tests completed.'
+      "
+
+networks:
+  nexus-erp-sandbox:
+    driver: bridge
+    name: nexus-erp-sandbox
+
+volumes:
+  postgres_sandbox_data:
+    name: nexus-erp-postgres-sandbox-data
+  redis_sandbox_data:
+    name: nexus-erp-redis-sandbox-data
+  minio_sandbox_data:
+    name: nexus-erp-minio-sandbox-data
+  backend_sandbox_storage:
+    name: nexus-erp-backend-sandbox-storage
+  frontend_sandbox_storage:
+    name: nexus-erp-frontend-sandbox-storage
+  test_results:
+    name: nexus-erp-test-results

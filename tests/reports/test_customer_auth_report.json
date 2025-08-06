@@ -1,0 +1,100 @@
+{
+  "timestamp": "2025-08-03T12:49:41.678Z",
+  "pageTitle": "NexusERP",
+  "url": "http://127.0.0.1:8000/customers",
+  "consoleMessages": [
+    {
+      "type": "log",
+      "text": "NexusERP Theme Manager initialized. Current theme: light",
+      "timestamp": "2025-08-03T12:49:35.489Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Module loaded",
+      "timestamp": "2025-08-03T12:49:36.494Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Window Component loaded",
+      "timestamp": "2025-08-03T12:49:36.494Z"
+    },
+    {
+      "type": "log",
+      "text": "NexusERP Theme Manager initialized. Current theme: light",
+      "timestamp": "2025-08-03T12:49:36.497Z"
+    },
+    {
+      "type": "log",
+      "text": "AI 助手已載入，用戶已認證",
+      "timestamp": "2025-08-03T12:49:36.498Z"
+    },
+    {
+      "type": "log",
+      "text": "Initializing AI Chat Module...",
+      "timestamp": "2025-08-03T12:49:36.498Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Module initialized successfully",
+      "timestamp": "2025-08-03T12:49:36.498Z"
+    },
+    {
+      "type": "log",
+      "text": "Initializing AI Chat Window...",
+      "timestamp": "2025-08-03T12:49:36.498Z"
+    },
+    {
+      "type": "log",
+      "text": "AI Chat Window initialized successfully",
+      "timestamp": "2025-08-03T12:49:36.498Z"
+    },
+    {
+      "type": "log",
+      "text": "AI 功能配置已載入: {success: true, message: AI capabilities loaded successfully, data: Object}",
+      "timestamp": "2025-08-03T12:49:36.509Z"
+    },
+    {
+      "type": "log",
+      "text": "NexusERP Theme Manager initialized. Current theme: light",
+      "timestamp": "2025-08-03T12:49:38.110Z"
+    }
+  ],
+  "networkRequests": [
+    {
+      "url": "http://127.0.0.1:8000/api/ai/capabilities",
+      "method": "GET",
+      "headers": {
+        "sec-ch-ua-platform": "\"macOS\"",
+        "x-csrf-token": "q1hCyTiPmDUu3JKhWt3npxBF3XKiqgO14PruEcHr",
+        "referer": "http://127.0.0.1:8000/dashboard",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"HeadlessChrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "sec-ch-ua-mobile": "?0",
+        "x-requested-with": "XMLHttpRequest",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/139.0.7258.5 Safari/537.36",
+        "content-type": "application/json"
+      },
+      "timestamp": "2025-08-03T12:49:36.498Z"
+    },
+    {
+      "url": "http://127.0.0.1:8000/api/dashboard/stats",
+      "method": "GET",
+      "headers": {
+        "sec-ch-ua-platform": "\"macOS\"",
+        "x-csrf-token": "q1hCyTiPmDUu3JKhWt3npxBF3XKiqgO14PruEcHr",
+        "referer": "http://127.0.0.1:8000/dashboard",
+        "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"HeadlessChrome\";v=\"139\", \"Chromium\";v=\"139\"",
+        "sec-ch-ua-mobile": "?0",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/139.0.7258.5 Safari/537.36",
+        "accept": "application/json",
+        "content-type": "application/json"
+      },
+      "timestamp": "2025-08-03T12:49:36.499Z"
+    }
+  ],
+  "failedResponses": [],
+  "screenshots": [
+    "./screenshots/step1_login_page.png",
+    "./screenshots/step2_after_login.png",
+    "./screenshots/step3_customers_page.png"
+  ]
+}

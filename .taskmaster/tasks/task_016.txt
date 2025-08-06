@@ -1,0 +1,11 @@
+# Task ID: 16
+# Title: Phase 2: Financials Expansion (Accounts Receivable)
+# Status: done
+# Dependencies: 14
+# Priority: high
+# Description: Build the Accounts Receivable functionality, including invoicing from sales orders and tracking customer payments, as per PRD 3.6.1.
+# Details:
+Extend the `invoices` table to support sales invoices. Create `accounts_receivable` records upon shipping a sales order. Develop APIs to record customer payments and apply them to outstanding invoices.
+
+# Test Strategy:
+Create a sales order, ship it, and verify that a customer invoice and AR record are generated. Record a payment and check that the customer's balance and the invoice status are updated correctly.

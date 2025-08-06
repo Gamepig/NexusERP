@@ -1,0 +1,11 @@
+# Task ID: 4
+# Title: Phase 0: Core Database Schema and Migrations
+# Status: done
+# Dependencies: 2
+# Priority: high
+# Description: Define and create the initial database schemas for core entities using a migration tool. This covers user management and organization structure as outlined in PRD 7.1.2.
+# Details:
+Create migration files for the following tables: `users`, `roles`, `permissions`, `user_roles`, `role_permissions`, `user_oauth_accounts`, `companies`, and `business_units`. Implement soft deletes and define primary/foreign keys and indexes.
+
+# Test Strategy:
+Run the migrations against the PostgreSQL container and verify that all tables and relationships are created correctly using a database client. Write a rollback test to ensure migrations can be reversed cleanly.

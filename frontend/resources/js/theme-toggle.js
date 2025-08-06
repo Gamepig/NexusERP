@@ -49,7 +49,7 @@ class NexusThemeManager {
         } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
             this.currentTheme = this.LIGHT_THEME;
         } else {
-            // 3. 預設使用深色主題 (符合 CSS 變數設定)
+            // 3. 預設使用深色主題 (專業外觀)
             this.currentTheme = this.DARK_THEME;
         }
     }

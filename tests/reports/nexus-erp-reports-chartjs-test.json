@@ -1,0 +1,245 @@
+{
+  "testDateTime": "2025-07-30T12:41:19.505Z",
+  "testCredentials": {
+    "email": "test@example.com"
+  },
+  "summary": {
+    "totalPages": 5,
+    "accessiblePages": 5,
+    "pagesWithCharts": 4,
+    "pagesWithActualCharts": 3,
+    "totalCanvasElements": 8,
+    "totalJsErrors": 3,
+    "chartJsAvailable": true,
+    "chartInstancesFound": 0
+  },
+  "authentication": {
+    "success": true
+  },
+  "reportPages": {
+    "/reports": {
+      "name": "Main Reports Center",
+      "path": "/reports",
+      "description": "Reports dashboard with overview cards",
+      "accessible": true,
+      "chartsFound": false,
+      "canvasElements": 0,
+      "chartJsLoaded": true,
+      "actualChartsRendered": false,
+      "interactiveFeatures": false,
+      "loadTime": 1159,
+      "errors": [],
+      "chartDetails": []
+    },
+    "/reports/sales": {
+      "name": "Sales Reports",
+      "path": "/reports/sales",
+      "description": "Sales analytics and charts",
+      "accessible": true,
+      "chartsFound": true,
+      "canvasElements": 2,
+      "chartJsLoaded": true,
+      "actualChartsRendered": true,
+      "interactiveFeatures": false,
+      "loadTime": 1163,
+      "errors": [],
+      "chartDetails": [
+        {
+          "index": 0,
+          "width": 862,
+          "height": 320,
+          "visible": true,
+          "hasContent": true,
+          "id": "sales-trend-chart",
+          "className": null,
+          "parentElement": "DIV"
+        },
+        {
+          "index": 1,
+          "width": 862,
+          "height": 320,
+          "visible": true,
+          "hasContent": true,
+          "id": "top-customers-chart",
+          "className": null,
+          "parentElement": "DIV"
+        }
+      ]
+    },
+    "/reports/financial": {
+      "name": "Financial Reports",
+      "path": "/reports/financial",
+      "description": "Financial dashboard and metrics",
+      "accessible": true,
+      "chartsFound": true,
+      "canvasElements": 2,
+      "chartJsLoaded": true,
+      "actualChartsRendered": true,
+      "interactiveFeatures": false,
+      "loadTime": 1115,
+      "errors": [],
+      "chartDetails": [
+        {
+          "index": 0,
+          "width": 862,
+          "height": 256,
+          "visible": true,
+          "hasContent": true,
+          "id": "revenueChart",
+          "className": null,
+          "parentElement": "DIV"
+        },
+        {
+          "index": 1,
+          "width": 862,
+          "height": 256,
+          "visible": true,
+          "hasContent": true,
+          "id": "expenseChart",
+          "className": null,
+          "parentElement": "DIV"
+        }
+      ]
+    },
+    "/reports/inventory": {
+      "name": "Inventory Reports",
+      "path": "/reports/inventory",
+      "description": "Inventory level charts and analytics",
+      "accessible": true,
+      "chartsFound": true,
+      "canvasElements": 2,
+      "chartJsLoaded": true,
+      "actualChartsRendered": true,
+      "interactiveFeatures": false,
+      "loadTime": 1134,
+      "errors": [],
+      "chartDetails": [
+        {
+          "index": 0,
+          "width": 874,
+          "height": 320,
+          "visible": true,
+          "hasContent": true,
+          "id": "inventory-category-chart",
+          "className": null,
+          "parentElement": "DIV"
+        },
+        {
+          "index": 1,
+          "width": 874,
+          "height": 320,
+          "visible": true,
+          "hasContent": true,
+          "id": "inventory-trend-chart",
+          "className": null,
+          "parentElement": "DIV"
+        }
+      ]
+    },
+    "/reports/purchase": {
+      "name": "Purchase Reports",
+      "path": "/reports/purchase",
+      "description": "Purchase order analytics",
+      "accessible": true,
+      "chartsFound": true,
+      "canvasElements": 2,
+      "chartJsLoaded": true,
+      "actualChartsRendered": false,
+      "interactiveFeatures": false,
+      "loadTime": 1124,
+      "errors": [],
+      "chartDetails": [
+        {
+          "index": 0,
+          "width": 300,
+          "height": 150,
+          "visible": true,
+          "hasContent": false,
+          "id": "purchaseTrendChart",
+          "className": null,
+          "parentElement": "DIV"
+        },
+        {
+          "index": 1,
+          "width": 300,
+          "height": 150,
+          "visible": true,
+          "hasContent": false,
+          "id": "categoryPieChart",
+          "className": null,
+          "parentElement": "DIV"
+        }
+      ]
+    }
+  },
+  "chartFunctionality": {
+    "libraryAvailable": true,
+    "chartInstancesFound": 0,
+    "chartTypes": [],
+    "dataVisualization": false,
+    "responsive": false,
+    "animationsWorking": false
+  },
+  "jsErrors": [
+    {
+      "type": "Page Error",
+      "message": "Identifier 'NexusChartTheme' has already been declared",
+      "stack": "",
+      "timestamp": "2025-07-30T12:40:40.416Z"
+    },
+    {
+      "type": "Page Error",
+      "message": "Identifier 'NexusChartTheme' has already been declared",
+      "stack": "",
+      "timestamp": "2025-07-30T12:40:56.991Z"
+    },
+    {
+      "type": "Page Error",
+      "message": "Cannot set properties of undefined (setting 'color')",
+      "stack": "TypeError: Cannot set properties of undefined (setting 'color')\n    at HTMLDocument.<anonymous> (http://127.0.0.1:8000/reports/purchase:1321:45)",
+      "timestamp": "2025-07-30T12:41:05.222Z"
+    }
+  ],
+  "screenshots": [
+    {
+      "page": "Main Reports Center",
+      "path": "test-reports-main-reports-center.png",
+      "canvasCount": 0,
+      "actualChartsRendered": false
+    },
+    {
+      "page": "Sales Reports",
+      "path": "test-reports-sales-reports.png",
+      "canvasCount": 2,
+      "actualChartsRendered": true
+    },
+    {
+      "page": "Financial Reports",
+      "path": "test-reports-financial-reports.png",
+      "canvasCount": 2,
+      "actualChartsRendered": true
+    },
+    {
+      "page": "Inventory Reports",
+      "path": "test-reports-inventory-reports.png",
+      "canvasCount": 2,
+      "actualChartsRendered": true
+    },
+    {
+      "page": "Purchase Reports",
+      "path": "test-reports-purchase-reports.png",
+      "canvasCount": 2,
+      "actualChartsRendered": false
+    }
+  ],
+  "evidenceBasedFindings": {
+    "chartJsImplementationStatus": "LIBRARY_LOADED_BUT_NOT_USED",
+    "actualVisualizationWorking": true,
+    "recommendedActions": [
+      "Create chart instances and bind to canvas elements"
+    ],
+    "technicalEvidence": [
+      "Chart.js loaded but no active chart instances found"
+    ]
+  }
+}

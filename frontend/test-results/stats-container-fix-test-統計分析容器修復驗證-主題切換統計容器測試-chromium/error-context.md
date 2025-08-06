@@ -1,0 +1,114 @@
+# Page snapshot
+
+```yaml
+- navigation "主要導航":
+  - link "NexusERP":
+    - /url: http://127.0.0.1:8000/dashboard
+    - img
+    - text: NexusERP
+  - navigation "主要導航":
+    - list:
+      - listitem:
+        - link "儀表板":
+          - /url: http://127.0.0.1:8000/dashboard
+      - listitem:
+        - button "客戶關係管理":
+          - text: 客戶關係管理
+          - img
+      - listitem:
+        - button "產品與庫存":
+          - text: 產品與庫存
+          - img
+      - listitem:
+        - button "採購管理":
+          - text: 採購管理
+          - img
+      - listitem:
+        - button "銷售管理":
+          - text: 銷售管理
+          - img
+      - listitem:
+        - button "分析與報表":
+          - text: 分析與報表
+          - img
+  - button "切換到暗色主題":
+    - img
+    - img
+    - text: 主題
+  - button "用戶選單":
+    - text: � 測試使用者 test@example.com
+    - img
+- main:
+  - heading "管理儀表板" [level=1]
+  - paragraph: 總覽您的業務營運狀況
+  - text: "最後更新: 下午3:26:32"
+  - button "重新整理":
+    - img
+    - text: 重新整理
+  - link "新增報價單 建立新的報價文件":
+    - /url: /quotes/create
+    - img
+    - heading "新增報價單" [level=3]
+    - paragraph: 建立新的報價文件
+  - link "庫存管理 檢視庫存狀況 22":
+    - /url: /inventory
+    - img
+    - heading "庫存管理" [level=3]
+    - paragraph: 檢視庫存狀況
+    - text: "22"
+  - link "訂單處理 處理待辦訂單 1000":
+    - /url: /orders
+    - img
+    - heading "訂單處理" [level=3]
+    - paragraph: 處理待辦訂單
+    - text: "1000"
+  - link "客戶管理 管理客戶資料 17":
+    - /url: /customers
+    - img
+    - heading "客戶管理" [level=3]
+    - paragraph: 管理客戶資料
+    - text: "17"
+  - paragraph: 總營收
+  - paragraph: NT$76,065,286.7
+  - text: "-41.4%"
+  - paragraph: 過去30天營收
+  - button "重新整理統計數據":
+    - img
+  - paragraph: 總訂單數
+  - paragraph: 1,032
+  - text: "-31.2%"
+  - paragraph: 過去30天訂單數
+  - button "重新整理統計數據":
+    - img
+  - paragraph: 總客戶數
+  - paragraph: "17"
+  - paragraph: 總客戶數量
+  - button "重新整理統計數據":
+    - img
+  - paragraph: 待處理報價
+  - paragraph: "554"
+  - text: +27.4%
+  - paragraph: 待處理報價
+  - button "重新整理統計數據":
+    - img
+  - paragraph: 庫存警報
+  - paragraph: "22"
+  - paragraph: 庫存警報數量
+  - button "重新整理統計數據":
+    - img
+  - paragraph: 轉換率
+  - paragraph: 6070.6%
+  - text: "-2747.1%"
+  - paragraph: 客戶轉換率
+  - button "重新整理統計數據":
+    - img
+  - heading "營收趨勢" [level=3]
+  - paragraph: 過去7天營收表現
+  - text: NT$81,890,029 +12.5% ↗
+  - heading "訂單狀態分布" [level=3]
+  - paragraph: 訂單狀態統計
+  - heading "庫存分析" [level=3]
+  - paragraph: 前8名產品庫存量
+  - heading "月度目標達成" [level=3]
+  - paragraph: 本月業績目標進度
+```

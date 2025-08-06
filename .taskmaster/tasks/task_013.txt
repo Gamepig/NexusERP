@@ -1,0 +1,11 @@
+# Task ID: 13
+# Title: Phase 2: Customer Management (CRM) Module
+# Status: done
+# Dependencies: 6
+# Priority: high
+# Description: Develop a comprehensive Customer Relationship Management (CRM) module as per PRD 3.5. This includes core functionalities such as customer master data management, customer contact management (supporting multiple contacts per customer), customer credit limit control, and basic customer activity tracking.
+# Details:
+Implement the CRM module by creating the following database tables: `customers` (for basic information, credit limits, and status), `customer_contacts` (for managing multiple contacts per customer), and `customer_activities` (for tracking customer interactions). Develop the following API endpoints: `POST /api/customers` (create customer), `GET /api/customers` (list customers), `GET /api/customers/{id}` (retrieve specific customer), `PUT /api/customers/{id}` (update customer), and `DELETE /api/customers/{id}` (soft delete customer).
+
+# Test Strategy:
+Write comprehensive integration tests covering all CRM functionalities. This includes testing CRUD operations for customer master data (including soft delete behavior), managing multiple customer contacts, verifying customer credit limit controls, and ensuring proper logging of customer activities. Additionally, test validation rules for all relevant data fields.
