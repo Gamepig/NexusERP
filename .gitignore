@@ -132,6 +132,35 @@ __pycache__/
 /frontend/build.log
 memory.json
 
+# === 開發工具和配置檔案 (不需上傳) ===
+
+# IDE 和編輯器配置
+/.claude/
+/.cursor/
+/.gemini/
+/.serena/
+
+# 任務管理和專案規劃
+/.taskmaster/
+/Task/
+/tasks/
+/docs/
+/rules/
+
+# MCP 配置檔案
+.mcp-free.json
+.mcp.json
+
+# 專案文件和報告 (本地開發用)
+PROJECT_DEVELOPMENT_PLAN.md
+POSTGRESQL_DEPLOYMENT_GUIDE.md
+USER_DROPDOWN_FIX_VERIFICATION_REPORT.md
+dashboard-test-report.json
+dashboard_test_analysis.md
+
+# 開發截圖和測試檔案
+/screenshots/
+
 # Miscellaneous
 *.pid
 *.seed
