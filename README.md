@@ -1,5 +1,10 @@
 ## NexusERP — 技術導向展示型 ERP 專案
 
+### 快速連結
+- [技術棧與功能總覽](technical-docs/01_stack_and_features.md)
+- [API 契約（函數/變數）](technical-docs/02_api_reference.md)
+- [資料庫設計（表與欄位）](technical-docs/03_database_schema.md)
+
 NexusERP 的核心目標不是「完成一個商用 ERP」，而是「展現嚴謹的系統設計與工程實作能力」。本專案以企業級架構為基礎，強調多租戶安全、可擴充模組化、可觀測性與自動化測試，並示範 AI 能力與第三方整合的工程落地方式。
 
 ### 亮點總覽（工程觀點）
