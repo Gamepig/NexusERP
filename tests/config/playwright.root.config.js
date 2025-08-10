@@ -5,7 +5,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
+  // 指向專案根的 tests 目錄
+  testDir: '../',
   
   use: {
     baseURL: 'http://127.0.0.1:8000',

@@ -14,8 +14,8 @@ test.describe('Card Height Verification Tests', () => {
     await page.fill('input[name="password"]', 'password123');
     await page.click('button[type="submit"]');
     
-    // 等待儀表板載入
-    await page.waitForSelector('.dashboard-grid', { timeout: 10000 });
+    // 等待儀表板載入（使用穩定選擇器）
+    await page.waitForSelector('[data-dashboard], #statsGrid, main, .nexus-main-content-no-sidebar', { timeout: 10000 });
     await page.waitForTimeout(2000); // 等待樣式完全載入
   });
 

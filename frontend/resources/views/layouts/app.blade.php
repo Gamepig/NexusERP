@@ -19,7 +19,7 @@
     </head>
     <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900" style="background-color: var(--nexus-bg-primary); color: var(--nexus-text-primary);">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900" style="background-color: var(--nexus-bg-primary);">
-            <!-- 頂部導航 -->
+            <!-- 頂部導航（含內嵌全域搜尋觸發器） -->
             <x-layouts.enhanced-navigation />
             
             <!-- 主內容區域 - 移除側邊欄後的全寬設計 -->
@@ -53,6 +53,8 @@
                         @yield('content')
                     @endisset
                 </main>
+                <!-- 行動版底部導航 -->
+                <x-navigation.mobile-bottom-nav />
             </div>
         </div>
         

@@ -22,7 +22,11 @@
     <!-- 過濾器 -->
     <div class="nx-card mb-8">
         <h3 class="text-lg font-semibold mb-4" style="color: var(--nexus-text-primary);">篩選條件</h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div>
+                <label class="block text-sm font-medium nx-text-accent mb-2">公司</label>
+                <select id="company-select" class="w-full nx-input"></select>
+            </div>
             <div>
                 <label class="block text-sm font-medium nx-text-accent mb-2">開始日期</label>
                 <input type="date" id="date-from" class="w-full nx-input">
@@ -146,6 +150,8 @@
                         <button id="export-pdf" class="nx-btn nx-btn-danger">
                             匯出 PDF
                         </button>
+                        <button id="export-csv" class="nx-btn nx-btn-secondary">下載 CSV</button>
+                        <button id="export-trend-png" class="nx-btn nx-btn-info">下載趨勢圖 PNG</button>
                     </div>
                 </div>
             </div>
@@ -218,7 +224,7 @@ class SalesReportController {
     init() {
         this.setupEventListeners();
         this.setDefaultDates();
-        this.loadReport();
+        this.initCompanySelect().then(() => this.loadReport());
     }
 
     setupEventListeners() {
@@ -245,6 +251,49 @@ class SalesReportController {
         document.getElementById('date-to').value = today.toISOString().split('T')[0];
     }
 
+    async initCompanySelect() {
+        try {
+            const sel = document.getElementById('company-select');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">載入公司中...</option>';
+            const resp = await fetch('/api/company-management/companies', { credentials: 'same-origin' });
+            const json = await resp.json();
+            const companies = json?.companies || json || [];
+            sel.innerHTML = '';
+            companies.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id || c.company_id || c.company?.id || '';
+                opt.textContent = c.name || c.company_name || `公司 ${opt.value}`;
+                if ((json.current_company_id && (opt.value == json.current_company_id)) || c.is_current) opt.selected = true;
+                sel.appendChild(opt);
+            });
+            sel.addEventListener('change', async () => {
+                await this.switchCompany(sel.value);
+                this.loadReport();
+            });
+        } catch (e) {
+            console.warn('載入公司清單失敗', e);
+        }
+    }
+
+    async switchCompany(companyId) {
+        if (!companyId) return;
+        try {
+            await fetch('/api/company-management/switch-company', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({ company_id: companyId })
+            });
+        } catch (e) {
+            console.warn('切換公司失敗', e);
+        }
+    }
+
     async loadReport() {
         try {
             this.showLoading();
@@ -258,7 +307,7 @@ class SalesReportController {
             const status = document.getElementById('status-filter').value;
             if (status) params.append('status', status);
 
-            // 調用 Laravel API
+    // 調用 Laravel API
             const response = await fetch(`/api/reports/sales?${params}`, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -304,8 +353,9 @@ class SalesReportController {
             return;
         }
 
-        const summary = JSON.parse(this.data.summary);
-        const details = JSON.parse(this.data.data);
+        // API 已回傳物件，不需再 JSON.parse
+        const summary = this.data.summary;
+        const details = this.data.data;
         
         this.renderSummary(summary);
         this.renderCharts(summary);
@@ -340,7 +390,7 @@ class SalesReportController {
                 labels: salesByMonth.map(item => item.month),
                 datasets: [{
                     label: '銷售額',
-                    data: salesByMonth.map(item => item.sales),
+                    data: salesByMonth.map(item => item.total_sales),
                     borderColor: '#10B981',
                     backgroundColor: 'rgba(16, 185, 129, 0.1)',
                     tension: 0.4,
@@ -381,7 +431,7 @@ class SalesReportController {
             data: {
                 labels: topCustomers.map(customer => customer.customer_name),
                 datasets: [{
-                    data: topCustomers.map(customer => customer.total_amount),
+                    data: topCustomers.map(customer => customer.total_spent),
                     backgroundColor: [
                         '#10B981',
                         '#3B82F6',
@@ -510,6 +560,28 @@ class SalesReportController {
         }
     }
 
+    bindExtraExports() {
+        const csvBtn = document.getElementById('export-csv');
+        if (csvBtn) {
+            csvBtn.onclick = () => {
+                const details = this.data?.data || [];
+                const header = 'OrderNumber,OrderDate,Customer,Status,TotalAmount';
+                const body = details.map(o => `${o.order_number},${o.order_date},${o.customer_name||''},${o.status},${o.total_amount}`).join('\n');
+                const blob = new Blob([header+'\n'+body], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href=url; a.download=`sales-details-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+            };
+        }
+        const pngBtn = document.getElementById('export-trend-png');
+        if (pngBtn) {
+            pngBtn.onclick = () => {
+                const c = document.getElementById('sales-trend-chart');
+                if (!c) return; const url=c.toDataURL('image/png');
+                const a=document.createElement('a'); a.href=url; a.download=`sales-trend-${new Date().toISOString().slice(0,10)}.png`; a.click();
+            };
+        }
+    }
+
     formatCurrency(amount) {
         return new Intl.NumberFormat('zh-TW', {
             style: 'currency',
@@ -522,7 +594,8 @@ class SalesReportController {
 
 // 頁面載入完成後初始化報表
 document.addEventListener('DOMContentLoaded', function() {
-    new SalesReportController();
+    const ctrl = new SalesReportController();
+    ctrl.bindExtraExports();
 });
 </script>
 @endsection

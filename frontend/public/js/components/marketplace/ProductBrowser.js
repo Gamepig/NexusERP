@@ -21,6 +21,10 @@ class ProductBrowser {
         this.sortBy = 'created_at';
         this.sortOrder = 'desc';
         this.isLoading = false;
+        this.lastFocusedElement = null;
+        this._handleEsc = null;
+        this.recentStorageKey = 'nx_recent_products';
+        this.recentLimit = 12;
 
         this.init();
     }
@@ -29,6 +33,73 @@ class ProductBrowser {
         this.bindEvents();
         this.loadCategories();
         this.loadProducts();
+        this.renderRecentViewed();
+    }
+
+    getProductImage(product) {
+        const explicitUrl = product?.images && product.images.length > 0 && product.images[0]?.url;
+        if (explicitUrl) return explicitUrl;
+        // 線上即時搜尋產品代表圖（無需金鑰，僅 DEMO 用途）
+        const q = encodeURIComponent(product?.name || 'product');
+        return `https://source.unsplash.com/featured/?${q}`;
+    }
+
+    // 最近瀏覽：存取、渲染
+    saveRecentView(product) {
+        try {
+            const list = this.getRecentViews();
+            const minimal = {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                category: product.category?.name || product.category || '',
+                image: this.getProductImage(product)
+            };
+            const filtered = list.filter(p => p.id !== minimal.id);
+            filtered.unshift(minimal);
+            const trimmed = filtered.slice(0, this.recentLimit);
+            localStorage.setItem(this.recentStorageKey, JSON.stringify(trimmed));
+        } catch (_) {}
+    }
+
+    getRecentViews() {
+        try {
+            const raw = localStorage.getItem(this.recentStorageKey);
+            if (!raw) return [];
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (_) { return []; }
+    }
+
+    renderRecentViewed() {
+        const section = document.getElementById('recent-viewed-section');
+        const grid = document.getElementById('recent-grid');
+        if (!section || !grid) return;
+        const items = this.getRecentViews();
+        if (!items.length) {
+            section.classList.add('hidden');
+            return;
+        }
+        section.classList.remove('hidden');
+        grid.innerHTML = items.map(item => {
+            const img = item.image || this.getFallbackImage(item);
+            return `
+            <div class="nx-card overflow-hidden cursor-pointer" role="button" tabindex="0"
+                 onclick="productBrowser.viewProductDetail(${item.id})"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();productBrowser.viewProductDetail(${item.id});}">
+                <img src="${img}" alt="${item.name}" class="w-full h-28 object-cover"
+                     onerror="this.onerror=null;this.src='https://picsum.photos/seed/recent-${item.id}/400/300'">
+                <div class="p-3">
+                    <div class="text-sm font-medium truncate" style="color: var(--nx-text-primary);">${item.name}</div>
+                    <div class="text-xs" style="color: var(--nx-text-secondary);">$${Number(item.price).toFixed(2)}</div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    getFallbackImage(product) {
+        const q = encodeURIComponent(product?.name || 'product');
+        return `https://source.unsplash.com/featured/?${q}`;
     }
 
     bindEvents() {
@@ -395,22 +466,19 @@ class ProductBrowser {
         emptyState.classList.add('hidden');
         grid.classList.remove('hidden');
 
-        grid.innerHTML = products.map(product => `
+        grid.innerHTML = products.map(product => {
+            const imageUrl = this.getProductImage(product);
+            const fallbackUrl = this.getFallbackImage(product);
+            return `
             <div class="nx-card hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer" 
-                 onclick="productBrowser.viewProductDetail(${product.id})">
+                 role="button" tabindex="0" aria-label="查看 ${product.name} 詳情"
+                 onclick="productBrowser.viewProductDetail(${product.id})"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();productBrowser.viewProductDetail(${product.id});}">
                 <!-- 產品圖片 -->
                 <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden relative" style="background: var(--nx-border-primary);">
-                    ${product.images && product.images.length > 0 
-                        ? `<img src="${product.images[0].url}" alt="${product.name}" 
-                               class="w-full h-48 object-cover group-hover:opacity-75">`
-                        : `<div class="w-full h-48 flex items-center justify-center">
-                             <svg class="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--nx-text-muted);">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                 </path>
-                             </svg>
-                           </div>`
-                    }
+                    <img src="${imageUrl}" alt="${product.name}"
+                         class="w-full h-48 object-cover group-hover:opacity-75"
+                         onerror="this.onerror=null;this.src='${fallbackUrl}';">
                     
                     <!-- 標籤 -->
                     <div class="absolute top-2 left-2 flex flex-col space-y-1">
@@ -457,13 +525,16 @@ class ProductBrowser {
                     </button>
                 </div>
             </div>
-        `).join('');
+        `;}).join('');
     }
 
     renderPagination(data) {
         const pagination = document.getElementById('pagination');
-        
-        if (data.total_pages <= 1) {
+        // 兼容多種 API 回應：total_pages、last_page 或由 total/per_page 推導
+        const totalPages = data.total_pages || data.last_page || Math.ceil((data.total || 0) / (data.per_page || this.pageSize)) || 1;
+        const currentPage = data.current_page || this.currentPage || 1;
+
+        if (totalPages <= 1) {
             pagination.classList.add('hidden');
             return;
         }
@@ -474,13 +545,13 @@ class ProductBrowser {
         nav.innerHTML = '';
 
         // 上一頁按鈕
-        if (data.current_page > 1) {
-            nav.appendChild(this.createPageButton('previous', data.current_page - 1, '上一頁'));
+        if (currentPage > 1) {
+            nav.appendChild(this.createPageButton('previous', currentPage - 1, '上一頁'));
         }
 
         // 頁碼按鈕
-        const startPage = Math.max(1, data.current_page - 2);
-        const endPage = Math.min(data.total_pages, data.current_page + 2);
+        const startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, currentPage + 2);
 
         if (startPage > 1) {
             nav.appendChild(this.createPageButton('page', 1, '1'));
@@ -490,19 +561,19 @@ class ProductBrowser {
         }
 
         for (let i = startPage; i <= endPage; i++) {
-            nav.appendChild(this.createPageButton('page', i, i.toString(), i === data.current_page));
+            nav.appendChild(this.createPageButton('page', i, i.toString(), i === currentPage));
         }
 
-        if (endPage < data.total_pages) {
-            if (endPage < data.total_pages - 1) {
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
                 nav.appendChild(this.createPageButton('ellipsis', null, '...'));
             }
-            nav.appendChild(this.createPageButton('page', data.total_pages, data.total_pages.toString()));
+            nav.appendChild(this.createPageButton('page', totalPages, totalPages.toString()));
         }
 
         // 下一頁按鈕
-        if (data.current_page < data.total_pages) {
-            nav.appendChild(this.createPageButton('next', data.current_page + 1, '下一頁'));
+        if (currentPage < totalPages) {
+            nav.appendChild(this.createPageButton('next', currentPage + 1, '下一頁'));
         }
     }
 
@@ -555,6 +626,9 @@ class ProductBrowser {
             if (response.ok) {
                 const product = await response.json();
                 this.showProductDetailModal(product);
+                // 記錄最近瀏覽並刷新區塊
+                this.saveRecentView(product);
+                this.renderRecentViewed();
             } else {
                 throw new Error('載入產品詳情失敗');
             }
@@ -567,37 +641,49 @@ class ProductBrowser {
     showProductDetailModal(product) {
         const modal = document.getElementById('product-detail-modal');
         const title = document.getElementById('product-detail-title');
+        const breadcrumb = document.getElementById('product-detail-breadcrumb');
         const content = document.getElementById('product-detail-content');
 
-        title.textContent = product.name;
+        // 記錄先前聚焦元素，供關閉後還原
+        this.lastFocusedElement = document.activeElement;
 
+        title.textContent = product.name;
+        if (breadcrumb) {
+            const supplierPart = product.supplier_id
+                ? `<li>/</li><li><a href="/marketplace/suppliers/${product.supplier_id}" class="hover:underline" style="color: var(--nx-text-secondary);">${product.supplier?.company_name || '商家'}</a></li>`
+                : '';
+            breadcrumb.innerHTML = `
+                <ol class="inline-flex items-center space-x-1">
+                    <li><a href="/marketplace" class="hover:underline" style="color: var(--nx-text-secondary);">市集</a></li>
+                    <li>/</li>
+                    <li><a href="/marketplace/products" class="hover:underline" style="color: var(--nx-text-secondary);">商品列表</a></li>
+                    ${supplierPart}
+                    <li>/</li>
+                    <li class="text-xs" style="color: var(--nx-text-primary);">${product.name}</li>
+                </ol>`;
+        }
+
+        const primaryImg = this.getProductImage(product);
+        const primaryFallback = this.getFallbackImage(product);
         content.innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 產品圖片 -->
                 <div>
-                    ${product.images && product.images.length > 0 
-                        ? `<div class="space-y-4">
-                             <img src="${product.images[0].url}" alt="${product.name}" 
-                                  class="w-full h-64 object-cover rounded-lg">
-                             ${product.images.length > 1 
-                                 ? `<div class="grid grid-cols-4 gap-2">
-                                      ${product.images.slice(1, 5).map(img => 
-                                          `<img src="${img.url}" alt="${product.name}" 
-                                                class="w-full h-16 object-cover rounded cursor-pointer hover:opacity-75"
-                                                onclick="document.querySelector('#product-detail-modal img').src='${img.url}'">`
-                                      ).join('')}
-                                    </div>`
-                                 : ''
-                             }
-                           </div>`
-                        : `<div class="w-full h-64 rounded-lg flex items-center justify-center" style="background: var(--nx-border-primary);">
-                             <svg class="h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--nx-text-muted);">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                 </path>
-                             </svg>
-                           </div>`
-                    }
+                    <div class="space-y-4">
+                        <img src="${primaryImg}" alt="${product.name}"
+                             class="w-full h-64 object-cover rounded-lg"
+                             onerror="this.onerror=null;this.src='${primaryFallback}';">
+                        ${product.images && product.images.length > 1 
+                            ? `<div class="grid grid-cols-4 gap-2">
+                                 ${product.images.slice(1, 5).map(img => 
+                                     `<img src="${img.url}" alt="${product.name}" 
+                                           class="w-full h-16 object-cover rounded cursor-pointer hover:opacity-75"
+                                           onclick="document.querySelector('#product-detail-modal img').src='${img.url}'">`
+                                 ).join('')}
+                               </div>`
+                            : ''
+                        }
+                    </div>
                 </div>
 
                 <!-- 產品資訊 -->
@@ -652,6 +738,13 @@ class ProductBrowser {
                                 <p class="text-sm" style="color: var(--nx-text-primary);">${product.supplier.company_name}</p>
                                 ${product.supplier.contact_person ? `<p class="text-sm" style="color: var(--nx-text-secondary);">聯絡人: ${product.supplier.contact_person}</p>` : ''}
                                 ${product.supplier.business_type ? `<p class="text-sm" style="color: var(--nx-text-secondary);">業務類型: ${this.getBusinessTypeText(product.supplier.business_type)}</p>` : ''}
+                                ${product.supplier_id ? `
+                                  <div class="pt-2">
+                                    <a href="/marketplace/suppliers/${product.supplier_id}" class="nx-btn nx-btn-secondary text-xs inline-flex items-center">
+                                      前往商家頁
+                                    </a>
+                                  </div>
+                                ` : ''}
                             </div>
                         </div>
                     ` : ''}
@@ -661,21 +754,86 @@ class ProductBrowser {
                                 class="w-full nx-btn nx-btn-primary py-3">
                             立即詢價
                         </button>
+                        <div class="mt-2 grid grid-cols-2 gap-2">
+                            <button id="btn-add-cart" class="nx-btn nx-btn-secondary">加入購物車</button>
+                            <button id="btn-go-cart" class="nx-btn nx-btn-secondary">前往購物車</button>
+                        </div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- 推薦商品 -->
+            <div class="mt-8 border-t pt-6" style="border-color: var(--nx-border-primary);">
+                <h5 class="text-lg font-semibold mb-4" style="color: var(--nx-text-primary);">猜你喜歡</h5>
+                <div id="suggestions-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
         `;
 
         modal.classList.remove('hidden');
+        // ESC 關閉與焦點設定
+        const closeBtn = document.getElementById('close-detail-modal');
+        if (closeBtn) closeBtn.focus();
+        this._handleEsc = (e) => { if (e.key === 'Escape') { this.closeProductDetailModal(); } };
+        document.addEventListener('keydown', this._handleEsc);
+
+        // 綁定購物車按鈕
+        try {
+            const addBtn = document.getElementById('btn-add-cart');
+            const goBtn = document.getElementById('btn-go-cart');
+            const payload = { id: product.id, name: product.name, price: product.price, images: product.images, supplier_id: product.supplier_id };
+            if (addBtn) addBtn.onclick = () => { demoCart.addItem(payload, 1); (window.nxToast||function(m){console.log(m)})('已加入購物車（DEMO）'); };
+            if (goBtn) goBtn.onclick = () => { demoCart.addItem(payload, 1); window.location.href='/marketplace/cart'; };
+        } catch(_) {}
+
+        // 載入推薦清單（同類別）
+        try {
+            const categoryName = product.category?.name || product.category || '';
+            const params = new URLSearchParams();
+            if (categoryName) params.append('category', categoryName);
+            params.append('exclude_id', String(product.id));
+            fetch(`${this.apiBaseUrl}/marketplace/products/suggestions?${params.toString()}`)
+                .then(r => r.json())
+                .then(s => {
+                    const suggestions = s.data || [];
+                    const grid = document.getElementById('suggestions-grid');
+                    if (!grid) return;
+                    grid.innerHTML = suggestions.map(item => {
+                        const sugUrl = productBrowser.getProductImage(item);
+                        const sugFallback = productBrowser.getFallbackImage(item);
+                        return `
+                        <div class="nx-card p-3 hover:shadow transition-shadow cursor-pointer" role="button" tabindex="0"
+                             onclick="productBrowser.viewProductDetail(${item.id})"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();productBrowser.viewProductDetail(${item.id});}">
+                            <div class="flex items-center gap-3">
+                                <img src="${sugUrl}" alt="${item.name}" class="w-16 h-16 object-cover rounded"
+                                     onerror="this.onerror=null;this.src='${sugFallback}';" />
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium" style="color: var(--nx-text-primary);">${item.name}</div>
+                                    <div class="text-xs" style="color: var(--nx-text-secondary);">$${Number(item.price).toFixed(2)}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;}).join('');
+                })
+                .catch(() => {});
+        } catch (_) {}
     }
 
     closeProductDetailModal() {
         document.getElementById('product-detail-modal').classList.add('hidden');
+        if (this._handleEsc) {
+            document.removeEventListener('keydown', this._handleEsc);
+            this._handleEsc = null;
+        }
+        // 還原焦點
+        if (this.lastFocusedElement && typeof this.lastFocusedElement.focus === 'function') {
+            try { this.lastFocusedElement.focus(); } catch (_) {}
+        }
     }
 
     inquireProduct(productId) {
         // 這裡可以實作詢價功能，例如開啟詢價表單或跳轉到詢價頁面
-        alert(`產品 ID ${productId} 的詢價功能尚未實作`);
+        (window.nxToast||function(m){console.log(m)})(`產品 ID ${productId} 的詢價功能尚未實作`);
     }
 
     updateProductCount(count) {
@@ -730,7 +888,7 @@ class ProductBrowser {
     }
 
     showError(message) {
-        alert(message);
+        (window.nxToast||function(m){console.log(m)})(message);
     }
 }
 

@@ -24,12 +24,12 @@
                     返回客戶
                 </a>
             @else
-                <a href="{{ route('customers.index') }}" 
+                <a href="{{ route('quotes.index') }}" 
                    class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
-                    返回客戶列表
+                    回報價單列表
                 </a>
             @endif
         </div>
@@ -110,15 +110,29 @@
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                             <option value="">請選擇客戶</option>
                             @if(isset($customers) && is_array($customers))
-                                @foreach($customers as $customer)
-                                    <option value="{{ $customer['id'] }}" 
-                                            data-contact-person="{{ $customer['contact_person'] ?? $customer['name'] ?? '' }}"
-                                            data-phone="{{ $customer['phone'] ?? '' }}"
-                                            data-email="{{ $customer['email'] ?? '' }}"
-                                            {{ (isset($customerId) && $customerId == $customer['id']) || (isset($quote) && $quote['customer_id'] == $customer['id']) ? 'selected' : '' }}>
-                                        {{ $customer['name'] }} {{ isset($customer['email']) ? '(' . $customer['email'] . ')' : '' }}
-                                    </option>
-                                @endforeach
+                                    @foreach($customers as $customer)
+                                        @php
+                                            $selected = false;
+                                            if (isset($customerId) && (string)$customerId === (string)$customer['id']) {
+                                                $selected = true;
+                                            } elseif (isset($quote) && is_array($quote)) {
+                                                // 依序嘗試不同來源的 customer_id（normalize 後可能放在 original.customer_id 或 customer.id）
+                                                $cid1 = $quote['customer_id'] ?? null;
+                                                $cid2 = $quote['original']['customer_id'] ?? null;
+                                                $cid3 = $quote['customer']['id'] ?? null;
+                                                if ((string)($cid1 ?? $cid2 ?? $cid3) === (string)$customer['id']) {
+                                                    $selected = true;
+                                                }
+                                            }
+                                        @endphp
+                                        <option value="{{ $customer['id'] }}" 
+                                                data-contact-person="{{ $customer['contact_person'] ?? $customer['name'] ?? '' }}"
+                                                data-phone="{{ $customer['phone'] ?? '' }}"
+                                                data-email="{{ $customer['email'] ?? '' }}"
+                                                {{ $selected ? 'selected' : '' }}>
+                                            {{ $customer['name'] }} {{ isset($customer['email']) ? '(' . $customer['email'] . ')' : '' }}
+                                        </option>
+                                    @endforeach
                             @endif
                         </select>
                     </div>
@@ -129,7 +143,7 @@
                             報價日期 <span class="text-red-500">*</span>
                         </label>
                         <input type="date" id="quote_date" name="quote_date" required
-                               value="{{ isset($quote) ? $quote['quote_date'] : date('Y-m-d') }}"
+                               value="{{ isset($quote) && isset($quote['quote_date']) ? date('Y-m-d', strtotime($quote['quote_date'])) : date('Y-m-d') }}"
                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                     </div>
 
@@ -139,7 +153,7 @@
                             有效期限 <span class="text-red-500">*</span>
                         </label>
                         <input type="date" id="valid_until" name="valid_until" required
-                               value="{{ isset($quote) ? ($quote['valid_until'] ?? $quote['valid_until_date'] ?? date('Y-m-d', strtotime('+30 days'))) : date('Y-m-d', strtotime('+30 days')) }}"
+                               value="@if(isset($quote) && (isset($quote['expiry_date']) || isset($quote['valid_until']))){{ date('Y-m-d', strtotime($quote['expiry_date'] ?? $quote['valid_until'])) }}@else{{ date('Y-m-d', strtotime('+30 days')) }}@endif"
                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
                     </div>
                 </div>
@@ -152,11 +166,22 @@
                         </label>
                         <select id="status" name="status" 
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-                            <option value="draft">草稿</option>
-                            <option value="sent">已發送</option>
-                            <option value="accepted">已接受</option>
-                            <option value="rejected">已拒絕</option>
-                            <option value="expired">已過期</option>
+                            @php 
+                                $currentStatus = $quote['status'] ?? 'draft';
+                                // 後端到前端的映射，用於顯示選中狀態
+                                $displayStatusMapping = [
+                                    'pending' => 'pending',
+                                    'approved' => 'approved',
+                                    'sent' => 'pending',      // 向後兼容
+                                    'accepted' => 'approved', // 向後兼容
+                                ];
+                                $mappedStatus = $displayStatusMapping[$currentStatus] ?? $currentStatus;
+                            @endphp
+                            <option value="draft" {{ $mappedStatus === 'draft' ? 'selected' : '' }}>📝 草稿</option>
+                            <option value="pending" {{ $mappedStatus === 'pending' ? 'selected' : '' }}>📤 已發送</option>
+                            <option value="approved" {{ $mappedStatus === 'approved' ? 'selected' : '' }}>✅ 已批准</option>
+                            <option value="rejected" {{ $mappedStatus === 'rejected' ? 'selected' : '' }}>❌ 已拒絕</option>
+                            <option value="expired" {{ $mappedStatus === 'expired' ? 'selected' : '' }}>⏰ 已過期</option>
                         </select>
                     </div>
 
@@ -164,6 +189,7 @@
                     <div>
                         <label for="contact_person" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">聯絡人</label>
                         <input type="text" id="contact_person" name="contact_person"
+                               value="{{ $quote['contact_person'] ?? '' }}"
                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                                placeholder="輸入聯絡人姓名">
                     </div>
@@ -193,44 +219,87 @@
 
                 <!-- 項目列表 -->
                 <div id="itemsList" class="space-y-4">
-                    <!-- 預設項目 -->
-                    <div class="item-row border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-800">
-                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-                            <div class="md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">產品/服務</label>
-                                <div class="relative">
-                                    <input type="text" name="items[0][name]" 
-                                           class="product-search w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                           placeholder="輸入產品名稱（可搜尋或手動輸入）"
-                                           data-item-index="0">
-                                    <input type="hidden" name="items[0][product_id]" class="product-id-input" value="">
-                                    <input type="hidden" name="items[0][description]" class="product-description-input" value="">
+                    @if(isset($quote) && isset($quote['items']) && is_array($quote['items']) && count($quote['items']) > 0)
+                        @foreach($quote['items'] as $index => $item)
+                            <div class="item-row border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-800">
+                                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">產品/服務</label>
+                                        <div class="relative">
+                                            <input type="text" name="items[{{ $index }}][name]" 
+                                                   value="{{ $item['name'] ?? ($item['product']['name'] ?? ($item['product_name'] ?? '')) }}"
+                                                   class="product-search w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                                   placeholder="輸入產品名稱（可搜尋或手動輸入）"
+                                                   data-item-index="{{ $index }}">
+                                            <input type="hidden" name="items[{{ $index }}][product_id]" class="product-id-input" value="{{ $item['product_id'] ?? '' }}">
+                                            <input type="hidden" name="items[{{ $index }}][description]" class="product-description-input" value="{{ $item['description'] ?? '' }}">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">數量</label>
+                                        <input type="number" name="items[{{ $index }}][quantity]" value="{{ $item['quantity'] ?? 1 }}" min="1" 
+                                               class="quantity-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                               onchange="updateItemSubtotal(this)">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">單價</label>
+                                        <input type="number" name="items[{{ $index }}][unit_price]" value="{{ $item['unit_price'] ?? 0 }}" min="0" step="0.01" 
+                                               class="price-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                               onchange="updateItemSubtotal(this)">
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button type="button" onclick="removeQuoteItem(this)" 
+                                                class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                                            刪除
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-right">
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">小計: </span>
+                                    <span class="item-subtotal text-lg font-medium text-gray-900 dark:text-white">${{ number_format(($item['quantity'] ?? 0) * ($item['unit_price'] ?? 0), 2) }}</span>
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">數量</label>
-                                <input type="number" name="items[0][quantity]" value="1" min="1" 
-                                       class="quantity-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                       onchange="updateItemSubtotal(this)">
+                        @endforeach
+                    @else
+                        <!-- 預設項目 -->
+                        <div class="item-row border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-800">
+                            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">產品/服務</label>
+                                    <div class="relative">
+                                            <input type="text" name="items[0][name]" 
+                                               class="product-search w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                               placeholder="輸入產品名稱（可搜尋或手動輸入）"
+                                               data-item-index="0">
+                                        <input type="hidden" name="items[0][product_id]" class="product-id-input" value="">
+                                        <input type="hidden" name="items[0][description]" class="product-description-input" value="">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">數量</label>
+                                    <input type="number" name="items[0][quantity]" value="1" min="1" 
+                                           class="quantity-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                           onchange="updateItemSubtotal(this)">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">單價</label>
+                                    <input type="number" name="items[0][unit_price]" value="1000" min="0" step="0.01" 
+                                           class="price-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+                                           onchange="updateItemSubtotal(this)">
+                                </div>
+                                <div class="flex justify-end">
+                                    <button type="button" onclick="removeQuoteItem(this)" 
+                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                                        刪除
+                                    </button>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">單價</label>
-                                <input type="number" name="items[0][unit_price]" value="1000" min="0" step="0.01" 
-                                       class="price-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                                       onchange="updateItemSubtotal(this)">
-                            </div>
-                            <div class="flex justify-end">
-                                <button type="button" onclick="removeQuoteItem(this)" 
-                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-                                    刪除
-                                </button>
+                            <div class="mt-4 text-right">
+                                <span class="text-sm text-gray-600 dark:text-gray-400">小計: </span>
+                                <span class="item-subtotal text-lg font-medium text-gray-900 dark:text-white">$1,000.00</span>
                             </div>
                         </div>
-                        <div class="mt-4 text-right">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">小計: </span>
-                            <span class="item-subtotal text-lg font-medium text-gray-900 dark:text-white">$1,000.00</span>
-                        </div>
-                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -280,7 +349,11 @@
 <script src="{{ asset('js/components/product-autocomplete.js') }}"></script>
 
 <script>
+@if(isset($quote) && isset($quote['items']) && is_array($quote['items']))
+let itemIndex = {{ count($quote['items']) }};
+@else
 let itemIndex = 1;
+@endif
 
 function addQuoteItem() {
     const itemsList = document.getElementById('itemsList');

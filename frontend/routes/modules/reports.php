@@ -60,6 +60,11 @@ Route::prefix('reports')->name('reports.')->group(function () {
         })->name('movements');
     });
     
+    // Customers Reports
+    Route::prefix('customers')->name('customers.')->group(function () {
+        Route::get('/', function () { return view('reports.customers.overview'); })->name('overview');
+    });
+    
     // Financial Reports
     Route::prefix('financial')->name('financial.')->group(function () {
         Route::get('/', function () {

@@ -140,7 +140,6 @@ class User extends Authenticatable
     {
         return $this->roles()
             ->where('name', $role)
-            ->where('is_active', true)
             ->exists();
     }
 

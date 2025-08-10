@@ -13,13 +13,13 @@ import (
 )
 
 type QuoteService struct {
-	db               *sqlx.DB
+	db                *sqlx.DB
 	salesOrderService *SalesOrderService
 }
 
 func NewQuoteService(db *sqlx.DB, salesOrderService *SalesOrderService) *QuoteService {
 	return &QuoteService{
-		db:               db,
+		db:                db,
 		salesOrderService: salesOrderService,
 	}
 }
@@ -73,22 +73,22 @@ func (s *QuoteService) CreateQuote(req *models.CreateQuoteRequest, userID int64)
 		for i, item := range req.Items {
 			productIDs[i] = item.ProductID
 		}
-		
+
 		// 建立 IN 查詢的佔位符
 		placeholders := make([]string, len(productIDs))
 		for i := range placeholders {
 			placeholders[i] = fmt.Sprintf("$%d", i+1)
 		}
-		
+
 		// 使用單一查詢驗證所有產品
 		query := fmt.Sprintf("SELECT id FROM products WHERE id IN (%s) AND is_active = true", strings.Join(placeholders, ","))
-		
+
 		var validProductIDs []int64
 		err = tx.Select(&validProductIDs, query, productIDs...)
 		if err != nil {
 			return nil, fmt.Errorf("failed to validate products: %w", err)
 		}
-		
+
 		// 檢查是否所有產品都有效
 		if len(validProductIDs) != len(req.Items) {
 			// 找出無效的產品 ID
@@ -96,7 +96,7 @@ func (s *QuoteService) CreateQuote(req *models.CreateQuoteRequest, userID int64)
 			for _, id := range validProductIDs {
 				validIDMap[id] = true
 			}
-			
+
 			for _, item := range req.Items {
 				if !validIDMap[item.ProductID] {
 					return nil, fmt.Errorf("product with ID %d not found or inactive", item.ProductID)
@@ -110,6 +110,37 @@ func (s *QuoteService) CreateQuote(req *models.CreateQuoteRequest, userID int64)
 	for _, item := range req.Items {
 		totalAmount += item.Quantity * item.UnitPrice
 	}
+
+	// 狀態選擇與映射邏輯
+	statusToUse := models.QuoteStatusDraft // 預設值
+
+	// 調試日誌
+	if req.Status != nil {
+		fmt.Printf("🔍 DEBUG: req.Status = %s\n", *req.Status)
+	} else {
+		fmt.Printf("🔍 DEBUG: req.Status is nil\n")
+	}
+
+	if req.Status != nil {
+		switch *req.Status {
+		case models.QuoteStatusDraft, models.QuoteStatusPending, models.QuoteStatusApproved,
+			models.QuoteStatusRejected, models.QuoteStatusExpired:
+			// 直接使用標準枚舉值
+			statusToUse = *req.Status
+		case "sent":
+			// 前端兼容性映射: "sent" -> "pending"
+			statusToUse = models.QuoteStatusPending
+		case "accepted":
+			// 前端兼容性映射: "accepted" -> "approved"
+			statusToUse = models.QuoteStatusApproved
+		default:
+			// 不支援的狀態，記錄警告但繼續使用預設值
+			// Note: 在生產環境可能要加上適當的日誌記錄
+			fmt.Printf("🔍 DEBUG: Unsupported status: %s, using default: %s\n", *req.Status, models.QuoteStatusDraft)
+		}
+	}
+
+	fmt.Printf("🔍 DEBUG: Final statusToUse = %s\n", statusToUse)
 
 	// Insert quote
 	quote := &models.Quote{}
@@ -131,7 +162,7 @@ func (s *QuoteService) CreateQuote(req *models.CreateQuoteRequest, userID int64)
 		userID,
 		req.Notes,
 		req.TermsAndConditions,
-		models.QuoteStatusDraft,
+		statusToUse, // 使用動態選擇的狀態
 	).StructScan(quote)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create quote: %w", err)
@@ -141,7 +172,7 @@ func (s *QuoteService) CreateQuote(req *models.CreateQuoteRequest, userID int64)
 	items := make([]models.QuoteItemWithDetails, len(req.Items))
 	for i, itemReq := range req.Items {
 		totalPrice := itemReq.Quantity * itemReq.UnitPrice
-		
+
 		item := &models.QuoteItem{}
 		itemQuery := `
 			INSERT INTO quote_items (
@@ -197,16 +228,16 @@ func (s *QuoteService) CreateQuote(req *models.CreateQuoteRequest, userID int64)
 			productIDs[i] = item.ProductID
 			productMap[item.ProductID] = i
 		}
-		
+
 		// 建立 IN 查詢的佔位符
 		placeholders := make([]string, len(productIDs))
 		for i := range placeholders {
 			placeholders[i] = fmt.Sprintf("$%d", i+1)
 		}
-		
+
 		// 使用單一查詢載入所有產品詳情
 		query := fmt.Sprintf("SELECT * FROM products WHERE id IN (%s)", strings.Join(placeholders, ","))
-		
+
 		var products []models.Product
 		err = s.db.Select(&products, query, productIDs...)
 		if err == nil {
@@ -226,7 +257,7 @@ func (s *QuoteService) CreateQuote(req *models.CreateQuoteRequest, userID int64)
 func (s *QuoteService) GetQuoteByID(id int64) (*models.QuoteWithDetails, error) {
 	quote := &models.Quote{}
 	query := `SELECT * FROM quotes WHERE id = $1`
-	
+
 	err := s.db.QueryRowx(query, id).StructScan(quote)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -341,7 +372,7 @@ func (s *QuoteService) UpdateQuote(id int64, req *models.UpdateQuoteRequest, use
 		// Insert new items
 		for _, itemReq := range req.Items {
 			totalPrice := itemReq.Quantity * itemReq.UnitPrice
-			
+
 			itemQuery := `
 				INSERT INTO quote_items (
 					quote_id, product_id, quantity, unit_price, total_price, description
@@ -399,7 +430,46 @@ func (s *QuoteService) ListQuotes(params *models.QuoteQueryParams) (*models.Quot
 	args := []interface{}{}
 	argIndex := 1
 
+	// 判斷是否需要 JOIN customers 表
+	needJoinCustomers := false
+	if params.CompanyID != nil || params.Search != "" || strings.HasPrefix(params.SortBy, "customer_") {
+		needJoinCustomers = true
+	}
+
 	// Build WHERE conditions
+
+	// 多租戶公司過濾 (優先級最高)
+	if params.CompanyID != nil {
+		if needJoinCustomers {
+			whereConditions = append(whereConditions, fmt.Sprintf("c.company_id = $%d", argIndex))
+		} else {
+			// 如果沒有JOIN customers，需要先建立JOIN再加條件
+			needJoinCustomers = true
+			whereConditions = append(whereConditions, fmt.Sprintf("c.company_id = $%d", argIndex))
+		}
+		args = append(args, *params.CompanyID)
+		argIndex++
+	}
+
+	// 搜尋邏輯 (支援報價單號、客戶名稱、備註)
+	if params.Search != "" {
+		searchTerm := strings.ToLower(params.Search)
+		likePattern := "%" + searchTerm + "%"
+		if needJoinCustomers {
+			whereConditions = append(whereConditions,
+				fmt.Sprintf("(LOWER(q.quote_number) LIKE $%d OR LOWER(q.notes) LIKE $%d OR LOWER(c.name) LIKE $%d)",
+					argIndex, argIndex+1, argIndex+2))
+			args = append(args, likePattern, likePattern, likePattern)
+			argIndex += 3
+		} else {
+			whereConditions = append(whereConditions,
+				fmt.Sprintf("(LOWER(q.quote_number) LIKE $%d OR LOWER(q.notes) LIKE $%d)",
+					argIndex, argIndex+1))
+			args = append(args, likePattern, likePattern)
+			argIndex += 2
+		}
+	}
+
 	if params.CustomerID != nil {
 		whereConditions = append(whereConditions, fmt.Sprintf("q.customer_id = $%d", argIndex))
 		args = append(args, *params.CustomerID)
@@ -447,8 +517,14 @@ func (s *QuoteService) ListQuotes(params *models.QuoteQueryParams) (*models.Quot
 		whereClause = "WHERE " + strings.Join(whereConditions, " AND ")
 	}
 
+	// 構建基礎查詢
+	baseFrom := "FROM quotes q"
+	if needJoinCustomers {
+		baseFrom = "FROM quotes q JOIN customers c ON c.id = q.customer_id"
+	}
+
 	// Count total records
-	countQuery := fmt.Sprintf("SELECT COUNT(*) FROM quotes q %s", whereClause)
+	countQuery := fmt.Sprintf("SELECT COUNT(*) %s %s", baseFrom, whereClause)
 	var total int64
 	err := s.db.QueryRow(countQuery, args...).Scan(&total)
 	if err != nil {
@@ -466,16 +542,22 @@ func (s *QuoteService) ListQuotes(params *models.QuoteQueryParams) (*models.Quot
 		if params.SortOrder == "desc" {
 			direction = "DESC"
 		}
-		orderBy = fmt.Sprintf("q.%s %s", params.SortBy, direction)
+
+		// 支援客戶名稱排序
+		if params.SortBy == "customer_name" && needJoinCustomers {
+			orderBy = fmt.Sprintf("c.name %s", direction)
+		} else {
+			orderBy = fmt.Sprintf("q.%s %s", params.SortBy, direction)
+		}
 	}
 
 	// Query quotes
 	query := fmt.Sprintf(`
-		SELECT q.* FROM quotes q 
+		SELECT q.* %s
 		%s 
 		ORDER BY %s 
 		LIMIT $%d OFFSET $%d`,
-		whereClause, orderBy, argIndex, argIndex+1)
+		baseFrom, whereClause, orderBy, argIndex, argIndex+1)
 
 	args = append(args, params.PageSize, offset)
 
@@ -553,7 +635,19 @@ func (s *QuoteService) ConvertQuoteToSalesOrder(quoteID int64, req *models.Conve
 		orderDate = *req.OrderDate
 	}
 
+	// 取得公司 ID：優先從客戶資料取得
+	var companyID int64
+	if quote.Customer != nil {
+		companyID = quote.Customer.CompanyID
+	} else {
+		// 回補查詢客戶公司 ID
+		if customer, err := s.getCustomerByID(quote.CustomerID); err == nil {
+			companyID = customer.CompanyID
+		}
+	}
+
 	salesOrderReq := &models.CreateSalesOrderRequest{
+		CompanyID:      companyID,
 		CustomerID:     quote.CustomerID,
 		BusinessUnitID: quote.BusinessUnitID,
 		OrderDate:      orderDate,
@@ -577,7 +671,7 @@ func (s *QuoteService) ConvertQuoteToSalesOrder(quoteID int64, req *models.Conve
 	}
 
 	// Update quote status to converted
-	_, err = tx.Exec("UPDATE quotes SET status = $1, updated_at = $2 WHERE id = $3", 
+	_, err = tx.Exec("UPDATE quotes SET status = $1, updated_at = $2 WHERE id = $3",
 		models.QuoteStatusConverted, time.Now(), quoteID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update quote status: %w", err)
@@ -626,7 +720,7 @@ func (s *QuoteService) enrichQuoteWithDetails(quote *models.Quote) (*models.Quot
 
 func (s *QuoteService) getQuoteItems(quoteID int64) ([]models.QuoteItemWithDetails, error) {
 	query := `SELECT * FROM quote_items WHERE quote_id = $1 ORDER BY id`
-	
+
 	rows, err := s.db.Queryx(query, quoteID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query quote items: %w", err)
@@ -659,35 +753,35 @@ func (s *QuoteService) getQuoteItems(quoteID int64) ([]models.QuoteItemWithDetai
 func (s *QuoteService) getCustomerByID(id int64) (*models.Customer, error) {
 	customer := &models.Customer{}
 	query := `SELECT * FROM customers WHERE id = $1 AND deleted_at IS NULL`
-	
+
 	err := s.db.QueryRowx(query, id).StructScan(customer)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return customer, nil
 }
 
 func (s *QuoteService) getUserByID(id int64) (*models.User, error) {
 	user := &models.User{}
 	query := `SELECT id, username, email, created_at, updated_at FROM users WHERE id = $1`
-	
+
 	err := s.db.QueryRowx(query, id).StructScan(user)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return user, nil
 }
 
 func (s *QuoteService) getProductByID(id int64) (*models.Product, error) {
 	product := &models.Product{}
 	query := `SELECT * FROM products WHERE id = $1 AND is_active = true`
-	
+
 	err := s.db.QueryRowx(query, id).StructScan(product)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return product, nil
 }

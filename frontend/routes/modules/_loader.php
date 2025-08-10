@@ -53,7 +53,8 @@ function loadRouteModules() {
     
     // Load other modules without specific middleware (if any)
     $otherModules = [
-        // Add any modules that don't need authentication here
+        // 其他模組（檔案內自帶自己需要的 middleware）
+        'demo',
     ];
     
     foreach ($otherModules as $module) {

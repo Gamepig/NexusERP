@@ -33,6 +33,11 @@ class Kernel extends ConsoleKernel
     protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');
+        $this->commands([
+            \App\Console\Commands\GenerateDemoData::class,
+            \App\Console\Commands\GenerateMockData::class,
+            \App\Console\Commands\SeedMarketplaceDemo::class,
+        ]);
 
         require base_path('routes/console.php');
     }

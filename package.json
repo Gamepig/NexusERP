@@ -31,5 +31,18 @@
     "comprehensive"
   ],
   "author": "Claude Code Assistant",
-  "license": "MIT"
+  "license": "MIT",
+  "main": "playwright.config.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gamepig/NexusERP.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gamepig/NexusERP/issues"
+  },
+  "homepage": "https://github.com/gamepig/NexusERP#readme"
 }

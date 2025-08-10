@@ -29,6 +29,23 @@ Route::get('/test-cash-flow-colors', function () {
     return view('test-cash-flow');
 });
 
+// Design System demo page
+Route::get('/components/demo', function () {
+    return view('components.demo');
+})->name('components.demo');
+
+// Test route for Alpine.js multi-step form
+Route::get('/quotes/multi-step-form', function () {
+    try {
+        return view('quotes.multi-step-form', [
+            'mode' => 'create',
+            'customers' => []
+        ]);
+    } catch (\Exception $e) {
+        return response('<h1>View Error: ' . $e->getMessage() . '</h1><pre>' . $e->getTraceAsString() . '</pre>', 500);
+    }
+})->name('test.quotes.multi-step-form');
+
 // Temporary test routes for inventory pages (bypass authentication)
 Route::get('/test-inventory-levels', function () {
     try {
@@ -144,6 +161,12 @@ Route::get('/dashboard', function () {
 */
 
 Route::middleware(['auth', \App\Http\Middleware\SetCompanyContext::class])->group(function () {
+    // Quote filter presets (session auth + CSRF)
+    Route::prefix('api/quotes')->group(function () {
+        Route::get('/filter-presets', [\App\Http\Controllers\Api\QuoteFilterPresetController::class, 'index']);
+        Route::post('/filter-presets', [\App\Http\Controllers\Api\QuoteFilterPresetController::class, 'store']);
+        Route::delete('/filter-presets/{id}', [\App\Http\Controllers\Api\QuoteFilterPresetController::class, 'destroy']);
+    });
     
     // Business Setup Routes (for OAuth users)
     Route::get('/auth/business-setup', [\App\Http\Controllers\Auth\BusinessSetupController::class, 'show'])->name('auth.business-setup');
@@ -209,6 +232,19 @@ Route::middleware(['auth', \App\Http\Middleware\SetCompanyContext::class])->grou
         Route::get('/products/{id}', function ($id) {
             return view('marketplace.products.detail', ['productId' => $id]);
         })->name('products.detail');
+
+        // Cart & Checkout (DEMO)
+        Route::get('/cart', function () {
+            return view('marketplace.cart');
+        })->name('cart');
+        Route::get('/checkout', function () {
+            return view('marketplace.checkout');
+        })->name('checkout');
+
+        // Supplier public profile
+        Route::get('/suppliers/{id}', function ($id) {
+            return view('marketplace.suppliers.show', ['supplierId' => (int) $id]);
+        })->name('suppliers.show');
 
         Route::prefix('supplier')->name('supplier.')->group(function () {
             Route::get('/register', function () {

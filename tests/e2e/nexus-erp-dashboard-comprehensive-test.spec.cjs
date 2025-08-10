@@ -86,7 +86,7 @@ test.describe('NexusERP Dashboard - Comprehensive Redesign Verification', () => 
         const expectedActions = [
             { name: '新增報價單', url: '/quotes/create', color: 'purple' },
             { name: '庫存管理', url: '/inventory', color: 'orange' },
-            { name: '訂單處理', url: '/orders', color: 'blue' },
+            { name: '訂單處理', url: '/orders/sales', color: 'blue' },
             { name: '客戶管理', url: '/customers', color: 'green' }
         ];
         

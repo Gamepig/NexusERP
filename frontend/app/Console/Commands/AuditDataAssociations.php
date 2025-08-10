@@ -24,7 +24,9 @@ class AuditDataAssociations extends Command
      */
     protected $signature = 'tenants:audit-data-associations 
                            {--output= : 自訂輸出檔案路徑} 
-                           {--format=text : 輸出格式 (text|json|csv)}';
+                           {--format=text : 輸出格式 (text|json|csv)}
+                           {--fix : 修復孤立記錄，將其指派給系統預設租戶}
+                           {--dry-run : 僅模擬修復操作，不實際修改資料}';
 
     /**
      * 指令說明
@@ -42,20 +44,54 @@ class AuditDataAssociations extends Command
     private array $validCompanyIds = [];
 
     /**
+     * 系統預設租戶 ID
+     */
+    private ?int $unassignedCompanyId = null;
+
+    /**
+     * 修復統計
+     */
+    private array $fixedRecords = [
+        'customers' => 0,
+        'suppliers' => 0,
+        'products' => 0,
+    ];
+
+    /**
      * 執行指令
      */
     public function handle()
     {
-        $this->info('🔍 開始資料關聯稽核作業...');
+        $fixMode = $this->option('fix');
+        $dryRun = $this->option('dry-run');
+        
+        if ($fixMode && $dryRun) {
+            $this->info('🔍 開始資料關聯稽核作業 (模擬修復模式)...');
+        } elseif ($fixMode) {
+            $this->info('🔧 開始資料關聯稽核與修復作業...');
+        } else {
+            $this->info('🔍 開始資料關聯稽核作業...');
+        }
+        
         $this->info('==================================');
 
         // 載入有效公司 ID
         $this->loadValidCompanyIds();
 
+        // 如果是修復模式，載入系統預設租戶
+        if ($fixMode) {
+            $this->loadUnassignedCompany();
+        }
+
         // 稽核各資料表
         $this->auditCustomers();
         $this->auditSuppliers();
         $this->auditProducts();
+
+        // 如果是修復模式，顯示修復統計
+        if ($fixMode) {
+            $this->displayFixStatistics();
+        }
 
         // 產生報告
         $this->generateReport();
@@ -79,6 +115,24 @@ class AuditDataAssociations extends Command
         if ($this->getOutput()->isVerbose()) {
             $this->line("有效公司 ID: " . implode(', ', $this->validCompanyIds));
         }
+    }
+
+    /**
+     * 載入系統預設租戶
+     */
+    private function loadUnassignedCompany(): void
+    {
+        $this->info('🔖 載入系統預設租戶...');
+        
+        $unassigned = Company::where('name', 'SYSTEM_UNASSIGNED')->first();
+        
+        if (!$unassigned) {
+            $this->error('❌ 未找到系統預設租戶！請先執行 tenants:create-unassigned');
+            exit(1);
+        }
+        
+        $this->unassignedCompanyId = $unassigned->id;
+        $this->info("✓ 系統預設租戶 ID: {$this->unassignedCompanyId}");
     }
 
     /**
@@ -134,7 +188,8 @@ class AuditDataAssociations extends Command
             'null_tenant_ids' => [],
             'invalid_tenant_ids' => [],
             'valid_records' => 0,
-            'issues_count' => 0
+            'issues_count' => 0,
+            'fixed_count' => 0
         ];
 
         try {
@@ -176,6 +231,11 @@ class AuditDataAssociations extends Command
             $results['valid_records'] = $results['total_records'] - count($results['null_tenant_ids']) - count($results['invalid_tenant_ids']);
             $results['issues_count'] = count($results['null_tenant_ids']) + count($results['invalid_tenant_ids']);
 
+            // 如果是修復模式，修復孤立記錄
+            if ($this->option('fix') && $results['issues_count'] > 0) {
+                $results['fixed_count'] = $this->fixOrphanedRecords($tableName, $modelClass, $tenantColumn, $nullTenantRecords, $invalidTenantRecords);
+            }
+
             // 顯示統計資訊
             $this->displayTableStats($results);
 
@@ -192,6 +252,60 @@ class AuditDataAssociations extends Command
     }
 
     /**
+     * 修復孤立記錄
+     */
+    private function fixOrphanedRecords(string $tableName, string $modelClass, string $tenantColumn, $nullRecords, $invalidRecords): int
+    {
+        $fixedCount = 0;
+        $dryRun = $this->option('dry-run');
+
+        if ($dryRun) {
+            $this->warn("  🔧 模擬修復模式，將不會實際修改資料");
+        } else {
+            $this->info("  🔧 正在修復孤立記錄...");
+        }
+
+        // 修復 NULL tenant_id 記錄
+        if (!$nullRecords->isEmpty()) {
+            foreach ($nullRecords as $record) {
+                if (!$dryRun) {
+                    $modelClass::where('id', $record->id)->update([$tenantColumn => $this->unassignedCompanyId]);
+                }
+                $fixedCount++;
+                
+                if ($this->getOutput()->isVerbose()) {
+                    $action = $dryRun ? '將修復' : '已修復';
+                    $this->line("    - {$action} NULL tenant_id 記錄: ID {$record->id}, 名稱: {$record->name}");
+                }
+            }
+        }
+
+        // 修復無效 tenant_id 記錄
+        if (!$invalidRecords->isEmpty()) {
+            foreach ($invalidRecords as $record) {
+                if (!$dryRun) {
+                    $modelClass::where('id', $record->id)->update([$tenantColumn => $this->unassignedCompanyId]);
+                }
+                $fixedCount++;
+                
+                if ($this->getOutput()->isVerbose()) {
+                    $action = $dryRun ? '將修復' : '已修復';
+                    $this->line("    - {$action} 無效 tenant_id 記錄: ID {$record->id}, 名稱: {$record->name}, 原 tenant_id: {$record->{$tenantColumn}}");
+                }
+            }
+        }
+
+        $this->fixedRecords[$tableName] = $fixedCount;
+
+        if ($fixedCount > 0) {
+            $action = $dryRun ? '將修復' : '已修復';
+            $this->info("  ✓ {$action} {$fixedCount} 筆記錄");
+        }
+
+        return $fixedCount;
+    }
+
+    /**
      * 顯示資料表統計資訊
      */
     private function displayTableStats(array $results): void
@@ -202,13 +316,48 @@ class AuditDataAssociations extends Command
         $this->line("     NULL tenant_id: " . count($results['null_tenant_ids']));
         $this->line("     無效 tenant_id: " . count($results['invalid_tenant_ids']));
         
-        if ($results['issues_count'] > 0) {
+        if (isset($results['fixed_count']) && $results['fixed_count'] > 0) {
+            $this->info("  ✅ 修復記錄數: {$results['fixed_count']}");
+        }
+        
+        if ($results['issues_count'] > 0 && (!isset($results['fixed_count']) || $results['fixed_count'] == 0)) {
             $this->warn("  ⚠️  發現 {$results['issues_count']} 個問題記錄");
-        } else {
+        } elseif ($results['issues_count'] == 0) {
             $this->info("  ✅ 所有記錄的租戶關聯都是有效的");
         }
         
         $this->line('');
+    }
+
+    /**
+     * 顯示修復統計
+     */
+    private function displayFixStatistics(): void
+    {
+        $totalFixed = array_sum($this->fixedRecords);
+        $dryRun = $this->option('dry-run');
+        
+        if ($totalFixed > 0) {
+            $this->info('');
+            $this->info('📋 修復統計:');
+            $this->info('================');
+            
+            foreach ($this->fixedRecords as $table => $count) {
+                if ($count > 0) {
+                    $action = $dryRun ? '將修復' : '已修復';
+                    $this->line("  {$table}: {$action} {$count} 筆記錄");
+                }
+            }
+            
+            $action = $dryRun ? '將修復' : '已修復';
+            $this->info("  總計: {$action} {$totalFixed} 筆記錄");
+            
+            if (!$dryRun) {
+                $this->info("  ✅ 所有孤立記錄已指派給系統預設租戶 (ID: {$this->unassignedCompanyId})");
+            }
+        } else {
+            $this->info('✅ 沒有需要修復的記錄');
+        }
     }
 
     /**

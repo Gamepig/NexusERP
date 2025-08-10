@@ -80,6 +80,58 @@ composer.phar
 /frontend/public/build/*
 /frontend/public/hot
 
+# === 2025-08-10 檢視補充項目 ===
+
+# Backend 編譯產物 (大型檔案 ~175MB)
+/backend/main
+/backend/nexus-erp
+/backend/nexus-erp-backend
+/backend/bin/
+/backend/build/
+/backend/tmp/
+
+# 大型日誌檔案 (避免 9MB+ 檔案)
+/backend/*.log
+/frontend/storage/logs/*.log
+/archive/log-files/
+
+# 測試相關大型檔案 (601個檔案 ~15MB)
+/tests/screenshots/
+/tests/e2e/frontend/screenshots/
+/frontend/*.png
+/frontend/*.jpg
+/frontend/*.webm
+/frontend/playwright-report/
+/frontend/test-results/
+
+# Session 和 Cookie 檔案 (機密資訊)
+cookies.txt
+cookie.jar
+cookie_jar
+*.session
+
+# 備份檔案
+*.backup
+
+# Python 虛擬環境
+playwright_env/
+__pycache__/
+*.pyc
+
+# PHPUnit 快取
+.phpunit.result.cache
+
+# 偵錯檔案
+/debug/
+/frontend/debug*/
+
+# 文件中包含機密資訊的檔案
+/documents/AI_Guided_Registration_Flow.md
+
+# 其他暫存檔
+/frontend/build.log
+memory.json
+
 # Miscellaneous
 *.pid
 *.seed

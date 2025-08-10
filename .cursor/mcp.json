@@ -14,6 +14,24 @@
 				"AZURE_OPENAI_API_KEY": "YOUR_AZURE_KEY_HERE",
 				"OLLAMA_API_KEY": "YOUR_OLLAMA_API_KEY_HERE"
 			}
+		},
+		"playwright": {
+			"command": "npx",
+			"args": ["@playwright/mcp@latest"]
+		},
+		"time-mcp": {
+			"command": "npx",
+			"args": ["-y", "@modelcontextprotocol/server-time"]
+		},
+		"serena": {
+			"command": "uvx",
+			"args": [
+				"--from",
+				"git+https://github.com/oraios/serena",
+				"serena-mcp-server",
+				"--context",
+				"ide-assistant"
+			]
 		}
 	}
 }

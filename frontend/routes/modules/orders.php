@@ -51,8 +51,11 @@ Route::prefix('quotes')->name('quotes.')->group(function () {
     // Quote listing page
     Route::get('/', [\App\Http\Controllers\Web\QuoteController::class, 'index'])->name('index');
     
-    // Create new quote page
+    // Create new quote page (traditional single-page form)
     Route::get('/create', [\App\Http\Controllers\Web\QuoteController::class, 'create'])->name('create');
+    
+    // Create new quote page (multi-step form)
+    Route::get('/create/multi-step', [\App\Http\Controllers\Web\QuoteController::class, 'createMultiStep'])->name('create.multi-step');
     
     // Store new quote
     Route::post('/', [\App\Http\Controllers\Web\QuoteController::class, 'store'])->name('store');
@@ -62,6 +65,9 @@ Route::prefix('quotes')->name('quotes.')->group(function () {
     
     // Edit quote page
     Route::get('/{id}/edit', [\App\Http\Controllers\Web\QuoteController::class, 'edit'])->name('edit')->where('id', '[0-9]+');
+    
+    // Edit quote page (multi-step form)
+    Route::get('/{id}/edit/multi-step', [\App\Http\Controllers\Web\QuoteController::class, 'editMultiStep'])->name('edit.multi-step')->where('id', '[0-9]+');
     
     // Update quote
     Route::put('/{id}', [\App\Http\Controllers\Web\QuoteController::class, 'update'])->name('update')->where('id', '[0-9]+');

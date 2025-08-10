@@ -36,6 +36,19 @@ body {
     flex-shrink: 0 !important;
 }
 
+/* 報表卡片版面一致化：等高、按鈕置底 */
+.nx-card.text-center {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    min-height: 13rem !important;
+}
+
+.nx-card.text-center .nx-btn {
+    margin-top: auto !important;
+    width: 100% !important;
+}
+
 .nx-card:hover {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     transform: translateY(-2px);
@@ -76,6 +89,19 @@ body {
     background: <?php echo $components['button']['secondary']['background']; ?>;
     color: <?php echo $components['button']['secondary']['color']; ?>;
     border: <?php echo $components['button']['secondary']['border']; ?>;
+}
+
+/* 追加：Info/Warning 變體（報表中心按鈕用） */
+.nx-btn-info {
+    background: linear-gradient(135deg, var(--nexus-accent-blue), #2563eb);
+    color: #ffffff;
+    border: none;
+}
+
+.nx-btn-warning {
+    background: linear-gradient(135deg, var(--nexus-accent-orange), #ea580c);
+    color: #111827;
+    border: none;
 }
 
 /* 報表表格樣式 */

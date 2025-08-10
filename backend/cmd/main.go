@@ -70,38 +70,38 @@ func main() {
 	customerService := services.NewCustomerService(db.DB)
 	salesOrderService := services.NewSalesOrderService(db.DB, inventoryService)
 	quoteService := services.NewQuoteService(db.DB, salesOrderService)
-	
+
 	// Initialize accounts payable services
 	invoiceService := services.NewInvoiceService(db.DB, supplierService, productService, purchaseOrderService)
 	accountsPayableService := services.NewAccountsPayableService(db.DB)
 	paymentService := services.NewPaymentService(db.DB, accountsPayableService)
-	
+
 	// Initialize customer payment service
 	customerPaymentService := services.NewCustomerPaymentService(db.DB)
-	
+
 	// Initialize accounts receivable service
 	accountsReceivableService := services.NewAccountsReceivableService(db.DB)
-	
+
 	// Initialize report service
 	reportService := services.NewReportService(db.DB)
-	
+
 	// Initialize prediction services
 	dataExtractionService := services.NewDataExtractionService(db.DB)
 	forecastingService := services.NewForecastingService(db.DB, dataExtractionService)
 	inventoryOptimizationService := services.NewInventoryOptimizationService(db.DB, dataExtractionService, forecastingService)
-	
+
 	// Initialize employee service
 	employeeService := services.NewEmployeeService(db.DB)
-	
+
 	// Initialize marketplace supplier service
 	marketplaceSupplierService := services.NewMarketplaceSupplierService(db.DB)
-	
+
 	// Initialize marketplace product service - Task 21.3
 	marketplaceProductService := services.NewMarketplaceProductService(db.DB)
-	
+
 	// Initialize AI service (using mock for development)
 	aiService := services.NewMockAIService()
-	
+
 	// Initialize OCR client and service
 	var ocrService services.OCRService
 	ocrClient, err := services.CreateOCRClientFromConfig(cfg)
@@ -111,7 +111,7 @@ func main() {
 	} else {
 		ocrService = services.NewOCRServiceWithClient(db.DB, ocrClient)
 	}
-	
+
 	// Initialize notification service
 	emailConfig := services.EmailConfig{
 		SMTPHost:     cfg.Email.SMTPHost,
@@ -122,7 +122,7 @@ func main() {
 		FromName:     cfg.Email.FromName,
 	}
 	notificationService := services.NewNotificationService(stocktakingService, userService, emailConfig)
-	
+
 	// Initialize scheduler service
 	schedulerService := services.NewSchedulerService(cfg, stocktakingService, notificationService)
 
@@ -158,6 +158,8 @@ func main() {
 	authMiddleware := middleware.NewAuthMiddleware(userService, cfg)
 	simpleAuthMiddleware := middleware.NewSimpleAuthMiddleware(simpleAuthService)
 	tenantMiddleware := middleware.NewTenantContextMiddlewareWithDB(cfg.JWT.Secret, db.DB)
+	auditService := services.NewAuditService(db.DB)
+	requestAudit := middleware.RequestAuditMiddleware(auditService)
 
 	// Set up Gin router
 	if cfg.App.Environment == "production" {
@@ -166,24 +168,37 @@ func main() {
 
 	r := gin.Default()
 
-	// Add CORS middleware
+	// Add CORS middleware (strict allowlist)
 	r.Use(func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
-		// Allow specific origins for credentials
-		if origin == "http://127.0.0.1:8000" || origin == "http://localhost:8000" {
-			c.Header("Access-Control-Allow-Origin", origin)
-			c.Header("Access-Control-Allow-Credentials", "true")
-		} else {
-			c.Header("Access-Control-Allow-Origin", "*")
+
+		// Build allowlist from env and common local dev origins
+		frontendURL := os.Getenv("FRONTEND_URL")
+		allowed := map[string]bool{
+			"http://127.0.0.1:8000": true,
+			"http://localhost:8000": true,
+			"http://127.0.0.1:5173": true,
+			"http://localhost:5173": true,
 		}
+		if frontendURL != "" {
+			allowed[frontendURL] = true
+		}
+
+		if origin != "" && allowed[origin] {
+			c.Header("Access-Control-Allow-Origin", origin)
+			c.Header("Vary", "Origin")
+			// Allow credentials only for allowlisted origins
+			c.Header("Access-Control-Allow-Credentials", "true")
+		}
+
 		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-CSRF-TOKEN")
-		
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
+
+		if c.Request.Method == http.MethodOptions {
+			c.AbortWithStatus(http.StatusNoContent)
 			return
 		}
-		
+
 		c.Next()
 	})
 
@@ -193,6 +208,8 @@ func main() {
 	// API routes
 	api := r.Group("/api")
 	{
+		// 全域請求審計（僅 API 群組）
+		api.Use(requestAudit)
 		// Authentication routes (public)
 		auth := api.Group("/auth")
 		{
@@ -203,13 +220,13 @@ func main() {
 			auth.POST("/refresh", authHandler.RefreshToken)
 			auth.POST("/forgot-password", authHandler.ForgotPassword)
 			auth.POST("/reset-password", authHandler.ResetPassword)
-			
+
 			// Simple auth routes for Laravel integration
 			auth.POST("/simple-login", simpleAuthHandler.SimpleLogin)
 			auth.POST("/simple-refresh", simpleAuthHandler.RefreshToken)
 			auth.POST("/simple-logout", simpleAuthHandler.SimpleLogout)
 		}
-		
+
 		// Simple auth verification (protected)
 		simpleAuth := api.Group("/auth")
 		simpleAuth.Use(simpleAuthMiddleware.RequireAuth())
@@ -222,7 +239,7 @@ func main() {
 		users.Use(authMiddleware.RequireAuth())
 		{
 			users.GET("/me", userHandler.GetProfile)
-			
+
 			// RBAC routes for user role management
 			users.GET("/:user_id/roles", rbacHandler.GetUserRoles)
 			users.GET("/:user_id/permissions", rbacHandler.GetUserPermissions)
@@ -359,7 +376,7 @@ func main() {
 			payments.POST("/", accountsPayableHandler.CreatePayment)
 			payments.POST("/:id/process", accountsPayableHandler.ProcessPayment)
 			payments.POST("/:id/cancel", accountsPayableHandler.CancelPayment)
-			
+
 			// Customer payment routes
 			payments.POST("/customer", customerPaymentHandler.CreateCustomerPayment)
 			payments.GET("/customer", customerPaymentHandler.GetCustomerPayments)
@@ -368,7 +385,7 @@ func main() {
 			payments.DELETE("/customer/:id", customerPaymentHandler.DeleteCustomerPayment)
 			payments.POST("/customer/:id/process", customerPaymentHandler.ProcessCustomerPayment)
 			payments.POST("/customer/:id/cancel", customerPaymentHandler.CancelCustomerPayment)
-			
+
 			// Customer payment application routes
 			payments.POST("/customer/:id/apply", customerPaymentHandler.ApplyCustomerPayment)
 			payments.GET("/customer/:id/allocations", customerPaymentHandler.GetCustomerPaymentAllocations)
@@ -400,7 +417,7 @@ func main() {
 			// Customer balance and AR routes
 			customers.GET("/:id/balance", accountsReceivableHandler.GetCustomerBalance)
 			customers.GET("/:id/outstanding-ar", accountsReceivableHandler.GetOutstandingAccountsReceivable)
-			
+
 			// Customer CRUD routes
 			customers.GET("/", customerHandler.GetCustomers)
 			customers.GET("/:id", customerHandler.GetCustomer)
@@ -511,7 +528,7 @@ func main() {
 			attendance.GET("/", employeeHandler.GetAttendanceRecords)
 			attendance.GET("/summary/:employee_id", employeeHandler.GetAttendanceSummary)
 			attendance.GET("/active/:employee_id", employeeHandler.GetActiveClockIn)
-			
+
 			// Quick clock-in/out endpoints for easy access
 			attendance.POST("/quick-clock-in/:code", employeeHandler.QuickClockIn)
 			attendance.POST("/quick-clock-out/:code", employeeHandler.QuickClockOut)

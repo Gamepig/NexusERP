@@ -73,22 +73,22 @@ func (s *SalesOrderService) CreateSalesOrder(req *models.CreateSalesOrderRequest
 		for i, item := range req.Items {
 			productIDs[i] = item.ProductID
 		}
-		
+
 		// 建立 IN 查詢的佔位符
 		placeholders := make([]string, len(productIDs))
 		for i := range placeholders {
 			placeholders[i] = fmt.Sprintf("$%d", i+1)
 		}
-		
+
 		// 使用單一查詢驗證所有產品
 		query := fmt.Sprintf("SELECT id FROM products WHERE id IN (%s) AND is_active = true", strings.Join(placeholders, ","))
-		
+
 		var validProductIDs []int64
 		err = tx.Select(&validProductIDs, query, productIDs...)
 		if err != nil {
 			return nil, fmt.Errorf("failed to validate products: %w", err)
 		}
-		
+
 		// 檢查是否所有產品都有效
 		if len(validProductIDs) != len(req.Items) {
 			// 找出無效的產品 ID
@@ -96,7 +96,7 @@ func (s *SalesOrderService) CreateSalesOrder(req *models.CreateSalesOrderRequest
 			for _, id := range validProductIDs {
 				validIDMap[id] = true
 			}
-			
+
 			for _, item := range req.Items {
 				if !validIDMap[item.ProductID] {
 					return nil, fmt.Errorf("product with ID %d not found or inactive", item.ProductID)
@@ -114,12 +114,13 @@ func (s *SalesOrderService) CreateSalesOrder(req *models.CreateSalesOrderRequest
 	// Insert sales order
 	salesOrder := &models.SalesOrder{}
 	query := `
-		INSERT INTO sales_orders (
-			customer_id, business_unit_id, order_date, total_amount, currency_id, user_id, status
-		) VALUES ($1, $2, $3, $4, $5, $6, $7)
-		RETURNING id, order_number, customer_id, business_unit_id, status, user_id, order_date, total_amount, currency_id, created_at, updated_at`
+        INSERT INTO sales_orders (
+            company_id, customer_id, business_unit_id, order_date, total_amount, currency_id, user_id, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING id, order_number, company_id, customer_id, business_unit_id, status, user_id, order_date, total_amount, currency_id, created_at, updated_at`
 
 	err = tx.QueryRowx(query,
+		req.CompanyID,
 		req.CustomerID,
 		req.BusinessUnitID,
 		req.OrderDate,
@@ -136,7 +137,7 @@ func (s *SalesOrderService) CreateSalesOrder(req *models.CreateSalesOrderRequest
 	items := make([]models.SalesOrderItemWithDetails, len(req.Items))
 	for i, itemReq := range req.Items {
 		totalPrice := itemReq.Quantity * itemReq.UnitPrice
-		
+
 		item := &models.SalesOrderItem{}
 		itemQuery := `
 			INSERT INTO sales_order_items (
@@ -192,7 +193,7 @@ func (s *SalesOrderService) GetSalesOrderByID(id int64) (*models.SalesOrderWithD
 	salesOrder := &models.SalesOrder{}
 	query := `SELECT id, order_number, customer_id, business_unit_id, status, user_id, order_date, total_amount, currency_id, created_at, updated_at 
 			  FROM sales_orders WHERE id = $1`
-	
+
 	err := s.db.QueryRowx(query, id).StructScan(salesOrder)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -205,7 +206,7 @@ func (s *SalesOrderService) GetSalesOrderByID(id int64) (*models.SalesOrderWithD
 	items := []models.SalesOrderItemWithDetails{}
 	itemQuery := `SELECT id, sales_order_id, product_id, quantity, unit_price, total_price, status, created_at, updated_at 
 				  FROM sales_order_items WHERE sales_order_id = $1 ORDER BY id`
-	
+
 	rows, err := s.db.Queryx(itemQuery, id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get sales order items: %w", err)
@@ -217,16 +218,16 @@ func (s *SalesOrderService) GetSalesOrderByID(id int64) (*models.SalesOrderWithD
 		if err := rows.StructScan(&item); err != nil {
 			return nil, fmt.Errorf("failed to scan sales order item: %w", err)
 		}
-		
+
 		itemWithDetails := models.SalesOrderItemWithDetails{
 			SalesOrderItem: item,
 		}
-		
+
 		// Load product details
 		if product, err := s.getProductByID(item.ProductID); err == nil {
 			itemWithDetails.Product = product
 		}
-		
+
 		items = append(items, itemWithDetails)
 	}
 
@@ -498,7 +499,7 @@ func (s *SalesOrderService) getCustomerByID(id int64) (*models.Customer, error) 
 	query := `SELECT id, customer_code, name, company_name, customer_type, status, 
 			  primary_email, primary_phone, city, state, country
 			  FROM customers WHERE id = $1 AND deleted_at IS NULL`
-	
+
 	err := s.db.QueryRowx(query, id).StructScan(customer)
 	if err != nil {
 		return nil, err
@@ -510,7 +511,7 @@ func (s *SalesOrderService) getProductByID(id int64) (*models.Product, error) {
 	product := &models.Product{}
 	query := `SELECT id, sku, name, description, unit_of_measure, cost_price, selling_price, is_active
 			  FROM products WHERE id = $1`
-	
+
 	err := s.db.QueryRowx(query, id).StructScan(product)
 	if err != nil {
 		return nil, err

@@ -11,7 +11,7 @@ test.describe('Light Theme Visual Quality Tests', () => {
     await page.click('button[type="submit"]');
     
     // Wait for dashboard to load
-    await page.waitForSelector('.main-content', { timeout: 10000 });
+    await page.waitForSelector('[data-dashboard], #statsGrid, main, .nexus-main-content-no-sidebar', { timeout: 10000 });
   });
 
   test('Light Theme Statistics Container Background and Contrast', async ({ page }) => {

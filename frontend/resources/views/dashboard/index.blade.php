@@ -3,7 +3,7 @@
 @section('title', '系統儀表板 - NexusERP')
 
 @push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css">
+{{-- Chart.js CSS 可省略，使用內建樣式即可 --}}
 <style>
     /* P1.3 儀表板樣式 */
     .dashboard-container {
@@ -427,8 +427,7 @@
 @endsection
 
 @push('scripts')
-<!-- Chart.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js"></script>
+<!-- 使用本地 ChartManager（已註冊 Chart.js 於 Vite 模組） -->
 
 <!-- Dashboard Manager -->
 <script src="{{ asset('js/components/dashboard/DashboardManager.js') }}"></script>
@@ -447,125 +446,46 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化圖表管理器
     const chartManager = {
         charts: {},
-        
-        // 初始化所有圖表
         initCharts() {
             this.initRevenueChart();
             this.initOrdersChart();
             this.initInventoryChart();
         },
-        
-        // 營收趨勢圖
         initRevenueChart() {
-            const ctx = document.getElementById('revenueChart');
-            if (!ctx) return;
-            
-            this.charts.revenue = new Chart(ctx, {
+            const config = {
                 type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: '營收',
-                        data: [],
-                        borderColor: 'var(--nexus-accent-green)',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+                data: { labels: [], datasets: [{ label: '營收', data: [], tension: 0.4, fill: true }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => '$' + Number(v).toLocaleString() } } } }
+            };
+            this.charts.revenue = window.Charts.create('revenueChart', config);
         },
-        
-        // 訂單狀態圖
         initOrdersChart() {
-            const ctx = document.getElementById('ordersChart');
-            if (!ctx) return;
-            
-            this.charts.orders = new Chart(ctx, {
+            const config = {
                 type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: [
-                            'var(--nexus-accent-green)',
-                            'var(--nexus-accent-blue)',
-                            'var(--nexus-accent-orange)',
-                            'var(--nexus-accent-red)'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
-                }
-            });
+                data: { labels: [], datasets: [{ data: [] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            };
+            this.charts.orders = window.Charts.create('ordersChart', config);
         },
-        
-        // 庫存分析圖
         initInventoryChart() {
-            const ctx = document.getElementById('inventoryChart');
-            if (!ctx) return;
-            
-            this.charts.inventory = new Chart(ctx, {
+            const config = {
                 type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: '庫存量',
-                        data: [],
-                        backgroundColor: 'var(--nexus-accent-purple)',
-                        borderColor: 'var(--nexus-accent-purple)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: { beginAtZero: true }
-                    }
-                }
-            });
+                data: { labels: [], datasets: [{ label: '庫存量', data: [] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            };
+            this.charts.inventory = window.Charts.create('inventoryChart', config);
         },
-        
-        // 更新圖表數據
         updateCharts(chartsData) {
             if (chartsData.revenue && this.charts.revenue) {
                 this.charts.revenue.data.labels = chartsData.revenue.labels;
                 this.charts.revenue.data.datasets[0].data = chartsData.revenue.values;
                 this.charts.revenue.update();
             }
-            
             if (chartsData.orders && this.charts.orders) {
                 this.charts.orders.data.labels = chartsData.orders.labels;
                 this.charts.orders.data.datasets[0].data = chartsData.orders.values;
                 this.charts.orders.update();
             }
-            
             if (chartsData.inventory && this.charts.inventory) {
                 this.charts.inventory.data.labels = chartsData.inventory.labels;
                 this.charts.inventory.data.datasets[0].data = chartsData.inventory.values;

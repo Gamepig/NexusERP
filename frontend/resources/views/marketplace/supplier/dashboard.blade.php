@@ -3,7 +3,71 @@
 @section('title', '供應商產品管理')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
+<div id="supplier-dashboard" class="container mx-auto px-4 py-6">
+    <style>
+    /* Supplier Dashboard theme-aware cards */
+    #supplier-dashboard .card { background:#ffffff; border:1px solid #e5e7eb; }
+    html[data-theme="dark"] #supplier-dashboard .card,
+    body.dark #supplier-dashboard .card,
+    .dark-theme.dark #supplier-dashboard .card {
+        background: linear-gradient(135deg, #0f172a 0%, #1f2937 55%, #111827 100%);
+        border: 1px solid #334155;
+    }
+    html[data-theme="dark"] #supplier-dashboard .card .text-gray-900 { color:#e5e7eb; }
+    html[data-theme="dark"] #supplier-dashboard .card .text-gray-600 { color:#cbd5e1; }
+    html[data-theme="dark"] #supplier-dashboard .bg-gray-50 { background:#0b1220 !important; }
+    html[data-theme="dark"] #supplier-dashboard thead.bg-gray-50 { background:#0b1220 !important; }
+    html[data-theme="dark"] #supplier-dashboard tbody.bg-white { background:#0f172a !important; }
+    html[data-theme="dark"] #supplier-dashboard .divide-gray-200 { --tw-divide-opacity:1; border-color:rgba(51,65,85,var(--tw-divide-opacity)); }
+    html[data-theme="dark"] #supplier-dashboard .border-gray-200 { border-color:#334155 !important; }
+
+    /* Modal dark theme overrides (modal is outside #supplier-dashboard) */
+    html[data-theme="dark"] #product-modal .mx-auto,
+    body.dark #product-modal .mx-auto,
+    .dark-theme.dark #product-modal .mx-auto { background: #0f172a !important; color:#e5e7eb; border:1px solid #334155; }
+    html[data-theme="dark"] #product-modal h3,
+    body.dark #product-modal h3,
+    .dark-theme.dark #product-modal h3,
+    html[data-theme="dark"] #product-modal label,
+    body.dark #product-modal label,
+    .dark-theme.dark #product-modal label { color:#e5e7eb !important; }
+    html[data-theme="dark"] #product-modal .text-gray-500,
+    body.dark #product-modal .text-gray-500,
+    .dark-theme.dark #product-modal .text-gray-500 { color:#94a3b8 !important; }
+    html[data-theme="dark"] #product-modal input,
+    html[data-theme="dark"] #product-modal textarea,
+    html[data-theme="dark"] #product-modal select,
+    body.dark #product-modal input,
+    body.dark #product-modal textarea,
+    body.dark #product-modal select,
+    .dark-theme.dark #product-modal input,
+    .dark-theme.dark #product-modal textarea,
+    .dark-theme.dark #product-modal select { background:#0b1220 !important; border-color:#334155 !important; color:#e5e7eb !important; }
+    html[data-theme="dark"] #product-modal input:focus,
+    html[data-theme="dark"] #product-modal textarea:focus,
+    html[data-theme="dark"] #product-modal select:focus,
+    body.dark #product-modal input:focus,
+    body.dark #product-modal textarea:focus,
+    body.dark #product-modal select:focus,
+    .dark-theme.dark #product-modal input:focus,
+    .dark-theme.dark #product-modal textarea:focus,
+    .dark-theme.dark #product-modal select:focus { outline:none; box-shadow:0 0 0 2px rgba(59,130,246,0.35); border-color:#3b82f6 !important; }
+    html[data-theme="dark"] #product-modal .border-gray-300,
+    body.dark #product-modal .border-gray-300,
+    .dark-theme.dark #product-modal .border-gray-300 { border-color:#334155 !important; }
+    html[data-theme="dark"] #product-modal .bg-white,
+    body.dark #product-modal .bg-white,
+    .dark-theme.dark #product-modal .bg-white { background:#0f172a !important; }
+    html[data-theme="dark"] #product-modal .text-gray-900,
+    body.dark #product-modal .text-gray-900,
+    .dark-theme.dark #product-modal .text-gray-900 { color:#e5e7eb !important; }
+    html[data-theme="dark"] #product-modal .text-gray-700,
+    body.dark #product-modal .text-gray-700,
+    .dark-theme.dark #product-modal .text-gray-700 { color:#cbd5e1 !important; }
+    html[data-theme="dark"] #product-modal .border-dashed,
+    body.dark #product-modal .border-dashed,
+    .dark-theme.dark #product-modal .border-dashed { border-color:#475569 !important; background:#0b1220; }
+    </style>
     <!-- 頁面標題 -->
     <div class="mb-6">
         <h1 class="text-3xl font-bold text-gray-900">產品管理</h1>
@@ -12,7 +76,7 @@
 
     <!-- 統計資訊卡片 -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="card rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="p-2 rounded-full bg-blue-100">
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,7 +90,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="card rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="p-2 rounded-full bg-green-100">
                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +104,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="card rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="p-2 rounded-full bg-yellow-100">
                     <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +118,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="card rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="p-2 rounded-full bg-purple-100">
                     <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,14 +178,14 @@
     </div>
 
     <!-- 產品列表 -->
-    <div class="bg-white rounded-lg shadow">
+    <div class="card rounded-lg shadow">
         <!-- Loading 狀態 -->
         <div id="loading-spinner" class="flex justify-center items-center py-12">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
 
         <!-- 空狀態 -->
-        <div id="empty-state" class="hidden text-center py-12">
+        <div id="empty-state" class="hidden text-center py-12 card">
             <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
             </svg>
@@ -156,7 +220,7 @@
         </div>
 
         <!-- 分頁 -->
-        <div id="pagination" class="hidden bg-white px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+        <div id="pagination" class="hidden card px-6 py-4 border-t flex items-center justify-between">
             <div class="flex-1 flex justify-between sm:hidden">
                 <button id="prev-mobile" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                     上一頁
@@ -318,6 +382,31 @@
 </div>
 
 @include('partials.app-config')
+
+<script>
+// 極簡 Toast：避免 DEMO 出現阻塞式 alert 視窗
+if (!window.nxToast) {
+  window.nxToast = function(message, type='info') {
+    let host = document.getElementById('nx-toast');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'nx-toast';
+      host.style.position='fixed';host.style.top='16px';host.style.right='16px';
+      host.style.zIndex='2147483647';host.style.display='flex';host.style.flexDirection='column';host.style.gap='8px';
+      document.body.appendChild(host);
+    }
+    const el = document.createElement('div');
+    const isDark = document.documentElement.getAttribute('data-theme')==='dark' || document.body.classList.contains('dark');
+    el.textContent = message; el.style.padding='10px 12px'; el.style.borderRadius='10px'; el.style.fontSize='13px'; el.style.boxShadow='0 6px 20px rgba(0,0,0,0.15)'; el.style.backdropFilter='blur(6px)';
+    if (type==='success'){ el.style.background=isDark?'rgba(34,197,94,0.18)':'rgba(16,185,129,0.15)'; el.style.color=isDark?'#bbf7d0':'#065f46'; el.style.border='1px solid rgba(16,185,129,0.35)'; }
+    else if (type==='error'){ el.style.background=isDark?'rgba(239,68,68,0.14)':'rgba(254,226,226,0.9)'; el.style.color=isDark?'#fecaca':'#7f1d1d'; el.style.border='1px solid rgba(239,68,68,0.35)'; }
+    else { el.style.background=isDark?'rgba(99,102,241,0.18)':'rgba(99,102,241,0.12)'; el.style.color=isDark?'#c7d2fe':'#3730a3'; el.style.border='1px solid rgba(99,102,241,0.35)'; }
+    host.appendChild(el);
+    setTimeout(()=>{el.style.opacity='0'; el.style.transition='opacity .3s';},2200);
+    setTimeout(()=>el.remove(),2600);
+  }
+}
+</script>
 
 <script src="{{ asset('js/components/marketplace/SupplierProductManagement.js') }}"></script>
 @endsection

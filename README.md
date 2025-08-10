@@ -1,3 +1,28 @@
+## NexusERP — 技術導向展示型 ERP 專案
+
+NexusERP 的核心目標不是「完成一個商用 ERP」，而是「展現嚴謹的系統設計與工程實作能力」。本專案以企業級架構為基礎，強調多租戶安全、可擴充模組化、可觀測性與自動化測試，並示範 AI 能力與第三方整合的工程落地方式。
+
+### 亮點總覽（工程觀點）
+- **雙端架構清晰**：`Golang/Gin` 後端專注業務邏輯；前端以 `Laravel + Blade + Vite` 承載 UI 與整合。
+- **企業級多租戶安全**：PostgreSQL Row-Level Security (RLS) + 應用層中介軟體，12+ 核心表達成資料隔離（`company_id` 強制、索引優化、觸發器防護）。
+- **一致的 API 契約**：RESTful 設計、統一錯誤格式與版本控管；前後端欄位對應（含 `selling_price → unit_price` 之類的防呆映射）。
+- **測試優先**：Playwright E2E（路由/庫存/報表/設定等），Go 單元/整合測試，實測優先於程式碼推測。
+- **DevEx 與可維運性**：Docker Compose 一鍵啟動、結構化日誌、指標化索引策略、故障模式紀錄與修復模式化。
+- **AI/整合實作**：OCR/RAG/CAG/LLM 設計藍圖、QuickBooks 與物流追蹤 PoC 範式、MCP Tools 整合位。
+
+### 關鍵模組與能力
+- **存貨/產品/供應商/客戶/訂單/財務** 等核心 ERP 模組之資料流與 API 範式
+- **報表與視覺化**：Chart.js 主題化與 Vite 建置鏈整合（含暗色主題一致性治理）
+- **安全與權限**：JWT/Session、RBAC、RLS、敏感資訊遮罩與稽核
+- **多租戶模型**：`companies → business_units → users` 三層結構與上下文注入
+
+### 目錄導覽（技術文件）
+- 技術棧與能力整合: `technical-docs/01_stack_and_features.md`
+- API/函數與資料契約: `technical-docs/02_api_reference.md`
+- 資料庫設計（表與欄位）: `technical-docs/03_database_schema.md`
+
+更多背景脈絡與決策歷程，請見 `memory-bank/`（`systemPatterns.md`、`techContext.md`、`progress.md`）。
+
 # NexusERP 企業資源規劃系統
 
 企業級 ERP 解決方案，提供全面的業務管理功能與企業級安全保障。

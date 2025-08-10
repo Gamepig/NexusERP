@@ -126,9 +126,9 @@
 /* 淺色主題 */
 :root.light-theme {
   /* 主要背景色 */
-  --nexus-bg-primary: #ffffff;
-  --nexus-bg-secondary: #f8fafc;
-  --nexus-bg-tertiary: #f1f5f9;
+  --nexus-bg-primary: #f5f7fb;   /* 淡灰帶藍，降低刺眼度 */
+  --nexus-bg-secondary: #eef2f7; /* 次要區塊更柔和 */
+  --nexus-bg-tertiary: #e7ecf3;  /* 卡片/分區背景 */
   --nexus-bg-sidebar: #f8fafc;
   --nexus-card-bg: #ffffff;
   

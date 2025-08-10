@@ -8,7 +8,7 @@
 
 @push('styles')
 <style>
-/* 多步驟表單樣式 */
+/* 多步驟表單樣式（深色主題對齊 Nexus 變數） */
 .step-container {
     max-width: 800px;
     margin: 0 auto;
@@ -29,7 +29,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: #e5e7eb;
+    background: var(--nexus-border-primary);
     z-index: 0;
 }
 
@@ -50,9 +50,9 @@
     justify-content: center;
     font-weight: 600;
     font-size: 1rem;
-    background: #f3f4f6;
-    color: #6b7280;
-    border: 2px solid #e5e7eb;
+    background: var(--nexus-card-bg);
+    color: var(--nexus-text-secondary);
+    border: 2px solid var(--nexus-border-primary);
     transition: all 0.3s ease;
 }
 
@@ -75,7 +75,7 @@
 .step-label {
     margin-top: 0.5rem;
     font-size: 0.875rem;
-    color: #6b7280;
+    color: var(--nexus-text-secondary);
     text-align: center;
     white-space: nowrap;
 }
@@ -90,11 +90,11 @@
 }
 
 .form-container {
-    background: white;
+    background: var(--nexus-card-bg);
     border-radius: 0.75rem;
     padding: 2rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--nexus-border-primary);
 }
 
 .form-group {
@@ -105,7 +105,7 @@
     display: block;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--nexus-text-primary);
     margin-bottom: 0.5rem;
 }
 
@@ -114,18 +114,20 @@
 .form-textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #d1d5db;
+    background: var(--nexus-card-bg);
+    color: var(--nexus-text-primary);
+    border: 1px solid var(--nexus-border-primary);
     border-radius: 0.5rem;
     font-size: 0.875rem;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--nexus-accent-purple);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.22);
 }
 
 .form-input.error,
@@ -143,7 +145,7 @@
 .form-help {
     margin-top: 0.25rem;
     font-size: 0.75rem;
-    color: #6b7280;
+    color: var(--nexus-text-secondary);
 }
 
 .required {
@@ -243,7 +245,7 @@
 .checkbox-label {
     font-size: 0.875rem;
     line-height: 1.5;
-    color: #374151;
+    color: var(--nexus-text-primary);
 }
 
 .step-content {
@@ -278,6 +280,10 @@
     <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-gray-900 mb-2">供應商註冊</h1>
         <p class="text-gray-600">加入 NexusERP 市場平台，開始您的業務合作</p>
+        <div class="mt-3 inline-flex items-center space-x-2">
+            <span class="text-xs px-2 py-1 rounded" style="background:#f59e0b;color:#fff;">DEMO</span>
+            <span class="text-xs text-gray-600">此頁為展示用途，提交動作不會寫入資料</span>
+        </div>
     </div>
 
     <!-- 進度條 -->
@@ -997,43 +1003,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // 表單提交處理
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        if (!validateCurrentStep()) {
-            return;
-        }
-        
-        const formData = collectFormData();
-        
-        try {
-            setSubmitLoading(true);
-            
-            // 調用後端 API  
-            const response = await fetch('/api/marketplace/suppliers/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                },
-                body: JSON.stringify(formData)
-            });
-            
-            const result = await response.json();
-            
-            if (response.ok) {
-                // 註冊成功，跳轉到成功頁面
-                window.location.href = '/marketplace/supplier/register/success';
-            } else {
-                // 處理錯誤
-                handleAPIError(response.status, result);
-            }
-            
-        } catch (error) {
-            console.error('Registration error:', error);
-            alert('網路錯誤，請稍後再試。如果問題持續，請聯絡客服。');
-        } finally {
-            setSubmitLoading(false);
-        }
+        if (!validateCurrentStep()) return;
+        // DEMO 模式：不呼叫後端，直接顯示提示並導向成功頁
+        setSubmitLoading(true);
+        showNotification('DEMO：提交已模擬，將導向成功頁面', 'success');
+        setTimeout(() => {
+            window.location.href = '/marketplace/supplier/register/success';
+        }, 800);
     });
     
     // 地址自動填入功能

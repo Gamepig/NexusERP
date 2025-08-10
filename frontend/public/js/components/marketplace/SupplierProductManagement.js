@@ -4,7 +4,10 @@
  */
 class SupplierProductManagement {
     constructor() {
-        this.apiBaseUrl = window.APP_CONFIG.API_BASE_URL;
+        // 後端 API Base：優先 APP_CONFIG.API_BASE_URL，其次 APP_CONFIG.BACKEND_URL + '/api'，最後回退 '/api'
+        const cfg = (typeof window !== 'undefined' ? window.APP_CONFIG : undefined) || {};
+        const fallbackByBackend = cfg && cfg.BACKEND_URL ? (cfg.BACKEND_URL.replace(/\/$/, '') + '/api') : null;
+        this.apiBaseUrl = (cfg.API_BASE_URL || fallbackByBackend || '/api');
         this.currentPage = 1;
         this.pageSize = 20;
         this.filters = {
@@ -15,8 +18,53 @@ class SupplierProductManagement {
         this.isLoading = false;
         this.selectedImages = [];
         this.currentProduct = null;
+        this.companyProducts = []; // 新增：儲存公司產品清單
+
+        // DEMO: 建立輕量 Toast 容器（避免跳出 alert 視窗）
+        if (!document.getElementById('nx-toast')) {
+            const c = document.createElement('div');
+            c.id = 'nx-toast';
+            c.style.position = 'fixed';
+            c.style.top = '16px';
+            c.style.right = '16px';
+            c.style.zIndex = '2147483647';
+            c.style.display = 'flex';
+            c.style.flexDirection = 'column';
+            c.style.gap = '8px';
+            document.body.appendChild(c);
+        }
 
         this.init();
+    }
+
+    toast(message, type = 'info') {
+        const host = document.getElementById('nx-toast');
+        if (!host) return;
+        const item = document.createElement('div');
+        item.textContent = message;
+        item.style.padding = '10px 12px';
+        item.style.borderRadius = '10px';
+        item.style.fontSize = '13px';
+        item.style.boxShadow = '0 6px 20px rgba(0,0,0,0.15)';
+        item.style.backdropFilter = 'blur(6px)';
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark' || document.body.classList.contains('dark');
+        if (type === 'success') {
+            item.style.background = isDark ? 'rgba(34,197,94,0.18)' : 'rgba(16,185,129,0.15)';
+            item.style.color = isDark ? '#bbf7d0' : '#065f46';
+            item.style.border = '1px solid rgba(16,185,129,0.35)';
+        } else if (type === 'error') {
+            // DEMO：錯誤以柔和提示顯示，不阻塞
+            item.style.background = isDark ? 'rgba(239,68,68,0.14)' : 'rgba(254,226,226,0.9)';
+            item.style.color = isDark ? '#fecaca' : '#7f1d1d';
+            item.style.border = '1px solid rgba(239,68,68,0.35)';
+        } else {
+            item.style.background = isDark ? 'rgba(99,102,241,0.18)' : 'rgba(99,102,241,0.12)';
+            item.style.color = isDark ? '#c7d2fe' : '#3730a3';
+            item.style.border = '1px solid rgba(99,102,241,0.35)';
+        }
+        host.appendChild(item);
+        setTimeout(() => { item.style.opacity = '0'; item.style.transition = 'opacity .3s'; }, 2200);
+        setTimeout(() => item.remove(), 2600);
     }
 
     init() {
@@ -24,6 +72,7 @@ class SupplierProductManagement {
         this.loadProductStats();
         this.loadProducts();
         this.loadCategories();
+        this.prefetchCompanyProducts();
     }
 
     bindEvents() {
@@ -70,6 +119,12 @@ class SupplierProductManagement {
             e.preventDefault();
             this.saveProduct();
         });
+
+        // 自動帶入：若公司產品清單存在，輸入框提供快速帶入
+        const nameInput = document.getElementById('product-name');
+        const skuInput = document.getElementById('product-sku');
+        nameInput && nameInput.addEventListener('blur', () => this.autofillFromCompany(nameInput.value));
+        skuInput && skuInput.addEventListener('blur', () => this.autofillFromCompany(skuInput.value));
 
         // 圖片上傳
         document.getElementById('file-upload').addEventListener('change', (e) => {
@@ -184,21 +239,58 @@ class SupplierProductManagement {
 
     async loadCategories() {
         try {
-            const response = await fetch(`${this.apiBaseUrl}/product-categories`);
+            const response = await fetch(`${this.apiBaseUrl}/marketplace/categories`);
             if (response.ok) {
-                const categories = await response.json();
+                const payload = await response.json();
+                const categories = Array.isArray(payload) ? payload : (payload.data || []);
                 const select = document.getElementById('product-category');
                 
-                categories.forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category.id;
-                    option.textContent = category.name;
-                    select.appendChild(option);
-                });
+                if (select) {
+                    select.innerHTML = '<option value="">選擇類別</option>';
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.id || category.value || '';
+                        option.textContent = category.name || category.label || '';
+                        select.appendChild(option);
+                    });
+                }
             }
         } catch (error) {
             console.error('載入產品類別失敗:', error);
+            this.toast('載入產品類別失敗（DEMO 類別將暫不顯示）', 'error');
         }
+    }
+
+    async prefetchCompanyProducts() {
+        try {
+            const token = localStorage.getItem('auth_token');
+            // 優先真實公司產品端點，若不存在則回退 DEMO 供應商商品
+            let resp = await fetch(`${this.apiBaseUrl}/products/company`, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (!resp.ok) {
+                // 回退到 DEMO：使用 marketplace/suppliers/{id}/products 或 marketplace/products?search=
+                // 這裡用 my 商品清單當作公司產品（已有 /api/marketplace/products/my）
+                resp = await fetch(`${this.apiBaseUrl}/marketplace/products?supplier_id=my&page_size=1000`);
+            }
+            if (resp.ok) {
+                const data = await resp.json();
+                const arr = Array.isArray(data) ? data : (data.data || data.products || []);
+                // 正規化欄位
+                this.companyProducts = arr.map(p => ({ name: p.name, sku: p.sku }));
+            } else {
+                this.companyProducts = [];
+            }
+        } catch (_) { this.companyProducts = []; }
+    }
+
+    autofillFromCompany(keyword) {
+        if (!keyword || !this.companyProducts || this.companyProducts.length === 0) return;
+        const k = String(keyword).trim().toLowerCase();
+        const hit = this.companyProducts.find(p => String(p.sku || '').toLowerCase() === k || String(p.name || '').toLowerCase() === k);
+        if (!hit) return;
+        const nameInput = document.getElementById('product-name');
+        const skuInput = document.getElementById('product-sku');
+        if (nameInput && !nameInput.value) nameInput.value = hit.name || '';
+        if (skuInput && !skuInput.value) skuInput.value = hit.sku || '';
     }
 
     renderProducts(data) {
@@ -629,15 +721,8 @@ class SupplierProductManagement {
         });
     }
 
-    showSuccess(message) {
-        // 可以使用 toast 通知或其他 UI 組件
-        alert(message);
-    }
-
-    showError(message) {
-        // 可以使用 toast 通知或其他 UI 組件
-        alert(message);
-    }
+    showSuccess(message) { this.toast(message, 'success'); }
+    showError(message) { this.toast(message, 'error'); }
 }
 
 // 初始化組件

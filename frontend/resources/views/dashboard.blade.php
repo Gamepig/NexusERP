@@ -246,11 +246,98 @@
             border-width: 1px !important;
         }
     }
+
+    /* Marketplace Banner - unify gradient across whole card */
+    .marketplace-hero { position: relative; }
+    /* 強制水平排列，避免外部樣式影響變成垂直 */
+    .marketplace-hero-row { display: flex !important; flex-direction: row !important; align-items: stretch !important; flex-wrap: nowrap !important; }
+    .marketplace-hero .marketplace-left { flex: 1 1 auto !important; min-width: 0 !important; }
+    .marketplace-hero .marketplace-right { flex: 0 0 33.333% !important; max-width: 33.333% !important; }
+    .marketplace-hero::before {
+        content: '';
+        position: absolute; inset: 0;
+        background:
+          radial-gradient(1200px 420px at 15% 0%, rgba(139,92,246,0.18), transparent 60%),
+          radial-gradient(900px 380px at 90% 40%, rgba(59,130,246,0.14), transparent 55%),
+          linear-gradient(90deg, rgba(99,102,241,0.10) 0%, rgba(59,130,246,0.08) 50%, rgba(14,165,233,0.06) 100%);
+        filter: saturate(115%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .marketplace-hero::after { /* subtle noise to remove banding */
+        content: '';
+        position: absolute; inset: 0;
+        background: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 4px);
+        mix-blend-mode: overlay; pointer-events: none;
+        z-index: 0;
+    }
+    .marketplace-hero > * { position: relative; z-index: 1; }
+    [data-theme="light"] .marketplace-hero::before {
+        background:
+          radial-gradient(1200px 420px at 15% 0%, rgba(99,102,241,0.22), transparent 62%),
+          radial-gradient(900px 380px at 90% 40%, rgba(147,197,253,0.22), transparent 58%),
+          linear-gradient(90deg, #edf2ff 0%, #e9f1ff 45%, #e6f3ff 100%);
+    }
+    [data-theme="light"] .marketplace-hero::after {
+        background: repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0 2px, transparent 2px 4px);
+    }
+    /* make inner containers transparent so overlay is continuous */
+    #marketplace-banner, #marketplace-visual { background: transparent !important; }
+    #marketplace-banner { border-radius: 1rem 0 0 1rem; }
+    #marketplace-visual { border-radius: 0 1rem 1rem 0; }
+    /* 提升 Marketplace 標籤在淺色主題的對比度 */
+    [data-theme="light"] #marketplace-banner .inline-flex { background-color: #4f46e5; color: #eef2ff; }
+
+    /* 右側視覺容器的背景（當圖片缺失或載入前的fallback） */
+    #marketplace-visual {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        border-radius: 0 1rem 1rem 0;
+    }
+    [data-theme="light"] #marketplace-visual {
+        background: linear-gradient(135deg, #c7d2fe 0%, #bfdbfe 60%, #93c5fd 100%);
+    }
+
+    /* Marketplace 標籤：固定字級與顏色，避免被其他樣式覆蓋 */
+    .marketplace-label{background-color:rgba(79,70,229,.92)!important;color:#eef2ff!important;border-radius:9999px;display:inline-flex;align-items:center;gap:.6rem;padding:.375rem 1rem;line-height:1!important}
+    .marketplace-label svg{color:inherit;width:1.5rem;height:1.5rem}
+    .marketplace-text{font-size:1.25rem!important;font-weight:700!important;letter-spacing:.02em!important}
+    @media(min-width:768px){.marketplace-text{font-size:1.5rem!important}}
+    [data-theme="light"] .marketplace-label{background-color:#4f46e5!important;color:#eef2ff!important}
+    [data-theme="dark"] .marketplace-label{background-color:rgba(99,102,241,.9)!important;color:#e0e7ff!important}
 </style>
 @endpush
 
 @section('content')
 <div class="dashboard-container" data-dashboard>
+    <!-- Marketplace Banner -->
+    <div class="nexus-card mb-6 marketplace-hero" style="border-radius: 1rem; overflow: hidden; position: relative;">
+        <div class="flex marketplace-hero-row items-stretch">
+            <div class="flex-1 p-6 marketplace-left" id="marketplace-banner">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="marketplace-label shadow-sm">
+                         <!-- Marketplace ICON (inline SVG) -->
+                         <svg class="" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                             <path d="M3 7h18l-2 12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L3 7Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                             <path d="M7 7V5a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                             <path d="M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                         </svg>
+                         <span class="marketplace-text">Marketplace</span>
+                     </span>
+                </div>
+                <h2 class="text-2xl font-bold nexus-text-primary mb-2">尋找好貨，也能賣好貨！</h2>
+                <p class="nexus-text-secondary mb-4">直接從 ERP 一鍵把商品上架到市集，庫存、訂單、客戶全在系統內一次管理。</p>
+                <div class="flex items-center gap-3">
+                    <a href="/marketplace/products" class="nexus-btn nexus-btn-primary">前往市集</a>
+                    <a href="/marketplace/supplier/register" class="nexus-btn">成為供應商</a>
+                    <a href="/marketplace/supplier/dashboard" class="nexus-btn">上架商品</a>
+                    <span class="text-xs px-2 py-1 rounded" style="background:#f59e0b;color:#fff;">DEMO</span>
+                </div>
+            </div>
+            <div id="marketplace-visual" class="marketplace-right h-40 md:h-auto relative">
+                <img src="/images/marketplace-banner.jpg" alt="Marketplace" class="absolute inset-0 w-full h-full object-cover" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </div>
     <!-- 頁面標題和控制項 -->
     <div class="dashboard-header flex justify-between items-center">
         <div>
@@ -327,7 +414,7 @@
             </a>
 
             <!-- 訂單處理 -->
-            <a href="/orders" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
+            <a href="{{ route('orders.sales.index') }}" class="nexus-card nexus-quick-action-card group hover:shadow-xl transition-all duration-300">
                 <div class="p-6 text-center h-full flex flex-col justify-center items-center">
                     <div class="w-12 h-12 mx-auto mb-3 bg-blue-500 bg-opacity-20 rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all quick-action-blue">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

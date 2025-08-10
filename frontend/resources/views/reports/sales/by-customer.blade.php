@@ -114,10 +114,10 @@ body {
         <p class="nx-text-accent">各客戶的購買行為分析</p>
         
         <!-- 返回按鈕 -->
-        <div class="mt-4">
-            <a href="{{ route('reports.sales.index') }}" class="nx-btn nx-btn-primary">
-                ← 返回報表選擇
-            </a>
+        <div class="mt-4 flex items-center space-x-2">
+            <a href="{{ route('reports.sales.index') }}" class="nx-btn nx-btn-primary">← 返回報表選擇</a>
+            <button id="export-csv" class="nx-btn nx-btn-secondary">匯出 CSV</button>
+            <button id="export-png" class="nx-btn nx-btn-info">匯出 PNG</button>
         </div>
     </div>
 
@@ -258,6 +258,43 @@ class CustomerSalesReportController {
         this.loadReport();
     }
 
+    bindExports() {
+        const customers = this.data.customers || [];
+        const rows = customers.map(c => ({
+            customer_name: c.customer_name,
+            tier: this.getTierLabel(c.tier),
+            order_count: c.order_count,
+            total_spent: c.total_spent,
+            average_order_value: c.average_order_value,
+            last_purchase: c.last_purchase || ''
+        }));
+        const toCsv = (arr) => {
+            const header = 'Customer,Tier,Orders,TotalSpent,AvgOrder,LastPurchase';
+            const body = arr.map(r => `${r.customer_name},${r.tier},${r.order_count},${r.total_spent},${r.average_order_value},${r.last_purchase}`).join('\n');
+            return header + '\n' + body;
+        }
+        const csvBtn = document.getElementById('export-csv');
+        if (csvBtn) {
+            csvBtn.onclick = () => {
+                const blob = new Blob([toCsv(rows)], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = `customer-sales-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+        const pngBtn = document.getElementById('export-png');
+        if (pngBtn) {
+            pngBtn.onclick = () => {
+                // 優先導出左側柱狀圖
+                const canvas = document.getElementById('customer-value-chart');
+                const url = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = url; a.download = `customer-value-${new Date().toISOString().slice(0,10)}.png`; a.click();
+            }
+        }
+    }
+
     setupEventListeners() {
         document.getElementById('apply-filters').addEventListener('click', () => {
             this.loadReport();
@@ -330,6 +367,7 @@ class CustomerSalesReportController {
         this.renderSummary();
         this.renderCharts();
         this.renderTable();
+        this.bindExports();
     }
 
     renderSummary() {

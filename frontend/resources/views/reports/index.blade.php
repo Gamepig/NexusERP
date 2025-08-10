@@ -19,7 +19,18 @@
     <!-- 銷售報表類別 -->
     <div class="report-category">
         <h2 class="category-title">💰 銷售報表</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 xl:gap-6">
+            <!-- 銷售摘要 -->
+            <div class="nx-card text-center">
+                <div class="report-icon mx-auto" style="background: linear-gradient(135deg, var(--nexus-accent-green), var(--nexus-accent-purple)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold mb-2" style="color: var(--nexus-text-primary);">銷售摘要</h3>
+                <p class="text-sm nx-text-muted mb-4">重點 KPI 與月度趨勢</p>
+                <a href="{{ route('reports.sales.summary') }}" class="nx-btn nx-btn-primary w-full">查看報表</a>
+            </div>
             <!-- 銷售總覽 -->
             <div class="nx-card text-center">
                 <div class="report-icon mx-auto" style="background: linear-gradient(135deg, var(--nexus-accent-green), var(--nexus-accent-blue)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
@@ -73,7 +84,18 @@
     <!-- 庫存報表類別 -->
     <div class="report-category">
         <h2 class="category-title">📦 庫存報表</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 xl:gap-6">
+            <!-- 庫存估值 -->
+            <div class="nx-card text-center">
+                <div class="report-icon mx-auto" style="background: linear-gradient(135deg, var(--nexus-accent-purple), var(--nexus-accent-green)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold mb-2" style="color: var(--nexus-text-primary);">庫存估值</h3>
+                <p class="text-sm nx-text-muted mb-4">類別估值與成本/市價對比</p>
+                <a href="{{ route('reports.inventory.valuation') }}" class="nx-btn nx-btn-secondary w-full">查看報表</a>
+            </div>
             <!-- 庫存總覽 -->
             <div class="nx-card text-center">
                 <div class="report-icon mx-auto" style="background: linear-gradient(135deg, var(--nexus-accent-blue), var(--nexus-accent-purple)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">

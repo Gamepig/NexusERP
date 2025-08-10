@@ -51,8 +51,12 @@
                 </div>
             </div>
 
-            <!-- 右側：快速操作 + 主題切換 + 使用者選單 -->
+            <!-- 右側：搜尋 + 快速操作 + 主題切換 + 使用者選單 -->
             <div class="flex items-center justify-end space-x-2 md:space-x-3 lg:space-x-4 min-w-0 flex-shrink-0">
+                <!-- 全域搜尋觸發器置中靠右（符合黃圈位置） -->
+                <div class="hidden md:block mr-2">
+                    <x-navigation.global-search />
+                </div>
                 
 
 
@@ -119,10 +123,10 @@
                          x-transition:leave-start="nexus-dropdown-leave-start"
                          x-transition:leave-end="nexus-dropdown-leave-end"
                          @click.outside="console.log('Click outside detected - closing menu'); showUserMenu = false"
-                         @mouseenter="clearTimeout(userCloseTimeout)"
-                         @mouseleave="console.log('Mouse leave on dropdown menu'); userCloseTimeout = setTimeout(() => { console.log('Dropdown mouse leave timeout - closing menu'); showUserMenu = false; }, 300)"
+                     @mouseenter="cancelCloseUserMenu()"
+                         @mouseleave="scheduleCloseUserMenu()"
                          class="nexus-user-dropdown-modern"
-                         id="user-dropdown-menu">
+                         id="user-dropdown-menu"
                         
                         <!-- 選單項目（簡化版） -->
                         <div class="nexus-menu-items-modern">
@@ -230,6 +234,9 @@ function enhancedNavigation() {
         interactionQueue: [],
         lastInteraction: null,
         
+        // 深色主題響應式檢測
+        isDarkTheme: false,
+        
         // 活動指示器
         currentPageIndicator: null,
         breadcrumbPath: [],
@@ -246,6 +253,7 @@ function enhancedNavigation() {
             this.initializeActivityIndicators();
             this.detectCurrentPage();
             this.setupAdvancedInteractions();
+            this.setupThemeDetection();
             this.initializeThemeToggle();
             this.setupUserMenuFallback();
             
@@ -721,7 +729,7 @@ function enhancedNavigation() {
                 navigation.style.cssText = navigation.style.cssText;
                 
                 // 更新背景色和邊框
-                const currentTheme = window.NexusTheme ? window.NexusTheme.getCurrentTheme() : 'dark';
+                const currentTheme = window.NexusTheme ? window.NexusTheme.getCurrentTheme() : (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
                 if (currentTheme === 'light') {
                     navigation.style.backgroundColor = 'var(--nexus-nav-bg-primary)';
                     navigation.style.borderBottomColor = 'var(--nexus-nav-border-primary)';
@@ -730,11 +738,13 @@ function enhancedNavigation() {
                     navigation.style.borderBottomColor = 'var(--nexus-nav-border-primary)';
                 }
             }
+            // 同步內部狀態供 x-bind:style 使用
+            this.isDarkTheme = (currentTheme === 'dark');
         },
         
         // 切換使用者選單
         toggleUserMenu() {
-            console.log('toggleUserMenu called'); // Debug log
+            // 僅在點擊時切換顯示
             
             // Debounce mechanism to prevent multiple rapid calls
             if (this._toggleDebounce) {
@@ -776,18 +786,207 @@ function enhancedNavigation() {
                     self.justOpened = false;
                 }, 300); // 增加到300ms
                 
-                // 用戶選單已打開
+                // 用戶選單已打開 - 強制應用背景樣式
+                self.forceDropdownBackgroundStyles();
+                
+                // 額外延遲強制應用深色主題樣式
+                setTimeout(() => {
+                    self.forceDarkThemeStyles();
+                }, 100);
             }
             
             // Force Alpine.js reactivity update
             this.$nextTick(() => {
                 console.log('Alpine nextTick completed, showUserMenu:', self.showUserMenu);
+                // 再次強制應用樣式，確保 Alpine.js 更新後樣式正確
+                if (self.showUserMenu) {
+                    self.forceDropdownBackgroundStyles();
+                }
             });
         },
         
         // 關閉其他選單和清除timeout
         closeOtherMenus() {
             // Method kept for future menu additions
+        },
+
+        // 強化用戶下拉選單背景樣式（僅在開啟狀態時）
+        forceDropdownBackgroundStyles() {
+            if (!this.showUserMenu) return; // 避免在關閉狀態時誤改 display
+            console.log('🎨 強制應用用戶下拉選單背景樣式');
+            
+            // 使用多個選擇器確保找到下拉選單
+            const selectors = [
+                '#user-dropdown-menu',
+                '.nexus-user-dropdown-modern',
+                '[x-show="showUserMenu"]'
+            ];
+            
+            let dropdown = null;
+            for (const selector of selectors) {
+                dropdown = document.querySelector(selector);
+                if (dropdown) {
+                    console.log(`📍 找到下拉選單使用選擇器: ${selector}`);
+                    break;
+                }
+            }
+            
+            if (!dropdown) {
+                console.warn('⚠️ 未找到用戶下拉選單元素');
+                return;
+            }
+            
+            // 強制應用完全不透明的背景樣式
+            const forceStyles = `
+                background: rgba(31, 41, 55, 1) !important;
+                background-color: rgba(31, 41, 55, 1) !important;
+                backdrop-filter: blur(30px) saturate(180%) contrast(120%) brightness(105%) !important;
+                -webkit-backdrop-filter: blur(30px) saturate(180%) contrast(120%) brightness(105%) !important;
+                box-shadow: 
+                    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                    0 25px 25px -5px rgba(0, 0, 0, 0.1),
+                    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+                border: 2px solid rgba(55, 65, 81, 0.8) !important;
+                border-radius: 14px !important;
+                position: absolute !important;
+                top: calc(100% + 0.5rem) !important;
+                right: 0 !important;
+                width: 12rem !important;
+                max-width: 90vw !important;
+            `;
+            
+            // 應用樣式到下拉選單
+            dropdown.style.cssText += forceStyles;
+            
+            // 檢查是否為深色主題
+            const isDarkTheme = document.documentElement.classList.contains('dark') || 
+                              document.body.classList.contains('dark');
+            
+            // 顏色由上面的 forceStyles 直接指定為不透明深色；不再根據主題切換
+            
+            console.log('✅ 用戶下拉選單背景樣式已強制應用');
+            
+            // 設置樣式監控，防止被其他代碼覆蓋
+            this.setupStyleMonitoring(dropdown);
+        },
+
+        // 強制應用深色主題樣式
+        forceDarkThemeStyles() {
+            if (!this.isDarkTheme) return;
+            
+            console.log('💪 強制應用深色主題樣式');
+            
+            const dropdown = document.getElementById('user-dropdown-menu');
+            if (!dropdown) return;
+            
+            // 僅設定必要深色樣式（避免透明）
+            dropdown.style.setProperty('background', '#1f2937', 'important');
+            dropdown.style.setProperty('background-color', '#1f2937', 'important');
+            dropdown.style.setProperty('border', '2px solid rgba(55, 65, 81, 0.8)', 'important');
+            
+            // 驗證應用結果
+            const applied = window.getComputedStyle(dropdown).backgroundColor;
+            console.log(`🎯 深色主題應用結果: ${applied}`);
+            
+            if (applied !== 'rgb(31, 41, 55)' && applied !== 'rgb(255, 255, 255)') {
+                dropdown.style.setProperty('background', 'rgba(31, 41, 55, 1)', 'important');
+                dropdown.style.setProperty('background-color', 'rgba(31, 41, 55, 1)', 'important');
+                dropdown.style.setProperty('border', '2px solid rgba(55, 65, 81, 0.9)', 'important');
+            }
+        },
+
+        // 設置深色主題檢測
+        setupThemeDetection() {
+            console.log('🌙 設置主題檢測系統');
+            
+            // 初始檢測主題狀態
+            this.updateThemeStatus();
+            
+            // 設置主題變化監聽器
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        const oldTheme = this.isDarkTheme;
+                        this.updateThemeStatus();
+                        
+                        if (oldTheme !== this.isDarkTheme) {
+                            console.log(`🔄 主題變化檢測: ${this.isDarkTheme ? '深色' : '淺色'}`);
+                            // 強制更新下拉選單樣式
+                            if (this.showUserMenu) {
+                                this.forceDropdownBackgroundStyles();
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // 監聽 html 和 body 的 class 變化
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+            
+            observer.observe(document.body, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+            
+            console.log('✅ 主題檢測系統已設置');
+            // 初始同步狀態
+            this.updateNavigationTheme();
+        },
+
+        // 更新主題狀態
+        updateThemeStatus() {
+            const oldStatus = this.isDarkTheme;
+            this.isDarkTheme = document.documentElement.classList.contains('dark') || 
+                              document.body.classList.contains('dark');
+            
+            if (oldStatus !== this.isDarkTheme) {
+                console.log(`🎨 主題狀態更新: ${this.isDarkTheme ? '🌙 深色' : '☀️ 淺色'}`);
+            }
+        },
+
+        // 設置樣式監控，防止樣式被覆蓋
+        setupStyleMonitoring(dropdown) {
+            if (!dropdown || dropdown._styleMonitorActive) {
+                return;
+            }
+            
+            console.log('🔍 設置用戶下拉選單樣式監控');
+            dropdown._styleMonitorActive = true;
+            
+            // 使用MutationObserver監控樣式變化
+                const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        const currentBg = dropdown.style.backgroundColor;
+                            const currentOpacity = dropdown.style.opacity;
+                        
+                        // 檢查背景是否正確對應當前主題
+                        const isDark = document.documentElement.classList.contains('dark');
+                        const expectedBg = isDark ? 'rgb(31, 41, 55)' : 'rgb(255, 255, 255)';
+                        
+                            if (currentBg !== expectedBg) {
+                            console.log(`🚨 檢測到背景樣式不匹配主題，重新應用 (期望: ${expectedBg}, 實際: ${currentBg})`);
+                            this.forceDropdownBackgroundStyles();
+                        }
+                    }
+                });
+            });
+            
+            observer.observe(dropdown, {
+                attributes: true,
+                attributeFilter: ['style', 'class']
+            });
+            
+            // 10秒後停止監控以節省性能
+            setTimeout(() => {
+                observer.disconnect();
+                dropdown._styleMonitorActive = false;
+                console.log('⏰ 用戶下拉選單樣式監控已停止');
+            }, 10000);
         },
         
         // 延遲關閉使用者選單 (防止立即關閉)
@@ -1284,10 +1483,9 @@ nav[class*="nexus-multi-nav"] a.nexus-nav-active,
     display: none !important; 
 }
 
-/* 強制覆蓋 x-show 的 display 屬性 */
-#user-dropdown-menu[x-show="showUserMenu"] {
-    display: block !important;
-}
+/* 修復：僅在 Alpine.js 設為顯示時才覆蓋 display 屬性 */
+/* 移除強制顯示規則，遵循 Alpine 控制顯示狀態 */
+/* #user-dropdown-menu[x-show="showUserMenu"][style*="display: block"] { display: block !important; } */
 
 /* 調試用：強制顯示下拉選單 */
 .nexus-user-dropdown.force-show {
@@ -1358,26 +1556,40 @@ nav[class*="nexus-multi-nav"] a.nexus-nav-active,
     @apply flex items-center;
 }
 
-/* 下拉選單容器 */
+/* 下拉選單容器 - 增強背景不透明度和視覺效果 */
 .nexus-user-dropdown-modern {
     position: absolute !important;
     top: calc(100% + 0.5rem) !important;
     right: 0 !important;
-    width: 11rem;
-    max-width: 90vw;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    z-index: 9999 !important;
-    overflow: hidden;
-    transform-origin: top right;
+    width: 12rem !important;
+    max-width: 90vw !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 2px solid rgba(229, 231, 235, 0.8) !important;
+    border-radius: 0.875rem !important;
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 25px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    z-index: 50000 !important;
+    overflow: hidden !important;
+    transform-origin: top right !important;
+    isolation: isolate !important;
+    contain: layout style paint !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .dark .nexus-user-dropdown-modern {
-    background: #1f2937;
-    border-color: #374151;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    background: #1f2937 !important;
+    background-color: #1f2937 !important;
+    border: 2px solid rgba(55, 65, 81, 0.8) !important;
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.6), 
+        0 25px 25px -5px rgba(0, 0, 0, 0.3),
+        0 10px 10px -5px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
 }
 
 /* 選單項目容器 */
@@ -1385,36 +1597,48 @@ nav[class*="nexus-multi-nav"] a.nexus-nav-active,
     @apply py-1;
 }
 
-/* 選單項目樣式 */
+/* 選單項目樣式 - 增強視覺效果 */
 .nexus-user-menu-item-modern {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 0.625rem 1rem;
-    color: #374151;
+    padding: 0.75rem 1rem;
+    color: rgba(55, 65, 81, 0.9);
     text-decoration: none;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.15s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     background: transparent;
     text-align: left;
     cursor: pointer;
+    border-radius: 0.5rem;
+    margin: 0.125rem 0.25rem;
+    position: relative;
+    overflow: hidden;
 }
 
 .dark .nexus-user-menu-item-modern {
-    color: #d1d5db;
+    color: rgba(209, 213, 219, 0.9);
 }
 
 .nexus-user-menu-item-modern:hover {
-    color: #111827;
-    background: #f8fafc;
-    transform: translateX(2px);
+    color: #1f2937;
+    background: rgba(248, 250, 252, 0.8);
+    backdrop-filter: blur(8px);
+    transform: translateX(3px) scale(1.02);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.05), 
+        0 0 0 1px rgba(59, 130, 246, 0.1) inset;
 }
 
 .dark .nexus-user-menu-item-modern:hover {
     color: #f9fafb;
-    background: #374151;
+    background: rgba(55, 65, 81, 0.6);
+    backdrop-filter: blur(8px);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), 
+        0 0 0 1px rgba(139, 92, 246, 0.2) inset;
 }
 
 .nexus-user-menu-item-modern svg {
@@ -1422,11 +1646,19 @@ nav[class*="nexus-multi-nav"] a.nexus-nav-active,
     height: 1rem;
     margin-right: 0.75rem;
     flex-shrink: 0;
-    opacity: 0.7;
+    opacity: 0.75;
+    transition: all 0.2s ease;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 .nexus-user-menu-item-modern:hover svg {
     opacity: 1;
+    transform: scale(1.1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.dark .nexus-user-menu-item-modern:hover svg {
+    filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.3));
 }
 
 /* 登出項目特殊樣式 */
@@ -1791,6 +2023,116 @@ nav[aria-label*="breadcrumb"],
 /* Fix dropdown visibility issues */
 [x-cloak] {
     display: none !important;
+}
+
+/* ===== Alpine.js 用戶下拉選單過渡動畫 ===== */
+/* 確保過渡動畫不會影響背景樣式的完整性 */
+.nexus-dropdown-enter {
+    transition: opacity 0.2s ease, transform 0.2s ease !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}
+
+.nexus-dropdown-enter-start {
+    opacity: 0 !important;
+    transform: scale(0.95) translateY(-10px) !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}
+
+.nexus-dropdown-enter-end {
+    opacity: 1 !important;
+    transform: scale(1) translateY(0) !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}
+
+.nexus-dropdown-leave {
+    transition: opacity 0.15s ease, transform 0.15s ease !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}
+
+.nexus-dropdown-leave-start {
+    opacity: 1 !important;
+    transform: scale(1) translateY(0) !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}
+
+.nexus-dropdown-leave-end {
+    opacity: 0 !important;
+    transform: scale(0.95) translateY(-10px) !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}
+
+/* 深色主題過渡動畫 */
+.dark .nexus-dropdown-enter,
+.dark .nexus-dropdown-enter-start,
+.dark .nexus-dropdown-enter-end,
+.dark .nexus-dropdown-leave,
+.dark .nexus-dropdown-leave-start,
+.dark .nexus-dropdown-leave-end {
+    background: #1f2937 !important;
+    background-color: #1f2937 !important;
+    border: 2px solid rgba(55, 65, 81, 0.8) !important;
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.6),
+        0 25px 25px -5px rgba(0, 0, 0, 0.3),
+        0 10px 10px -5px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 強化深色主題下拉選單樣式優先級 */
+.dark #user-dropdown-menu,
+html.dark #user-dropdown-menu,
+body.dark #user-dropdown-menu {
+    background: #1f2937 !important;
+    background-color: #1f2937 !important;
+    border: 2px solid rgba(55, 65, 81, 0.8) !important;
+}
+
+/* 終極深色主題樣式強制應用 */
+html.dark .nexus-user-dropdown-modern,
+body.dark .nexus-user-dropdown-modern,
+[class*="dark"] .nexus-user-dropdown-modern {
+    background: #1f2937 !important;
+    background-color: #1f2937 !important;
+    border: 2px solid rgba(55, 65, 81, 0.8) !important;
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.6),
+        0 25px 25px -5px rgba(0, 0, 0, 0.3),
+        0 10px 10px -5px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 超級強制深色主題樣式 - 最高優先級 */
+html.dark #user-dropdown-menu[id="user-dropdown-menu"].nexus-user-dropdown-modern {
+    background: #1f2937 !important;
+    background-color: #1f2937 !important;
+    background-image: none !important;
+}
+
+body.dark #user-dropdown-menu[id="user-dropdown-menu"].nexus-user-dropdown-modern {
+    background: #1f2937 !important; 
+    background-color: #1f2937 !important;
+    background-image: none !important;
+}
+
+/* 深色主題強制覆蓋所有可能的樣式來源 */
+.dark #user-dropdown-menu,
+html.dark #user-dropdown-menu,
+body.dark #user-dropdown-menu {
+    background: #1f2937 !important;
+    background-color: #1f2937 !important;
+    background-image: none !important;
+}
+
+/* 應對內聯樣式的超級覆蓋 */
+html[class*="dark"] .nexus-user-dropdown-modern[style*="background"] {
+    background: #1f2937 !important;
+    background-color: #1f2937 !important;
 }
 
 .nexus-user-dropdown[x-cloak] {

@@ -47,6 +47,8 @@ type CreateQuoteRequest struct {
 	Notes              string                  `json:"notes"`
 	TermsAndConditions string                  `json:"terms_and_conditions"`
 	Items              []CreateQuoteItemRequest `json:"items" binding:"required,min=1"`
+	// 新增狀態欄位支援
+	Status             *string                 `json:"status,omitempty"`
 }
 
 // CreateQuoteItemRequest represents a line item in a quote creation request
@@ -123,6 +125,9 @@ type QuoteQueryParams struct {
 	PageSize       int    `form:"page_size,default=20"`
 	SortBy         string `form:"sort_by,default=created_at"`
 	SortOrder      string `form:"sort_order,default=desc"`
+	// 新增搜尋與多租戶支援
+	Search         string `form:"search"`      // 搜尋關鍵字
+	CompanyID      *int64 `form:"company_id"`  // 多租戶公司ID
 }
 
 // QuoteConstants defines valid enum values

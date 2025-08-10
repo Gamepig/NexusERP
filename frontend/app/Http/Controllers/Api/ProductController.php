@@ -667,7 +667,7 @@ class ProductController extends Controller
 
             return response()->json([
                 'success' => true,
-                'products' => $searchResults,
+                'data' => $searchResults,
                 'total' => $searchResults->count(),
                 'query' => $query
             ]);
@@ -689,7 +689,7 @@ class ProductController extends Controller
                 'success' => false,
                 'message' => '產品搜尋失敗',
                 'error' => $e->getMessage(),
-                'products' => []
+                'data' => []
             ], 500);
         }
     }

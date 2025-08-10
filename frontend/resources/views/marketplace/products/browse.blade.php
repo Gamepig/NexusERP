@@ -104,17 +104,100 @@ body {
 }
 </style>
 
+<!-- Light theme overrides for Marketplace homepage -->
+<style>
+:root.light-theme,
+html[data-theme="light"],
+body[data-theme="light"] {
+    --nexus-primary-bg: #f5f7fb;      /* 舒適淡灰底 */
+    --nexus-secondary-bg: #eef2f7;    /* 區塊底色 */
+    --nexus-card-bg: #ffffff;         /* 卡片白底 */
+    --nexus-text-primary: #0f172a;    /* 文字主色 */
+    --nexus-text-secondary: #334155;  /* 次要文字 */
+    --nexus-text-muted: #64748b;      /* 淡化文字 */
+    --nexus-accent-purple: #7c3aed;
+    --nexus-accent-blue: #2563eb;
+    --nexus-accent-green: #059669;
+    --nexus-accent-orange: #f59e0b;
+    --nexus-accent-red: #dc2626;
+    --nexus-border-primary: #cbd5e1;  /* 邊框顏色 */
+}
+
+/* 淺色主題下具體元件背景與邊框 */
+html[data-theme="light"] body,
+body[data-theme="light"] { background-color: var(--nexus-primary-bg); color: var(--nexus-text-primary); }
+html[data-theme="light"] .nx-card,
+body[data-theme="light"] .nx-card { background: var(--nexus-card-bg); border: 1px solid var(--nexus-border-primary); }
+html[data-theme="light"] .nx-input,
+body[data-theme="light"] .nx-input,
+html[data-theme="light"] .nx-select,
+body[data-theme="light"] .nx-select { background: #ffffff; color: var(--nexus-text-primary); border-color: var(--nexus-border-primary); }
+html[data-theme="light"] .nx-btn-secondary,
+body[data-theme="light"] .nx-btn-secondary { background: #f1f5f9; color: var(--nexus-text-primary); border-color: var(--nexus-border-primary); }
+html[data-theme="light"] .nx-btn-secondary:hover,
+body[data-theme="light"] .nx-btn-secondary:hover { background: #e2e8f0; }
+
+/* 頁面頂部內容容器（你截圖中的上方區塊） */
+html[data-theme="light"] .min-h-screen > .nx-card.border-b,
+body[data-theme="light"] .min-h-screen > .nx-card.border-b { 
+    background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.92) 60%, rgba(245,247,251,0.96) 100%);
+    border-color: var(--nexus-border-primary) !important;
+}
+
+/* 深色主題 Banner 背景（修正目前過亮問題） */
+html[data-theme="dark"] .min-h-screen > .nx-card.border-b,
+body[data-theme="dark"] .min-h-screen > .nx-card.border-b,
+:root.dark-theme .min-h-screen > .nx-card.border-b {
+    background:
+      radial-gradient(700px 280px at 15% 0%, rgba(99,102,241,0.14), transparent 60%),
+      radial-gradient(600px 240px at 85% 40%, rgba(14,165,233,0.12), transparent 55%),
+      linear-gradient(135deg, rgba(17,24,39,0.92) 0%, rgba(31,41,55,0.88) 50%, rgba(2,6,23,0.94) 100%);
+    border-color: #334155 !important;
+}
+ 
+/* 右側主列表外層背景過深問題 */
+html[data-theme="light"] .container,
+body[data-theme="light"] .container { background: transparent; }
+html[data-theme="light"] .container > .flex > .lg\:w-3\/4,
+body[data-theme="light"] .container > .flex > .lg\:w-3\/4 { background: transparent; }
+</style>
+
+<style>
+/* 保護 Banner/標題列水平排列不換行 */
+.marketplace-hero-row{display:flex!important;flex-direction:row!important;align-items:center!important;flex-wrap:nowrap!important}
+</style>
+
 <div class="min-h-screen" style="background-color: var(--nexus-primary-bg);">
     <!-- 頁面標題區域 -->
     <div class="nx-card border-b" style="border-color: var(--nexus-border-primary);">
         <div class="container mx-auto px-4 py-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+            <div class="flex justify-between items-start md:items-center marketplace-hero-row">
                 <div>
+                    <!-- 麵包屑 -->
+                    <nav class="text-xs mb-2" aria-label="Breadcrumb" style="color: var(--nexus-text-secondary);">
+                        <ol class="inline-flex items-center space-x-1">
+                            <li><a href="/marketplace" class="hover:underline" style="color: var(--nexus-text-secondary);">市集</a></li>
+                            <li>/</li>
+                            <li class="text-xs" style="color: var(--nexus-text-primary);">商品列表</li>
+                        </ol>
+                    </nav>
                     <h1 class="text-3xl font-bold" style="color: var(--nexus-text-primary);">NexusERP 市集</h1>
-                    <p class="mt-2" style="color: var(--nexus-text-secondary);">發現優質供應商和產品</p>
+                    <p class="mt-2" style="color: var(--nexus-text-secondary);">尋找好貨，也能賣好貨！直接從 ERP 一鍵上架到市集，庫存與訂單集中管理。</p>
+                    <div class="mt-3 flex items-center space-x-2">
+                        <span class="text-xs px-2 py-1 rounded" style="background: var(--nexus-accent-orange); color: #fff;">DEMO</span>
+                        <span class="text-xs" style="color: var(--nexus-text-secondary);">此頁為展示用途，所有下單/付款/提交操作已停用</span>
+                    </div>
                 </div>
                 <div class="mt-4 md:mt-0">
-                    <div class="flex items-center text-sm" style="color: var(--nexus-text-secondary);">
+                    <div class="flex items-center text-sm gap-4" style="color: var(--nexus-text-secondary);">
+                        <a href="/marketplace/cart" class="relative inline-flex items-center nx-btn nx-btn-secondary" title="前往購物車">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
+                                <path d="M2.25 3a.75.75 0 000 1.5h1.386c.17 0 .32.114.36.28l.334 1.337 1.574 6.291A2.25 2.25 0 008.089 14.5H16.5a2.25 2.25 0 002.197-1.72l1.18-4.72A.75.75 0 0019.156 7H6.223l-.24-.96A1.875 1.875 0 004.636 4.5H2.25z" />
+                                <path d="M8.25 20.25a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.75 20.25a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                            </svg>
+                            購物車
+                            <span id="nx-cart-count" class="absolute -top-2 -right-2 hidden text-xs px-1.5 py-0.5 rounded-full" style="background: var(--nexus-accent-red); color:#fff;">0</span>
+                        </a>
                         <span id="total-products-count">載入中...</span>
                     </div>
                 </div>
@@ -208,6 +291,15 @@ body {
 
             <!-- 右側產品列表區域 -->
             <div class="lg:w-3/4">
+                <!-- 最近瀏覽 -->
+                <div id="recent-viewed-section" class="nx-card p-4 mb-6 hidden">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-md font-semibold" style="color: var(--nexus-text-primary);">最近瀏覽</h3>
+                        <button class="text-xs" style="color: var(--nexus-text-secondary);" onclick="localStorage.removeItem('nx_recent_products'); document.getElementById('recent-viewed-section').classList.add('hidden');">清除</button>
+                    </div>
+                    <div id="recent-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+                </div>
+
                 <!-- 排序和顯示選項 -->
                 <div class="nx-card p-4 mb-6">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
@@ -270,7 +362,10 @@ body {
         <div class="mt-3">
             <!-- 模態框標題 -->
             <div class="flex justify-between items-center mb-4">
-                <h3 id="product-detail-title" class="text-xl font-semibold" style="color: var(--nexus-text-primary);">產品詳情</h3>
+                <div>
+                    <nav id="product-detail-breadcrumb" class="text-xs mb-1" aria-label="Breadcrumb" style="color: var(--nexus-text-secondary);"></nav>
+                    <h3 id="product-detail-title" class="text-xl font-semibold" style="color: var(--nexus-text-primary);">產品詳情</h3>
+                </div>
                 <button id="close-detail-modal" class="transition-colors" style="color: var(--nexus-text-secondary);" onmouseover="this.style.color='var(--nexus-text-primary)'" onmouseout="this.style.color='var(--nexus-text-secondary)'">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -288,5 +383,11 @@ body {
 
 @include('partials.app-config')
 
+<script src="{{ asset('js/components/marketplace/Cart.js') }}"></script>
 <script src="{{ asset('js/components/marketplace/ProductBrowser.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  demoCart.updateBadge('nx-cart-count');
+});
+</script>
 @endsection

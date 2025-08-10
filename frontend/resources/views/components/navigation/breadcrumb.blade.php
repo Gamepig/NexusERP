@@ -1,3 +1,24 @@
+{{-- 簡易麵包屑組件 --}}
+@props(['items' => []])
+
+@if(!empty($items))
+<nav aria-label="麵包屑" class="mb-4">
+  <ol class="flex items-center space-x-2 text-sm">
+    @foreach($items as $i => $item)
+      @if($i > 0)
+        <li class="text-gray-400">/</li>
+      @endif
+      <li>
+        @if(!empty($item['url']) && empty($item['active']))
+          <a href="{{ $item['url'] }}" class="hover:underline" style="color: var(--nexus-text-secondary)">{{ $item['label'] }}</a>
+        @else
+          <span class="nexus-breadcrumb-indicator">{{ $item['label'] ?? '' }}</span>
+        @endif
+      </li>
+    @endforeach
+  </ol>
+@endif
+
 {{--
     麵包屑導航組件
     動態生成基於路由的導航路徑
