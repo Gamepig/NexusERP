@@ -14,7 +14,7 @@ class ApiService
 
     public function __construct()
     {
-        $this->baseUrl = rtrim(config('app.backend_api_url', 'http://127.0.0.1:8082'), '/') . '/api';
+        $this->baseUrl = rtrim(env('BACKEND_API_URL', 'http://127.0.0.1:8082'), '/') . '/api';
         $this->timeout = config('app.api_timeout', 10); // Reduced timeout for faster failure detection
     }
 
